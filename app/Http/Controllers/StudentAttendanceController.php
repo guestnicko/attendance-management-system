@@ -346,7 +346,7 @@ class StudentAttendanceController extends Controller
             ->get()
             ->first();
 
-        $students = StudentAttendance::join('students', function($join){
+        $students = StudentAttendance::select('*', 'student_attendances.created_at')->join('students', function($join){
             $join->on('student_attendances.student_rfid', '=', 'students.s_rfid')
             ->orOn('student_attendances.student_rfid', '=', 'students.s_studentID');
         });
@@ -370,5 +370,24 @@ class StudentAttendanceController extends Controller
         }
 
         return $students;
+    }
+
+    public function formatAttendance(){
+        // FIRST GET STUDENT
+        // CHECK IF STUDENT ATTENDED IN THE EVENT
+        // COMBINE DUPLICATES OF SAME EVENT
+        //
+        $attendance = StudentAttendance::where('event_id', 2)->where( function (Builder $query){
+            $query->where('student_rfid', "2023-00069")
+            ->orWhere('student_rfid', "0002193309");
+        })->get();
+
+        $group = $attendance->groupBy(['student_rfid', 'event_id']);
+
+        $student = Student::whereAny(['s_rfid', 's_studentID'], '')->get()->first();
+
+        dd($group);
+
+        dd($student);
     }
 }
