@@ -51,10 +51,18 @@ async function post(form) {
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const response = await post(new FormData(event.target));
+    // 3 VARIABLES ARE USED TO FETCH JSON DATA
+    let objProperty = response.data;
+    let attendCheckIn = response.attend_checkIn;
+    let attendCheckOut = response.attend_checkOut;
     if (response.isRecorded) {
-        AttendanceRecorded();
-        loadTable(await get().students);
+        console.log(response.data);
+        console.log(attendCheckIn);
+        console.log(attendCheckOut);
+        AttendanceRecorded(objProperty, attendCheckIn, attendCheckOut); //Added 3 arguments to retrieve the data
+
     } else {
+        console.log(response.data);
         AttendanceNotRecorded();
     }
 
@@ -67,9 +75,17 @@ form.addEventListener("submit", async (event) => {
 form_auto.addEventListener("submit", async (event) => {
     event.preventDefault();
     let response = await post(new FormData(event.target));
+    // 3 VARIABLES ARE USED TO FETCH JSON DATA
+    let objProperty = response.data;
+    let attendCheckIn = response.attend_checkIn;
+    let attendCheckOut = response.attend_checkOut;
     if (response.isRecorded) {
-        AttendanceRecorded();
+        console.log(response.data);
+        console.log(attendCheckIn);
+        console.log(attendCheckOut);
+        AttendanceRecorded(objProperty, attendCheckIn, attendCheckOut); //Added 3 arguments to retrieve the data
     } else {
+        console.log(response.data);
         AttendanceNotRecorded();
     }
     let data = await get();
@@ -93,15 +109,36 @@ function notify(status, content) {}
 
 function error(status, content) {}
 
-function AttendanceRecorded() {
-    console.log("Student Attendance Recorded");
+// ENHANCE THE POP UP TO SHOW THE DETAILS OF THE STUDENT AND ITS CHECKIN AND OUT
+function AttendanceRecorded(objProperty, attendCheckIn, attendCheckOut) {
+    console.log("Student Attendance Recorded: " + objProperty.s_fname);
     Swal.fire({
         icon: "success",
-        title: "Student Attendance Recorded!",
-        showConfirmButton: false,
-        timer: 750,
+        title: "Attendance Recorded!",
+        html: `
+            <div class="text-center">
+                <h2 class="text-2xl font-semibold text-gray-800">Welcome,</h2>
+                <h3 class="text-3xl font-bold text-red-600 my-2">
+                    ${objProperty.s_fname} ${objProperty.s_lname}
+                </h3>
+                <p class="text-lg font-medium text-gray-700">
+                    ${objProperty.s_program} - Year Level: ${objProperty.s_lvl}
+                </p>
+                <p class="text-md text-gray-500 mt-1">Set: ${objProperty.s_set}</p>
+                <p class="text-md text-gray-500 mt-1">Time In: ${attendCheckIn}</p>
+                <p class="text-md text-gray-500 mt-1">Time Out: ${attendCheckOut}</p>
+
+            </div>
+        `,
+        showConfirmButton: true,
+        customClass: {
+            popup: "bg-white shadow-lg rounded-xl p-6",
+            title: "text-xl font-bold text-gray-900",
+        },
+
     });
 }
+
 
 function AttendanceNotRecorded() {
     console.log("Student Attendance Not Recorded");
@@ -109,7 +146,7 @@ function AttendanceNotRecorded() {
         icon: "warning",
         title: "Student Attendance Not Recorded!",
         showConfirmButton: false,
-        timer: 750,
+        timer: 1500,
     });
 }
 

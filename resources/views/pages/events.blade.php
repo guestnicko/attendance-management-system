@@ -267,8 +267,8 @@
                         <td>Date</td>
                         <td>Start of Check In</td>
                         <td>End of Check In</td>
-                        <td>Start of Check In</td>
-                        <td>End of Check In</td>
+                        <td>Start of Check Out</td>
+                        <td>End of Check Out</td>
                         <td>Actions</td>
                     </tr>
                 </thead>
@@ -277,10 +277,10 @@
                         <tr>
                             <td>{{ $event->event_name }}</td>
                             <td>{{ $event->date }}</td>
-                            <td>{{ $event->checkIn_start }}</td>
-                            <td>{{ $event->checkIn_end }}</td>
-                            <td>{{ $event->checkOut_start }}</td>
-                            <td>{{ $event->checkOut_end }}</td>
+                            <td>{{ date_format(date_create($event->checkIn_start), 'h:i A') }}</td>
+                            <td>{{ date_format(date_create($event->checkIn_end), 'h:i A') }}</td>
+                            <td>{{ date_format(date_create($event->checkOut_start), 'h:i A') }}</td>
+                            <td>{{ date_format(date_create($event->checkOut_end), 'h:i A' )}}</td>
                             <td class="flex gap-3 py-3">
                                 <x-edit-button x-on:click="open = true" onclick="editEvent({{ $event }})">
                                     {{-- Edit Button --}}

@@ -62,7 +62,7 @@
         <div class="flex justify-between mb-3">
             <div class="w-full flex items-center gap-5">
                 <div class="">
-                    <select name="event_id" id="eventField">
+                    <select name="event_id" id="eventField" class="block w-full text-lg text-gray-500 bg-transparent border-0 border-b-2 border-violet-500 appearance-none ">
                         <option value="">Select Event</option>
                         @foreach ($events as $event)
                             <option value="{{$event->id}}">{{$event->event_name}}</option>
@@ -226,29 +226,31 @@
         </div>
         {{-- ======================================================== --}}
 
-        <div class="mt-4">
+        <div class="mt-4 overflow-x-auto shadow-md sm:rounded-lg">
             <h3 class="text-3xl text-violet-800 font-extrabold">
                 Attendance Record
             </h3>
-            <table class="min-w-full">
-                <tr class="bg-violet-200 text-violet-900 py-2 text-lg font-semibold">
-                    <td>No.</td>
-                    <td>Name</td>
-                    <td>Program</td>
-                    <td>Set</td>
-                    <td>Level</td>
-                    <td>Time In</td>
-                    <td>Time Out</td>
-                    <td>Event</td>
-                    <td>Date</td>
-                </tr>
+            <table class="min-w-full w-full text-lg text-center rtl:text-right text-gray-900 font-semibold">
+                <thead class="text-base text-gray-700 uppercase bg-gray-50">
+                    <tr class="bg-violet-200 text-violet-900 py-2 text-lg font-semibold">
+                        <td>No.</td>
+                        <td>Name</td>
+                        <td>Program</td>
+                        <td>Set</td>
+                        <td>Level</td>
+                        <td>Time In</td>
+                        <td>Time Out</td>
+                        <td>Event</td>
+                        <td>Date</td>
+                    </tr>
+                </thead>
                 <tbody id="student_table_body">
                     {{-- Removed Hard-coded data --- This is now ready for dynamic data --}}
                     @php
                         $i = 1;
                     @endphp
                     @foreach ($logs as $log)
-                        <tr>
+                        <tr class="table_row">
                             <td>{{ $i++ }}</td>
                             <td>{{ $log->s_fname . ' ' . $log->s_lname }} </td>
                             <td>{{ $log->s_program }}</td>
@@ -263,61 +265,6 @@
                 </tbody>
             </table>
             <span id="std_info_table"></span>
-        </div>
-
-        {{-- Fines Table Section --}}
-        <div class="mt-8">
-            <h3 class="text-3xl text-violet-800 font-extrabold mb-4">
-                Fines Record
-            </h3>
-            <table class="min-w-full">
-                <tr class="bg-violet-200 text-violet-900 py-2 text-lg font-semibold">
-                    <td>No.</td>
-                    <td>Name</td>
-                    <td>Program</td>
-                    <td>Set</td>
-                    <td>Level</td>
-                    <td>Missed Actions</td>
-                    <td>Fine Amount</td>
-                    <td>Total Fines</td>
-                    <td>Event</td>
-                    <td>Date</td>
-                </tr>
-                <tbody>
-                    @php
-                        $i = 1;
-                    @endphp
-                    @foreach ($fines as $fine)
-                        <tr>
-                            <td>{{ $i++ }}</td>
-                            <td>{{ $fine->student->s_fname . ' ' . $fine->student->s_lname }}</td>
-                            <td>{{ $fine->student->s_program }}</td>
-                            <td>{{ $fine->student->s_set }}</td>
-                            <td>{{ $fine->student->s_lvl }}</td>
-                            <td>
-                                <ul class="list-disc list-inside">
-                                    @if($fine->morning_checkIn_missed)
-                                        <li>Morning Check-in</li>
-                                    @endif
-                                    @if($fine->morning_checkOut_missed)
-                                        <li>Morning Check-out</li>
-                                    @endif
-                                    @if($fine->afternoon_checkIn_missed)
-                                        <li>Afternoon Check-in</li>
-                                    @endif
-                                    @if($fine->afternoon_checkOut_missed)
-                                        <li>Afternoon Check-out</li>
-                                    @endif
-                                </ul>
-                            </td>
-                            <td>₱{{ number_format($fine->fine_amount, 2) }}</td>
-                            <td>₱{{ number_format($fine->total_fines, 2) }}</td>
-                            <td>{{ $fine->event->event_name }}</td>
-                            <td>{{ $fine->created_at->format('Y-m-d') }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
         </div>
     </div>
 
