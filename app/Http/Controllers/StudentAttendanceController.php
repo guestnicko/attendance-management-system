@@ -181,6 +181,9 @@ class StudentAttendanceController extends Controller
             ]);
         }
 
+        //Get the details of the student
+        $myStudent = Student::whereAny(['s_rfid', 's_studentID'], $request->s_rfid)->get()->first();
+
 
         // INITIALIZE VARIABLES, ETC
         date_default_timezone_set('Asia/Manila');
@@ -232,6 +235,14 @@ class StudentAttendanceController extends Controller
                 'event_id' => $request->event_id,
                 "attend_checkIn"=> $currentTime
             ]);
+            
+            // RETURNS A JSON THAT ALSO RECORDS THE CHECK IN
+            return response()->json([
+                "message" => "Attendance recorded successfully!",
+                "isRecorded" => true,
+                "data" => $myStudent,
+                "attend_checkIn"=> $currentTime,
+            ]);
         }
 
 
@@ -241,6 +252,13 @@ class StudentAttendanceController extends Controller
                 'event_id' => $request->event_id,
                 "attend_checkOut"=> $currentTime
             ]);
+            // RECORDS THE CHECKOUT AS JSON
+            return response()->json([
+                "message" => "Attendance recorded successfully!",
+                "isRecorded" => true,
+                "data" => $myStudent,
+                "attend_checkOut"=> $currentTime,
+            ]);
         }
         if ($time > $event->checkOut_start && $time < $event->checkOut_end && !empty(StudentAttendance::where('event_id',$event->id )->where("student_rfid", $request->s_rfid)->get()->first())) {
             StudentAttendance::where('event_id',$event->id )
@@ -248,11 +266,20 @@ class StudentAttendanceController extends Controller
             ->update([
                 "attend_checkOut"=> $currentTime
             ]);
+            //RECORDS THE CHECKOUT AS JSON
+            return response()->json([
+                "message" => "Attendance recorded successfully!",
+                "isRecorded" => true,
+                "data" => $myStudent,
+                "attend_checkOut"=> $currentTime,
+            ]);
         }
+
 
         return response()->json([
             "message" => "Attendance recorded successfully!",
             "isRecorded" => true,
+            "data" => $myStudent, //RECORDS THE DATA OF THE STUDENT DETAILS
         ]);
 
     // CODE BELOW IS FOR FUTURE USE

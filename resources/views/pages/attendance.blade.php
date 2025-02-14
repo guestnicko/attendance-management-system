@@ -1,6 +1,16 @@
 <x-app-layout>
     @vite(['resources/js/axios.js', 'resources/js/student_attendance.js'])
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            Swal.fire({
+                title: "Auto-attendance is on",
+                timer: 1500,
+                showConfirmButton: false,
+            });
+        })
+    </script>
+
     <x-slot name="header">
         <h2 class="font-semibold text-3xl text-violet-800 leading-tight">
             {{ __('Student Attendance') }}
@@ -55,7 +65,7 @@
                                 </span>
                             </h2>
                             <h2 class="text-lg font-bold text-gray-800">
-                                Check Out Start:
+                                Check Out End:
                                 <span class="text-gray-500">
                                     {{ date_format(date_create($event->checkOut_end), 'h:i A') }}
                                 </span>
@@ -79,11 +89,11 @@
                     <div x-data="{ open: false }" class="transition-all">
                         <div class="flex-col justify-end">
                             <button x-on:click="open = ! open" onclick="myFunction()"
-                            class="bg-orange-500 px-3 py-2 mb-2 hover:bg-orange-600 transition-full max-w-xs text-center rounded-xl text-white shadow-lg">
-                            Enter Student ID:
+                            class="bg-red-500 px-3 py-2 mb-2 hover:bg-orange-600 transition-full max-w-xs text-center rounded-xl text-white shadow-lg">
+                            Manually Enter RFID
                         </button>
                         <button onclick="startInterval()"
-                            class="bg-orange-500 px-3 py-2 mb-2 hover:bg-orange-600 transition-full max-w-xs text-center rounded-xl text-white shadow-lg">
+                            class="bg-yellow-500 px-3 py-2 mb-2 hover:bg-yellow-400 transition-full max-w-xs text-center rounded-xl text-white shadow-lg">
                             Start Attendance
                         </button>
                         </div>
@@ -191,13 +201,6 @@
         console.log("attendance start");
         document.getElementById("inputField").focus();
         startAttendance = true;
-
-        Swal.fire({
-            icon: "info",
-            title: "Attendance is now starting!",
-            showConfirmButton: false,
-            timer: 1000
-        });
 
         stopInterval();
     }
