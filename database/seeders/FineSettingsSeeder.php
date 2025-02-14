@@ -12,7 +12,7 @@ class FineSettingsSeeder extends Seeder
         FineSettings::firstOrCreate(
             ['id' => 1],
             [
-                'fine_amount' => 25.00,
+                'fine_amount' => 25,
                 'morning_checkin' => true,
                 'morning_checkout' => true,
                 'afternoon_checkin' => true,

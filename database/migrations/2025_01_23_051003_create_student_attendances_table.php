@@ -21,14 +21,13 @@ return new class extends Migration
             $table->time('attend_afternoon_checkOut')->nullable();
             $table->string('event_id');
             $table->string('student_rfid');
-            $table->boolean('morning_attendance')->default(false);
-            $table->boolean('afternoon_attendance')->default(false);
+            $table->string('id_student');
             $table->timestamps();
         });
     }
 
     /**
-     * Reverse the migrations. 
+     * Reverse the migrations.
      */
     public function down(): void
     {

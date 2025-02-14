@@ -56,11 +56,7 @@ form.addEventListener("submit", async (event) => {
     let attendCheckIn = response.attend_checkIn;
     let attendCheckOut = response.attend_checkOut;
     if (response.isRecorded) {
-        console.log(response.data);
-        console.log(attendCheckIn);
-        console.log(attendCheckOut);
         AttendanceRecorded(objProperty, attendCheckIn, attendCheckOut); //Added 3 arguments to retrieve the data
-
     } else {
         console.log(response.data);
         AttendanceNotRecorded();
@@ -135,10 +131,8 @@ function AttendanceRecorded(objProperty, attendCheckIn, attendCheckOut) {
             popup: "bg-white shadow-lg rounded-xl p-6",
             title: "text-xl font-bold text-gray-900",
         },
-
     });
 }
-
 
 function AttendanceNotRecorded() {
     console.log("Student Attendance Not Recorded");
