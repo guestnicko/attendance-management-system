@@ -1,4 +1,5 @@
 import axios from "axios";
+
 const api = axios.create({
     headers: {
         "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
@@ -14,6 +15,12 @@ const baseUrl = window.location.href;
 document.querySelector("#eventField").addEventListener("change", (e) => {
     document.querySelector("#inputField").value = e.target.value;
     getCategory();
+});
+
+const formatter = new Intl.DateTimeFormat("ja-JP", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
 });
 
 function GeneratePDFReport() {
@@ -93,7 +100,7 @@ async function getCategory() {
                             <td>${e.attend_checkIn}</td>
                             <td>${e.attend_checkOut}</td>
                             <td>${e.event_name}</td>
-                            <td>${e.created_at}</td>
+                            <td>${formatter.format(new Date(e.created_at))}</td>
                         </tr>
             `;
             document.getElementById("std_info_table").innerHTML = "";

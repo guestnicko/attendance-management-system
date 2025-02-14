@@ -156,7 +156,7 @@
                         <td>Date</td>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="student_table_body">
                     @isset($students)
                         @foreach ($students as $student)
                             <tr>

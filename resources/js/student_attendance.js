@@ -15,6 +15,12 @@ let intervalId = setInterval(() => {
     document.getElementById("inputField1").focus();
 }, 500);
 
+const formatter = new Intl.DateTimeFormat("ja-JP", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+});
+
 function stopInterval() {
     clearInterval(intervalId);
     console.log("Interval stopped!");
@@ -54,6 +60,7 @@ form.addEventListener("submit", async (event) => {
         console.log(attendCheckIn);
         console.log(attendCheckOut);
         AttendanceRecorded(objProperty, attendCheckIn, attendCheckOut); //Added 3 arguments to retrieve the data
+
     } else {
         console.log(response.data);
         AttendanceNotRecorded();
@@ -81,6 +88,8 @@ form_auto.addEventListener("submit", async (event) => {
         console.log(response.data);
         AttendanceNotRecorded();
     }
+    let data = await get();
+    loadTable(data);
     document.querySelector("#inputField1").value = "";
     // notify(isRecorded, "")
 
@@ -91,8 +100,7 @@ async function get() {
     let uri = document.getElementById("getURI").value;
     let isFetch = false;
     const data = await axios.get(uri);
-
-    return data;
+    return data.data;
 }
 
 // FOR NOTIFICATIONS ETC
@@ -127,6 +135,7 @@ function AttendanceRecorded(objProperty, attendCheckIn, attendCheckOut) {
             popup: "bg-white shadow-lg rounded-xl p-6",
             title: "text-xl font-bold text-gray-900",
         },
+
     });
 }
 
@@ -138,5 +147,23 @@ function AttendanceNotRecorded() {
         title: "Student Attendance Not Recorded!",
         showConfirmButton: false,
         timer: 1500,
+    });
+}
+
+function loadTable(data) {
+    const table = document.querySelector("#student_table_body");
+    table.innerHTML = "";
+    data.forEach((element) => {
+        table.innerHTML += `
+    <tr>
+        <td>${element.s_fname + " " + element.s_lname} </td>
+        <td>${element.s_program}</td>
+        <td>${element.s_set}</td>
+        <td>${element.s_lvl}</td>
+        <td>${element.attend_checkIn}</td>
+        <td>${element.attend_checkOut}</td>
+        <td>${formatter.format(new Date(element.created_at))}</td>
+    </tr>
+    `;
     });
 }
