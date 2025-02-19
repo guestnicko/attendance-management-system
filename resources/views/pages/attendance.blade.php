@@ -1,5 +1,5 @@
 <x-app-layout>
-    @vite(['resources/js/axios.js', 'resources/js/student_attendance.js'])
+    @vite(['resources/js/student_attendance.js'])
 
     <script>
         document.addEventListener('DOMContentLoaded', function(){

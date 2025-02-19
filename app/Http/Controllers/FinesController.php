@@ -107,4 +107,87 @@ class FinesController extends Controller
             $finesCreated++;
         }
     }
+
+
+    // protected function calculateFine(){
+    //      // CODE BELOW IS FOR FUTURE USE
+
+    //      $settings = FineSettings::firstOrCreate(
+    //         ['id' => 1],
+    //         [
+    //             'fine_amount' => 25.00,
+    //             'morning_checkin' => true,
+    //             'morning_checkout' => true,
+    //             'afternoon_checkin' => true,
+    //             'afternoon_checkout' => true
+    //         ]
+    //     );
+
+
+
+    //     $fine = Fine::where('student_id', $student->id)
+    //         ->where('event_id', $event->id)
+    //         ->first();
+
+    //     if ($fine) {
+    //         // Morning check-in
+    //         if ($time > $event->checkIn_start && $time < $event->checkIn_end) {
+    //             $attendance->attend_checkIn = $currentTime;
+    //             $attendance->morning_attendance = true;
+    //             $attendance->save();
+
+    //             if (!$fine->morning_checkin) {
+    //                 $fine->morning_checkin = true;
+    //                 $fine->absences -= 1;
+    //                 $fine->total_fines = $fine->absences * $settings->fine_amount;
+    //                 $fine->save();
+    //             }
+    //         }
+
+    //         // Morning check-out
+    //         if ($time > $event->checkOut_start && $time < $event->checkOut_end) {
+    //             $attendance->attend_checkOut = $currentTime;
+    //             $attendance->morning_attendance = true;
+    //             $attendance->save();
+
+    //             if (!$fine->morning_checkout) {
+    //                 $fine->morning_checkout = true;
+    //                 $fine->absences -= 1;
+    //                 $fine->total_fines = $fine->absences * $settings->fine_amount;
+    //                 $fine->save();
+    //             }
+    //         }
+
+    //         // Afternoon check-in
+    //         if ($time > $event->afternoon_checkIn_start && $time < $event->afternoon_checkIn_end) {
+    //             $attendance->attend_afternoon_checkIn = $currentTime;
+    //             $attendance->afternoon_attendance = true;
+    //             $attendance->save();
+
+    //             if (!$fine->afternoon_checkin) {
+    //                 $fine->afternoon_checkin = true;
+    //                 $fine->absences -= 1;
+    //                 $fine->total_fines = $fine->absences * $settings->fine_amount;
+    //                 $fine->save();
+    //             }
+    //         }
+
+    //         // Afternoon check-out
+    //         if ($time > $event->afternoon_checkOut_start && $time < $event->afternoon_checkOut_end) {
+    //             $attendance->attend_afternoon_checkOut = $currentTime;
+    //             $attendance->afternoon_attendance = true;
+    //             $attendance->save();
+
+    //             if (!$fine->afternoon_checkout) {
+    //                 $fine->afternoon_checkout = true;
+    //                 $fine->absences -= 1;
+    //                 $fine->total_fines = $fine->absences * $settings->fine_amount;
+    //                 $fine->save();
+    //             }
+    //         }
+
+
+    //     }
+    // }
+
 }

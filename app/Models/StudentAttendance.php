@@ -18,7 +18,8 @@ class StudentAttendance extends Model
         "event_id",
         "student_rfid",
         "morning_attendance",
-        "afternoon_attendance"
+        "afternoon_attendance",
+        "id_student",
     ];
 
     protected $casts = [

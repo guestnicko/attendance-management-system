@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('fine_settings', function (Blueprint $table) {
             $table->id();
-            $table->decimal('fine_amount', 8, 2)->default(25.00);
+            $table->integer('fine_amount')->default(25);
             $table->boolean('morning_checkin')->default(true);
             $table->boolean('morning_checkout')->default(true);
             $table->boolean('afternoon_checkin')->default(true);

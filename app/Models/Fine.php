@@ -10,15 +10,15 @@ class Fine extends Model
     use HasFactory;
 
     protected $fillable = [
-        'attendance_id',
+        'student_id',
         'event_id',
         'student_rfid',
-        'fine_amount',
+        'fines_amount',
         'morning_checkIn_missed',
-        'morning_checkOut_missed', 
+        'morning_checkOut_missed',
         'afternoon_checkIn_missed',
         'afternoon_checkOut_missed',
-        'total_fines'
+        'total_fines',
     ];
 
     public function student()

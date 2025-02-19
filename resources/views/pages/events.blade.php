@@ -1,5 +1,41 @@
 <x-app-layout>
     @vite(['resources/js/events.js'])
+
+       {{-- Implemented Sweet Alert Pop Ups on Conditionals --}}
+       @if ($errors->any())
+       <script>
+           document.addEventListener("DOMContentLoaded", function() {
+               Swal.fire({
+                   icon: "error",
+                   title: "Oops!...",
+                   html: `
+                   <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside text-left">
+                       @foreach ($errors->all() as $error)
+                           <li>{{ $error }}</li>
+                       @endforeach
+                   </ul>
+               `,
+                   showConfirmButton: true,
+               });
+           });
+       </script>
+   @endif
+
+   @if (session('success'))
+       <script>
+           document.addEventListener("DOMContentLoaded", function() {
+               Swal.fire({
+                   icon: 'success',
+                   title: 'Success!',
+                   text: '{{ session('success') }}',
+                   showConfirmButton: false,
+                   timer: 1500,
+               });
+           });
+       </script>
+   @endif
+
+
     <x-slot name="header">
         <div class="">
             <h2 class="font-semibold text-3xl text-violet-800 leading-tight">
@@ -15,7 +51,7 @@
                         Edit Event
                     </h1>
                 </div>
-                <div class="mb-5">
+                <div class="mb-5 max-h-[400px] overflow-y-scroll">
                     <form x-ref="updateForm" action="{{ route('updateEvent') }}" method="POST" class="min-w-[500px]">
                         @csrf
                         @method('PATCH')
@@ -24,7 +60,7 @@
                             <label for="">Day or Event:</label>
                             <input type="text" placeholder="Enter Event Name" name="event_name" id="evn_name">
                         </div>
-                        
+
                         <div class="flex flex-col mb-3">
                             <label for="">Event Date:</label>
                             <input type="date" name="date" id="evn_date" class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
@@ -109,6 +145,99 @@
                                     <input type="time" name="checkOut_end"
                                         class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         min="09:00" max="18:00" value="00:00" id="out_end" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 items-center mb-3">
+                            <input type="checkbox" id="isWholeDay" name="wholeDay">
+                            <label for="">Whole Day?</label>
+                        </div>
+                        <div id="afternoon_attendance" class="hidden transition-all">
+                            <p>Afternoon Attendance</p>
+                            <p>Check In:</p>
+                            <div class="flex gap-5 mb-3">
+                                <div class="w-full">
+                                    <label for="start-time"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start
+                                        time:</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <input type="time" id="afternoon_in_start" name="afternoon_checkIn_start"
+                                            class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            min="09:00" max="18:00" value="00:00" required />
+                                    </div>
+                                </div>
+                                <div class="w-full">
+                                    <label for="end-time"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End
+                                        time:</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <input type="time" id="afternoon_in_end" name="afternoon_checkIn_end"
+                                            class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            min="09:00" max="18:00" value="00:00" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <p>Check Out:</p>
+                            <div class="flex gap-5 mb-3">
+                                <div class="w-full">
+                                    <label for="start-time"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start
+                                        time:</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <input type="time" id="afternoon_out_start" name="afternoon_checkOut_start"
+                                            class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            min="09:00" max="18:00" value="00:00" required />
+                                    </div>
+                                </div>
+                                <div class="w-full">
+                                    <label for="end-time"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End
+                                        time:</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <input type="time" id="afternoon_out_end" name="afternoon_checkOut_end"
+                                            class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            min="09:00" max="18:00" value="00:00" required />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -247,6 +376,102 @@
                                         min="09:00" max="18:00" value="00:00" required />
                                 </div>
                             </div>
+
+                            {{-- AFTERNOON ATTENDANCE --}}
+
+                        </div>
+                        <div class="flex gap-4 items-center mb-3">
+                            <input type="checkbox" id="wholeDay" name="wholeDay">
+                            <label for="">Whole Day?</label>
+                        </div>
+                        <div id="afternoon_attendance" class="hidden transition-all">
+                            <p>Afternoon Attendance</p>
+                            <p>Check In:</p>
+                            <div class="flex gap-5 mb-3">
+                                <div class="w-full">
+                                    <label for="start-time"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start
+                                        time:</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <input type="time" id="start-time" name="afternoon_checkIn_start"
+                                            class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            min="09:00" max="18:00" value="00:00" required />
+                                    </div>
+                                </div>
+                                <div class="w-full">
+                                    <label for="end-time"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End
+                                        time:</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <input type="time" id="end-time" name="afternoon_checkIn_end"
+                                            class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            min="09:00" max="18:00" value="00:00" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <p>Check Out:</p>
+                            <div class="flex gap-5 mb-3">
+                                <div class="w-full">
+                                    <label for="start-time"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start
+                                        time:</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <input type="time" id="start-time" name="afternoon_checkOut_start"
+                                            class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            min="09:00" max="18:00" value="00:00" required />
+                                    </div>
+                                </div>
+                                <div class="w-full">
+                                    <label for="end-time"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End
+                                        time:</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <input type="time" id="end-time" name="afternoon_checkOut_end"
+                                            class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            min="09:00" max="18:00" value="00:00" required />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </form>
 
@@ -288,7 +513,7 @@
                                 <x-delete-button onclick="deleteEvent({{ $event }})">
                                     {{-- Delete Button --}}
                                 </x-delete-button>
-                                
+
                                 {{-- Add Complete Event Button --}}
                                 <form action="{{ route('events.complete', $event->id) }}" method="POST" class="inline">
                                     @csrf
@@ -299,13 +524,13 @@
                             </td>
                         </tr>
                     @endforeach
-    
+
                 </tbody>
             </table>
         </div>
     </div>
 
-
+{{-- MODAL FOR EXPORTING EVENTS  --}}
 
     <form method="POST" id="deleteForm" action="{{ route('deleteEvent') }}" hidden>
         @csrf

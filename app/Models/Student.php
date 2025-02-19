@@ -33,4 +33,8 @@ class Student extends Model
     {
         return $this->fines->sum('total_fines');
     }
+
+    public function student_attendances(){
+        return $this->hasMany(StudentAttendance::class, 'id_student');
+    }
 }

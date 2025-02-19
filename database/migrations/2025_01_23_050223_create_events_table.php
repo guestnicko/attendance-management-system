@@ -19,6 +19,12 @@ return new class extends Migration
             $table->time('checkIn_end');
             $table->time('checkOut_start');
             $table->time('checkOut_end');
+            $table->time('afternoon_checkIn_start')->nullable();
+            $table->time('afternoon_checkIn_end')->nullable();
+            $table->time('afternoon_checkOut_start')->nullable();
+            $table->time('afternoon_checkOut_end')->nullable();
+            $table->string('isWholeDay')->default('false');
+            $table->string('event_status')->default('pending');
             $table->foreignId('admin_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });

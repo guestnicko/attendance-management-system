@@ -13,15 +13,14 @@ return new class extends Migration
     {
         Schema::create('fines', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('attendance_id')->references('id')->on('student_attendances')->nullable();
             $table->foreignId('event_id')->references('id')->on('events');
             $table->string('student_id')->references('id')->on('students');
-            $table->decimal('fine_amount', 8, 2);
+            $table->integer('fines_amount');
             $table->boolean('morning_checkIn_missed')->default(false);
             $table->boolean('morning_checkOut_missed')->default(false);
             $table->boolean('afternoon_checkIn_missed')->default(false);
             $table->boolean('afternoon_checkOut_missed')->default(false);
-            $table->decimal('total_fines', 8, 2);
+            $table->integer('total_fines');
             $table->timestamps();
 
         });

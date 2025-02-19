@@ -8,12 +8,17 @@ const form_auto = document.getElementById("auto_attendanceForm");
 
 window.startInterval = startInterval;
 window.stopInterval = stopInterval;
+const inputField1 = document.getElementById("inputField1");
+
+let intervalId;
 
 // Time Interval to foucs on field for attendance
-let intervalId = setInterval(() => {
-    console.log("Hello World");
-    document.getElementById("inputField1").focus();
-}, 500);
+if (inputField1) {
+    intervalId = setInterval(() => {
+        console.log("Hello World");
+        inputField1.focus();
+    }, 500);
+}
 
 const formatter = new Intl.DateTimeFormat("ja-JP", {
     day: "2-digit",
@@ -61,7 +66,8 @@ form.addEventListener("submit", async (event) => {
         console.log(response.data);
         AttendanceNotRecorded();
     }
-
+    let data = await get();
+    loadTable(data);
     document.querySelector("#inputField").value = "";
     // notify(isRecorded, "")
 
@@ -76,12 +82,8 @@ form_auto.addEventListener("submit", async (event) => {
     let attendCheckIn = response.attend_checkIn;
     let attendCheckOut = response.attend_checkOut;
     if (response.isRecorded) {
-        console.log(response.data);
-        console.log(attendCheckIn);
-        console.log(attendCheckOut);
         AttendanceRecorded(objProperty, attendCheckIn, attendCheckOut); //Added 3 arguments to retrieve the data
     } else {
-        console.log(response.data);
         AttendanceNotRecorded();
     }
     let data = await get();
@@ -148,6 +150,7 @@ function loadTable(data) {
     const table = document.querySelector("#student_table_body");
     table.innerHTML = "";
     data.forEach((element) => {
+        console.log(element);
         table.innerHTML += `
     <tr>
         <td>${element.s_fname + " " + element.s_lname} </td>

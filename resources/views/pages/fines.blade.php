@@ -250,15 +250,15 @@
                     @php
                         $i = 1;
                     @endphp
-                    @foreach ($fines as $fine)
+                    @foreach ($logs as $fine)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td>{{ $fine->student->s_fname . ' ' . $fine->student->s_lname }}</td>
-                            <td>{{ $fine->student->s_program }}</td>
-                            <td>{{ $fine->student->s_set }}</td>
-                            <td>{{ $fine->student->s_lvl }}</td>
+                            <td>{{ $fine->s_fname . ' ' . $fine->s_lname }}</td>
+                            <td>{{ $fine->s_program }}</td>
+                            <td>{{ $fine->s_set }}</td>
+                            <td>{{ $fine->s_lvl }}</td>
                             <td>
-                                <ul class="list-disc list-inside">
+                                <ul class="list-disc list-inside text-left">
                                     @if($fine->morning_checkIn_missed)
                                         <li>Morning Check-in</li>
                                     @endif
@@ -273,10 +273,10 @@
                                     @endif
                                 </ul>
                             </td>
-                            <td>₱{{ number_format($fine->fine_amount, 2) }}</td>
+                            <td>₱{{ number_format($fine->fines_amount, 2) }}</td>
                             <td>₱{{ number_format($fine->total_fines, 2) }}</td>
-                            <td>{{ $fine->event->event_name }}</td>
-                            <td>{{ $fine->created_at->format('Y-m-d') }}</td>
+                            <td>{{ $fine->event_id }}</td>
+                            <td>{{ $fine->created_at ? date('Y-m-d', strtotime($fine->created_at)) : '-' }}</td>
                         </tr>
                     @endforeach
                 </tbody>

@@ -1,5 +1,5 @@
 <x-app-layout>
-    {{-- @vite(['resources/js/dashboard.js', 'resources/js/app.js']) --}}
+    @vite(['resources/js/dashboard.js'])
 
     {{-- Add these styles at the top of the file --}}
     <style>
@@ -257,6 +257,102 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="flex gap-4 items-center mb-3">
+                            <input type="checkbox" id="wholeDay" name="wholeDay">
+                            <label for="">Whole Day?</label>
+                        </div>
+
+{{-- AFTERNOON ATTENDANCE --}}
+
+                        <div id="afternoon_attendance" class="hidden transition-all">
+                            <p>Afternoon Attendance</p>
+                            <p>Check In:</p>
+                            <div class="flex gap-5 mb-3">
+                                <div class="w-full">
+                                    <label for="start-time"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start
+                                        time:</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <input type="time" id="start-time" name="afternoon_checkIn_start"
+                                            class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            min="09:00" max="18:00" value="00:00" required />
+                                    </div>
+                                </div>
+                                <div class="w-full">
+                                    <label for="end-time"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End
+                                        time:</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <input type="time" id="end-time" name="afternoon_checkIn_end"
+                                            class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            min="09:00" max="18:00" value="00:00" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <p>Check Out:</p>
+                            <div class="flex gap-5 mb-3">
+                                <div class="w-full">
+                                    <label for="start-time"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start
+                                        time:</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <input type="time" id="start-time" name="afternoon_checkOut_start"
+                                            class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            min="09:00" max="18:00" value="00:00" required />
+                                    </div>
+                                </div>
+                                <div class="w-full">
+                                    <label for="end-time"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End
+                                        time:</label>
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                    d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <input type="time" id="end-time" name="afternoon_checkOut_end"
+                                            class="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            min="09:00" max="18:00" value="00:00" required />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </form>
 
                 </x-slot>
@@ -386,20 +482,20 @@
             <h3 class="text-3xl text-violet-800 font-extrabold">
                 Attendance Record
             </h3>
-            
+
             {{-- full-screen-btn --}}
             <button id="fullscreenToggle" class="bg-violet-600 text-white px-4 py-2 rounded-md mb-2">
-                <svg height="15px" width="15px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                <svg height="15px" width="15px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                     viewBox="0 0 512 512"  xml:space="preserve">
                 <style type="text/css">
                     .st0{fill:#000000;}
                 </style>
                 <g>
-                    <polygon class="st0" points="345.495,0 394.507,49.023 287.923,155.607 356.384,224.086 462.987,117.493 511.991,166.515 
+                    <polygon class="st0" points="345.495,0 394.507,49.023 287.923,155.607 356.384,224.086 462.987,117.493 511.991,166.515
                         511.991,0 	"/>
-                    <polygon class="st0" points="155.615,287.914 49.022,394.507 0.009,345.494 0.009,512 166.515,512 117.493,462.978 
+                    <polygon class="st0" points="155.615,287.914 49.022,394.507 0.009,345.494 0.009,512 166.515,512 117.493,462.978
                         224.087,356.375 	"/>
-                    <polygon class="st0" points="356.384,287.914 287.923,356.375 394.507,462.978 345.495,512 511.991,512 511.991,345.485 
+                    <polygon class="st0" points="356.384,287.914 287.923,356.375 394.507,462.978 345.495,512 511.991,512 511.991,345.485
                         462.977,394.507 	"/>
                     <polygon class="st0" points="166.505,0 0.009,0 0.009,166.506 49.022,117.493 155.615,224.086 224.087,155.607 117.501,49.023 	"/>
                 </g>
@@ -454,6 +550,12 @@
                 document.exitFullscreen();
             }
         });
+
+        // FOR MODAL EVENT WHOLE DAY
+const afternoon = document.querySelector("#afternoon_attendance");
+document.querySelector("#wholeDay").addEventListener("change", function () {
+    afternoon.classList.toggle("hidden");
+});
     </script>
 
 </x-app-layout>

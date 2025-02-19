@@ -10,6 +10,7 @@ use App\Models\Fine;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
@@ -19,12 +20,10 @@ class LogController extends Controller
 {
     public function viewLogs()
     {
-        $logs = StudentAttendance::join('students', function($join){
-            $join->on('student_attendances.student_rfid', '=', 'students.s_rfid')
-            ->orOn('student_attendances.student_rfid', '=', 'students.s_studentID');
-        })
+        $logs = StudentAttendance::leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
             ->join('events', 'events.id', '=', 'student_attendances.event_id')
             ->get();
+
 
         // Get fines with related student and event data
         $fines = Fine::with(['student', 'event'])
@@ -59,28 +58,41 @@ class LogController extends Controller
 
     protected function generatePDF(Request $request)
     {
-        $logs = StudentAttendance::select('*', 'student_attendances.created_at')
-            ->join('students', function($join){
-                $join->on('student_attendances.student_rfid', '=', 'students.s_rfid')
-                ->orOn('student_attendances.student_rfid', '=', 'students.s_studentID');
-            })->join('events', 'events.id', '=', 'student_attendances.event_id');
-        if($request->event_id){
-            $logs = $logs->where('event_id', $request->event_id);
-        }
-          if($request->s_lvl){
-            $logs = $logs->where('s_lvl', $request->s_lvl);
+        $event = Event::findOrfail($request->event_id);
+
+        // RETRIEVE ALL PRESENT AND ABSENT STUDENT THEN UNION THEM
+
+        $students = DB::table('students')->select('*', 'student_attendances.created_at')
+        ->leftJoin('student_attendances', 'students.id', '=', 'student_attendances.id_student')
+        ->where('event_id', $request->event_id);
+        $absent = DB::table('students')->select('*', 'student_attendances.created_at')
+        ->leftJoin('student_attendances', 'students.id', '=', 'student_attendances.id_student')
+        ->whereNull('event_id');
+
+
+
+        if($request->s_lvl){
+            $students = $students->where('s_lvl', $request->s_lvl);
+            $absent = $absent->where('s_lvl', $request->s_lvl);
         }
         if($request->s_set){
-            $logs = $logs->where('s_set', $request->s_set);
+            $students = $students->where('s_set', $request->s_set);
+            $absent = $absent->where('s_set', $request->s_lvl);
+
         }
         if($request->s_program){
-            $logs = $logs->where('s_program', $request->s_program);
+            $students = $students->where('s_program', $request->s_program);
+            $absent = $absent->where('s_program', $request->s_lvl);
+
         }
         if($request->s_status){
-            $logs = $logs->where('s_status', $request->s_status);
+            $students = $students->where('s_status', $request->s_status);
+            $absent = $absent->where('s_status', $request->s_lvl);
+
         }
-        $logs = $logs->get();
-        $pdf = PDF::loadView('reports.attendance', compact('logs'));
+        $logs = $students->union($absent)->get();
+
+        $pdf = PDF::loadView('reports.attendance', compact('logs', 'event'));
 
         return $pdf->download('burh_attendance_report.pdf');
 
@@ -90,16 +102,14 @@ class LogController extends Controller
         $request->validate([
             "event_id"=> ['required']
         ]);
-        $logs = StudentAttendance::select('students.s_studentID',
+        $logs = DB::table('students')->select('students.s_studentID',
         'students.s_lname', 'students.s_fname',
         'students.s_program',  'students.s_set',
         'students.s_lvl',  'student_attendances.attend_checkIn',
         'student_attendances.attend_checkOut', 'events.event_name',
         'student_attendances.created_at')
-            ->join('students', function($join){
-                $join->on('student_attendances.student_rfid', '=', 'students.s_rfid')
-                ->orOn('student_attendances.student_rfid', '=', 'students.s_studentID');
-            })->join('events', 'events.id', '=', 'student_attendances.event_id');
+        ->leftJoin('student_attendances', 'students.id', '=', 'student_attendances.id_student');
+
         if($request->event_id){
             $logs = $logs->where('event_id', $request->event_id);
         }
@@ -131,10 +141,7 @@ class LogController extends Controller
     }
 
     public function filterByCategory(Request $request){
-        $students = StudentAttendance::select('*', 'student_attendances.created_at')->join('students', function($join){
-            $join->on('student_attendances.student_rfid', '=', 'students.s_rfid')
-            ->orOn('student_attendances.student_rfid', '=', 'students.s_studentID');
-        })->join('events', 'events.id', '=', 'student_attendances.event_id')
+        $students = StudentAttendance::select('*', 'student_attendances.created_at')->join('students', 'students.id', '=', 'student_attendances.id_student')->join('events', 'events.id', '=', 'student_attendances.event_id')
         ;
 
         if ($request->query('set')) {
