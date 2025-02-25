@@ -515,19 +515,19 @@
                     <td>Event</td>
                     <td>Date</td>
                 </tr>
-                <tbody>
+                <tbody class="border-3 shadow-lg">
                     @php
                         $index = 1;
                     @endphp
                     @foreach ($attendances as $attendance)
-                        <tr>
-                            <td>{{ $index++ }}</td>
+                        <tr class="font-semibold shadow-lg border-3">
+                            <td class="py-5 px-3">{{ $index++ }}</td>
                             <td>{{ $attendance->s_fname . ' ' . $attendance->s_lname }}</td>
                             <td>{{ $attendance->s_program }}</td>
                             <td>{{ $attendance->s_set }}</td>
                             <td>{{ $attendance->s_lvl }}</td>
-                            <td>{{ $attendance->attend_checkIn ? date('h:i A', strtotime($attendance->attend_checkIn)) : '-' }}</td>
-                            <td>{{ $attendance->attend_checkOut ? date('h:i A', strtotime($attendance->attend_checkOut)) : '-' }}</td>
+                            <td>{{ $attendance->attend_checkIn ? date('h:i A', strtotime($attendance->attend_checkIn)) : 'N/A' }}</td>
+                            <td>{{ $attendance->attend_checkOut ? date('h:i A', strtotime($attendance->attend_checkOut)) : 'N/A' }}</td>
                             <td>{{ $attendance->event_name }}</td>
                             <td>{{ $attendance->date }}</td>
                         </tr>
