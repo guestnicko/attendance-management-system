@@ -250,8 +250,8 @@
                         $i = 1;
                     @endphp
                     @foreach ($logs as $log)
-                        <tr class="table_row">
-                            <td>{{ $i++ }}</td>
+                        <tr class="table_row shadow-lg border-3">
+                            <td class="py-5">{{ $i++ }}</td>
                             <td>{{ $log->s_fname . ' ' . $log->s_lname }} </td>
                             <td>{{ $log->s_program }}</td>
                             <td>{{ $log->s_set }}</td>
