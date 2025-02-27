@@ -230,7 +230,7 @@
             <h3 class="text-3xl text-violet-800 font-extrabold">
                 Attendance Record
             </h3>
-            <table class="min-w-full w-full text-lg text-center rtl:text-right text-gray-900 font-semibold">
+            <table class="min-w-full w-full text-lg text-center text-gray-900 font-semibold">
                 <thead class="text-base text-gray-700 uppercase bg-gray-50">
                     <tr class="bg-violet-200 text-violet-900 py-2 text-lg font-semibold">
                         <td>No.</td>
