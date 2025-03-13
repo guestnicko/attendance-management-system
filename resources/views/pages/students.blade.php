@@ -379,7 +379,7 @@
                     </div>
                 </div>
 
-                <div class="">
+                <div class="z-50">
                     <x-new-modal>
                         <x-slot name="button">
                             <div class="flex px-1 py-3 items-center">
@@ -495,20 +495,21 @@
             
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table class="min-w-full w-full text-sm text-center rtl:text-right text-gray-900 font-semibold">
+
                     <thead class="text-lg font-semibold text-gray-100 uppercase bg-green-700">
                         <tr>
-                            <td class="py-5">No.</td>
-                            <td>First Name</td>
-                            <td>Last Name</td>
-                            <td>Middle Name</td>
-                            <td>Suffix</td>
-                            <td>Year Level</td>
+                            <th scope="col" class="py-5">No.</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Middle Name</th>
+                            <th scope="col">Suffix</th>
+                            <th scope="col">Year Level</th>
     
-                            <td>Set</td>
-                            <td>Program</td>
+                            <th scope="col">Set</th>
+                            <th scope="col">Program</th>
     
-                            <td>Status</td>
-                            <td></td>
+                            <th scope="col">Status</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="student_table_body">

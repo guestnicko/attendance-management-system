@@ -29,7 +29,7 @@
             </div>
             <div>
                 <button
-                class="bg-green-600 hover:bg-green-700 text-white rounded-md text-md flex p-3 items-center">
+                class="bg-gray-800 hover:bg-gray-700 text-white rounded-md text-md flex p-3 items-center">
         
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
@@ -62,7 +62,7 @@
             <h3 class="text-3xl text-gray-900 font-extrabold">
                 Attendance Record
             </h3>
-            <div class="flex justify-between my-5">
+            <div class="flex justify-between my-5 mx-1">
                 <div class="w-full">
                     {{-- Search Form --}}
                     <div class="flex items-center justify-start py-3 w-full">
@@ -209,15 +209,15 @@
                 <table class="min-w-full w-full text-lg text-center text-gray-900 font-semibold">
                     <thead class="text-lg font-semibold text-gray-100 uppercase bg-green-700">
                         <tr>
-                            <td class="py-5">No.</td>
-                            <td>Name</td>
-                            <td>Program</td>
-                            <td>Set</td>
-                            <td>Level</td>
-                            <td>Time In</td>
-                            <td>Time Out</td>
-                            <td>Event</td>
-                            <td>Date</td>
+                            <th scope="col" class="py-5">No.</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Program</th>
+                            <th scope="col">Set</th>
+                            <th scope="col">Level</th>
+                            <th scope="col">Time In</th>
+                            <th scope="col">Time Out</th>
+                            <th scope="col">Event</th>
+                            <th scope="col">Date</th>
                         </tr>
                     </thead>
                     <tbody id="student_table_body">
