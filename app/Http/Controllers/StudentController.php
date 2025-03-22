@@ -49,6 +49,7 @@ class StudentController extends Controller
             's_program' => ['required'],
             's_lvl' => ['required'],
             's_set' => ['required'],
+            's_status' => ['required'] //Line by Panzerweb: added Status field to update
         ]);
         $path = null;
         if ($request->hasFile('s_image')) {
@@ -59,10 +60,10 @@ class StudentController extends Controller
         $fields['s_suffix'] = $request->s_suffix;
         $fields['s_mname'] = $request->s_mname;
         $fields['s_image'] = $path;
-        $fields['s_status'] = 'ENROLLED';
+        $fields['s_status'] = $request->s_status; //Line by Panzerweb: Status is now dynamic to be updated
 
         $student = Student::where('id', $request->id)->update($fields);
-        return back()->with(['successful' => 'Student updated successfully']);
+        return back()->with(['success' => 'Student updated successfully']); //Line by Panzerweb: change from successful to success
     }
     public function delete(Request $request)
     {

@@ -88,10 +88,11 @@
             </form>
         </div>
     </div>
+    {{-- Edit Student Information --}}
     <div x-data="{ open: false }"="mt-4">
-        <div x-show.important="open" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div x-show.important="open" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div x-on:click.outside="open = false" class="max-w-[1000px] bg-white p-6 rounded-lg shadow-lg">
-                <div class="border-b-2 border-gray-300 mb-5">
+                <div class="border-b-2 border-green-500 mb-5">
                     <h1 class="text-2xl font-bold">
                         Edit Student Information
                     </h1>
@@ -110,39 +111,39 @@
                                         RFID
                                     </label>
                                     <input type="text" placeholder="Scan RFID" name="s_rfid" id="s_RFID"
-                                        value="">
+                                        value="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 </div>
                                 <div class="grid grid-cols-1">
                                     <label for="">Student ID:</label>
                                     <input type="text" placeholder="Enter Student ID (Ex. 2023-00069)"
-                                        name="s_studentID" id="s_STUDENTID">
+                                        name="s_studentID" id="s_STUDENTID" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 mt-5 mx-7">
                                 <label for="">First Name:</label>
-                                <input type="text" placeholder="Enter Firstname" name="s_fname" id="s_FNAME">
+                                <input type="text" placeholder="Enter Firstname" name="s_fname" id="s_FNAME" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             </div>
                             <div class="grid grid-cols-1 mt-5 mx-7">
                                 <label for="">Last Name:</label>
-                                <input type="text" placeholder="Enter Lastname" name="s_lname" id="s_LNAME">
+                                <input type="text" placeholder="Enter Lastname" name="s_lname" id="s_LNAME" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
 
                                 <div class="grid grid-cols-1">
                                     <label for="">Middle Name</label>
                                     <input type="text" placeholder="Enter Middlename" name="s_mname"
-                                        id="s_MNAME">
+                                        id="s_MNAME" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 </div>
                                 <div class="grid grid-cols-1">
                                     <label for="">Suffix</label>
-                                    <input type="text" placeholder="Enter Suffix" name="s_suffix" id="s_SUFFIX">
+                                    <input type="text" placeholder="Enter Suffix" name="s_suffix" id="s_SUFFIX" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8 mt-5 mx-7">
 
                                 <div class="grid grid-cols-1">
                                     <label for="">Program</label>
-                                    <select name="s_program" id="s_PROGRAM">
+                                    <select name="s_program" id="s_PROGRAM" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                         <option selected value="">Select Program</option>
                                         <option value="BSIT">BSIT</option>
                                         <option value="BSIS">BSIS</option>
@@ -150,7 +151,7 @@
                                 </div>
                                 <div class="grid grid-cols-1">
                                     <label for="">Year Level</label>
-                                    <select name="s_lvl" id="s_LVL">
+                                    <select name="s_lvl" id="s_LVL" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                         <option selected value="">Select Year Level</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -160,7 +161,7 @@
                                 </div>
                                 <div class="grid grid-cols-1">
                                     <label for="">Set</label>
-                                    <select name="s_set" id="s_SET">
+                                    <select name="s_set" id="s_SET" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                         <option selected value="">Select Set</option>
                                         <option value="A">A</option>
                                         <option value="B">B</option>
@@ -175,7 +176,7 @@
                             </div>
                         </div>
                         <div class="basis-1/4  mt-5 items-center gap-5">
-                            <div x-data="{ image: '{{ asset('images/icons/profile.svg') }}' }" class="flex flex-col items-center gap-5">
+                            <div x-data="{ image: '{{ asset('images/icons/default-image.svg') }}' }" class="flex flex-col items-center gap-5">
                                 <img id="uploadImage" class="max-w-1/2" :src="image" alt="">
                                 <input id="uploadFile" type="file" name="s_image" x-ref="imageFile"
                                     x-on:change="image = URL.createObjectURL($refs.imageFile.files[0])" hidden>
@@ -188,7 +189,7 @@
                                 <span>
                                     Change Student Status
                                 </span>
-                                <select name="s_status" id="s_STATUS">
+                                <select name="s_status" id="s_STATUS" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                     <option value="ENROLLED">ENROLLED</option>
                                     <option value="DROPPED">DROPPED</option>
                                     <option value="GRADUATED">GRADUATED</option>
@@ -379,6 +380,7 @@
                     </div>
                 </div>
 
+                {{-- Add Student --}}
                 <div class="z-50">
                     <x-new-modal>
                         <x-slot name="button">
@@ -493,7 +495,7 @@
                 </div>
             </div>
             
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg z-0">
                 <table class="min-w-full w-full text-sm text-center rtl:text-right text-gray-900 font-semibold">
 
                     <thead class="text-lg font-semibold text-gray-100 uppercase bg-green-700">
@@ -540,8 +542,8 @@
                         @endisset
                     </tbody>
                 </table>
-                <span id="std_info_table">
-    
+                <span id="std_info_table" class="py-5">
+
                 </span>
             </div>
         </div>
@@ -644,6 +646,8 @@
             let details = document.getElementById("errorDetails");
             details.classList.toggle("hidden");
         }
+
+        
     </script>
 
 </x-app-layout>

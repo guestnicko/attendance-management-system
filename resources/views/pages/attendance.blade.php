@@ -45,7 +45,15 @@
                 <kbd class="px-2 py-1.5 text-xs font-semibold text-green-500 bg-gray-900 border border-gray-900 rounded-lg">
                     Created at:
                     <span>
-                        {{ date_format(date_create($event->date), 'Y-m-d, h:i A') }}
+                        @if ($event)
+                            <span class="text-yellow-500">
+                                {{ date('Y-m-d, h:i A', strtotime($event->date)) }}
+                            </span>
+                        @else
+                            <span class="text-yellow-500">
+                                No Event
+                            </span>
+                        @endif
                     </span>
                 </kbd>
             </div>
