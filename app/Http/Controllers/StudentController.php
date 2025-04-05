@@ -11,31 +11,48 @@ class StudentController extends Controller
 {
     public function create(Request $request)
     {
-        $fields = $request->validate([
-            's_rfid' => ['required', 'unique:students,s_rfid'],
-            's_studentID' => ['required', 'unique:students,s_studentID'],
-            's_fname' => ['required'],
-            's_lname' => ['required'],
-            's_program' => ['required'],
-            's_lvl' => ['required'],
-            's_set' => ['required'],
-        ]);
-        $path = null;
-        if ($request->hasFile('s_image')) {
-            $request->file('s_image')->store('profile_pictures');
-            $path = $request->file('s_image')->getClientOriginalName();
+        // Create method modified by Panzerweb: includes a try-catch
+        try {
+            $fields = $request->validate([
+                's_rfid' => ['required', 'unique:students,s_rfid'],
+                's_studentID' => ['required', 'unique:students,s_studentID'],
+                's_fname' => ['required'],
+                's_lname' => ['required'],
+                's_program' => ['required'],
+                's_lvl' => ['required'],
+                's_set' => ['required'],
+            ]);
+            $path = null;
+            if ($request->hasFile('s_image')) {
+                $request->file('s_image')->store('profile_pictures');
+                $path = $request->file('s_image')->getClientOriginalName();
+            }
+            $fields['s_suffix'] = $request->s_suffix;
+            $fields['s_mname'] = $request->s_mname;
+            $fields['s_image'] = $path;
+            $fields['s_status'] = 'ENROLLED';
+            Student::create($fields);
+            return back()->with('success', 'Student Added Successfully');
+        } catch (\Throwable $error) {
+            //Identifies unique fields
+            $fields =[
+                "s_rfid" => $request->s_rfid,
+                "s_studentID" => $request->s_studentID,
+            ];
+            //Stores both error and the input fields
+            $errorDetails = [
+                "message" => $error->getMessage(),
+                "details" => $fields
+            ];
+            // implode(" ", $fields);
+            // dd($error);
+            return back()->with('error', $errorDetails);
         }
-        $fields['s_suffix'] = $request->s_suffix;
-        $fields['s_mname'] = $request->s_mname;
-        $fields['s_image'] = $path;
-        $fields['s_status'] = 'ENROLLED';
-        Student::create($fields);
-        return back()->with('success', 'Student Added Successfully');
     }
 
     public function view()
     {
-        $students = Student::all();
+        $students = Student::paginate(5); //Changed by Panzerweb to paginate
         return view('pages.students', compact('students'));
     }
     public function update(Request $request)
