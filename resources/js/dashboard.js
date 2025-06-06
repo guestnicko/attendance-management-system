@@ -5,13 +5,12 @@ import { toggleDropdown, triggerDropdownOnLoad } from "./component.js";
 console.log("Dashboard JS");
 
 //Dashboard JS Functions
-window.testStudentForm = testStudentForm;
 window.startTime = startTime;
 window.toggleDropdown = toggleDropdown;
 triggerDropdownOnLoad();
 // The code is from dashboard.blade.php sa script
 // Pero gi transfer lng nako dire para uniformed, since testing function raman sad
-function testStudentForm() {
+const testStudentForm = () => {
     // Added Randomality of Test Users
     const testUsers = [
         {
@@ -60,4 +59,4 @@ function testStudentForm() {
     document.getElementById("s_lvl").value = randomUsers.s_lvl;
     document.getElementById("s_set").value = randomUsers.s_set;
     document.getElementById("s_suffix").value = randomUsers.s_suffix;
-}
+};

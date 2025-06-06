@@ -1,4 +1,6 @@
 import axios from "axios";
+//Added testing function
+console.log("HEllo WOrld");
 
 const api = axios.create({
     headers: {
@@ -7,9 +9,7 @@ const api = axios.create({
     },
 });
 
-function updateStudent(data) {
-    console.log(data);
-    console.log(data.s_rfid);
+function updateStudent(data, img) {
     document.getElementById("s_RFID").value = data.s_rfid;
     document.getElementById("s_STUDENTID").value = data.s_studentID;
     document.getElementById("s_MNAME").value = data.s_mname;
@@ -21,7 +21,10 @@ function updateStudent(data) {
     document.getElementById("s_LVL").value = data.s_lvl;
     document.getElementById("s_SET").value = data.s_set;
     document.getElementById("s_ID").value = data.id;
+    document.getElementById("uploadImage").src = img;
 }
+document.updateStudent = updateStudent;
+
 function deleteStudent(data) {
     console.log(data);
     Swal.fire({
@@ -50,7 +53,6 @@ function deleteStudent(data) {
     });
 }
 
-document.updateStudent = updateStudent;
 document.deleteStudent = deleteStudent;
 document.search = search;
 document.getCategory = getCategory;
@@ -266,7 +268,7 @@ async function deleteSelectedRows() {
 
 // AXIOS API
 async function search(uri, data) {
-    console.log("workinga");
+    console.log("Search is Working");
     uri = uri + "?search=" + data;
     const response = await axios.get(uri, {
         headers: {
@@ -321,6 +323,7 @@ async function search(uri, data) {
         </button>
     </td>
 </tr>`;
+            document.getElementById("std_info_table").style.display = "none"; //Line by Panzerweb: When search is empty, remove the span
         });
         Array.from(table_row).forEach((element) => {
             element.addEventListener("click", (e) => {
@@ -331,9 +334,11 @@ async function search(uri, data) {
             });
         });
     } else {
-        document.getElementById("std_info_table").innerHTML = `
-<h3 class="text-center">No Student Found</h3>
-`;
+        //Code by Panzerweb: If search does not match, display text 'No Student Found'
+        document.getElementById("std_info_table").style.display = "block";
+        document.getElementById(
+            "std_info_table"
+        ).innerHTML = `<h3 class="text-center tracking-wide text-gray-500 text-xl">No Student Found</h3>`;
     }
 }
 async function searchViaCategory(uri) {

@@ -36,7 +36,7 @@ class RegisteredUserController extends Controller
             'admin_email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-    
+
         $user = User::create([
             'admin_fname' => $request->admin_fname,
             'admin_lname' => $request->admin_lname,
@@ -45,9 +45,9 @@ class RegisteredUserController extends Controller
             'admin_type' => 'admin', // Set default admin type
             'password' => Hash::make($request->password),
         ]);
-    
+
         event(new Registered($user));
-      
+
         return redirect()->route('login')->with('status', 'Account created successfully! Please login.');
     }
 }
