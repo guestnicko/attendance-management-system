@@ -25,18 +25,18 @@
                      </svg>
                     Print Excel
                  </button>
-     
+
             </div>
             <div>
                 <button
                 class="bg-gray-800 hover:bg-gray-700 text-white rounded-md text-md flex p-3 items-center">
-        
+
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                     </svg>
-        
+
                     Clear Logs
                 </button>
             </div>
@@ -81,7 +81,7 @@
                                     <input type="search" id="default-search"
                                         class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                                         placeholder="Student name, Student ID, ..." required />
-    
+
                                     {{-- NOTE: Remove button if Live Search is implemented --}}
                                     <button type="submit"
                                         class="inline-flex items-center py-4 px-3 ms-2 text-sm font-semibold text-gray-950 bg-yellow-400 rounded-lg hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-blue-300">
@@ -105,7 +105,7 @@
                             @endforeach
                         </select>
                     </div>
-    
+
                     {{-- SELECTION FORM --}}
                     <div class="flex items-center py-3 ">
                         <button id="dropdownDefault" data-dropdown-toggle="dropdown"
@@ -114,14 +114,14 @@
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
                             </svg>
-{{--                               
+{{--
                             <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
                                 </path>
                             </svg> --}}
                         </button>
-    
+
                         <!-- Dropdown menu -->
                         <div id="dropdown" class="z-10 hidden w-auto p-3 bg-white rounded-lg shadow dark:bg-gray-700 border-2">
                             <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
@@ -136,7 +136,7 @@
                                             <li class="flex items-center">
                                                 <input value="{{ $program }}" type="checkbox" name="program"
                                                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-    
+
                                                 <label for="{{ $program }}"
                                                     class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                                                     {{ $program }}
@@ -154,14 +154,14 @@
                                             <li class="flex items-center">
                                                 <input  type="checkbox" value="{{$key}}" name="lvl"
                                                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-    
+
                                                 <label for="{{ $key }}"
                                                     class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                                                     {{ $value }}
                                                 </label>
                                             </li>
                                         @endforeach
-    
+
                                     </ul>
                                 </form>
                                 {{-- List for Sets --}}
@@ -172,7 +172,7 @@
                                             <li class="flex items-center">
                                                 <input value="{{ $set }}" type="checkbox" name="set"
                                                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-    
+
                                                 <label for="{{ $set }}"
                                                     class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                                                     {{ $set }}
@@ -189,7 +189,7 @@
                                             <li class="flex items-center">
                                                 <input value="{{ $status }}" type="checkbox" name="status"
                                                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-    
+
                                                 <label for="{{ $status }}"
                                                     class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                                                     {{ $status }}
@@ -199,12 +199,12 @@
                                     </ul>
                                 </form>
                             </div>
-    
+
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table class="min-w-full w-full text-lg text-center text-gray-900 font-semibold">
                     <thead class="text-lg font-semibold text-gray-100 uppercase bg-green-700">
@@ -242,8 +242,10 @@
                 </table>
                 <span id="std_info_table"></span>
             </div>
-            
+
         </div>
+            <x-pagination />
+
     </div>
 
 </x-app-layout>

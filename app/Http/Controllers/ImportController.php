@@ -27,12 +27,13 @@ class ImportController extends Controller
 
             return redirect()->back()->with('success', "Data Imported Successfully");
         } catch (Throwable $error) {
+            dd($error);
+
+            // much better if there is a duplicate entry then the system will just skip that entry: => should be done in import controlle
             if ($error->getCode() == 23000) { //23000 is Integrity Constraint error
-                // dd($error);
                 return redirect()->back()->with('error', $error->getMessage()); //For Duplicate Entries
-            }else{
+            } else {
                 return redirect()->back()->with('error', $error->getMessage());
-                
             }
         }
     }

@@ -78,7 +78,7 @@
                         <button type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                            </svg>                
+                            </svg>
                         </button>
                     </a>
                 </div>
@@ -117,7 +117,7 @@
                         <p class="text-lg font-medium opacity-90">Enrolled Students</p>
                     </div>
                 </div>
-    
+
                 <!-- Graduates Card -->
                 <div onclick="window.location.href = '{{ route('students') }}'"
                     class="flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg p-4 shadow-lg hover:shadow-xl hover:scale-105 transition-all cursor-pointer">
@@ -135,7 +135,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 
 
@@ -547,8 +547,9 @@
                     @endforeach
                 </tbody>
             </table>
-
         </div>
+
+        <x-pagination/>
     </div>
 
     <script>

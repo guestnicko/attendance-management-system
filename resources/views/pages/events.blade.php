@@ -528,6 +528,8 @@
                 </tbody>
             </table>
         </div>
+            <x-pagination />
+
     </div>
 
 {{-- MODAL FOR EXPORTING EVENTS  --}}
