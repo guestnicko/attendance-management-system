@@ -20,7 +20,7 @@
 <body class="font-sans antialiased bg-gray-200" onload="startTime()">
     <div class="min-h-full w-full bg-gray-200">
         <!-- Navigation Bar -->
-        <nav class="bg-green-700 w-full fixed top-0 right-0 left-0">
+        <nav class="bg-green-700 w-full fixed top-0 right-0 left-0 z-10">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center justify-between">
                     <div class="flex items-center">

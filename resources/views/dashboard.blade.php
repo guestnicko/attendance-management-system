@@ -54,6 +54,62 @@
             });
         </script>
     @endif
+        {{-- Code by Panzerweb: Added second error handling for sweet alert --}}
+        {{-- Error popup modified by Panzerweb --}}
+    @if (session('error'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const errors = @json(session('error'));
+            console.log(errors);
+            let errorList = '<ul class="pl-5 text-sm text-red-700">';
+            for (const [key, value] of Object.entries(errors.details)) {
+                errorList += `<li><strong>${key}:</strong> ${value}</li>`;
+            }
+            errorList += '</ul>';
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                html: 
+                `   <h2 class="text-lg font-semibold text-red-600">Something is wrong!</h2><br>
+                    <div class="w-full max-w-md mx-auto">
+                        <div class="">
+                            <button onclick="toggleAccordion()" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                View Details
+                            </button>
+                            <div id="errorDetails" class="hidden p-4 bg-red-100 border-t border-gray-300 rounded-lg">
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-red-700 flex items-center gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 11-12.728 0 9 9 0 0112.728 0zM12 8v4m0 4h.01" />
+                                            </svg>
+                                            Full Error Details
+                                        </h3>
+                                        <p class="text-sm text-red-600">
+                                            The following information might help you identify and fix the issue:
+                                        </p>
+                                    </div>
+                                    <div class="bg-gray-200 p-4 rounded-md border border-red-200">
+                                        <p class="text-md font-medium text-red-800 mb-2">Error Message:</p>
+                                        <p class="text-sm text-red-700 italic">
+                                            The error shows that either a <b>Student RFID</b> or <b>Student ID</b> has been duplicated, or there are <b> empty fields </b>, please check carefully input details of inserted data.   
+                                        </p>
+                                        <div class="bg-gray-100 p-4 rounded-md border border-red-200">
+                                            <p class="text-sm font-medium text-red-800 mb-2">Details affected:</p>
+                                            ${errorList}
+                                        </div>
+
+                                        <span class="text-sm"><strong>Full error message: </strong>${errors.message}</span>
+                                    </div>
+                                    
+                            </div>
+                        </div>
+                    </div>`,         
+                showConfirmButton: true,
+            });
+        });
+    </script>
+    @endif
 
     {{-- <x-slot name="header">
         <div class="flex items-center gap-3">
@@ -78,7 +134,7 @@
                         <button type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                            </svg>
+                            </svg>                
                         </button>
                     </a>
                 </div>
@@ -117,7 +173,7 @@
                         <p class="text-lg font-medium opacity-90">Enrolled Students</p>
                     </div>
                 </div>
-
+    
                 <!-- Graduates Card -->
                 <div onclick="window.location.href = '{{ route('students') }}'"
                     class="flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg p-4 shadow-lg hover:shadow-xl hover:scale-105 transition-all cursor-pointer">
@@ -135,7 +191,7 @@
                 </div>
             </div>
         </div>
-
+        
     </div>
 
 
@@ -547,9 +603,8 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
 
-        <x-pagination/>
+        </div>
     </div>
 
     <script>
@@ -566,10 +621,17 @@
         });
 
         // FOR MODAL EVENT WHOLE DAY
-const afternoon = document.querySelector("#afternoon_attendance");
-document.querySelector("#wholeDay").addEventListener("change", function () {
-    afternoon.classList.toggle("hidden");
-});
+        const afternoon = document.querySelector("#afternoon_attendance");
+        document.querySelector("#wholeDay").addEventListener("change", function () {
+            afternoon.classList.toggle("hidden");
+        });
+
+        // Code by Panzerweb: for error details accordion
+        // Accordion for Error Details
+        function toggleAccordion() {
+            let details = document.getElementById("errorDetails");
+            details.classList.toggle("hidden");
+        }
     </script>
 
 </x-app-layout>

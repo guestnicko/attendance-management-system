@@ -28,9 +28,9 @@ document.updateStudent = updateStudent;
 function deleteStudent(data) {
     console.log(data);
     Swal.fire({
-        title: "Chotto Matte Kudasai!!!",
+        title: "Do you really want to delete this student?",
         html: `
-<strong>Are you sure to delete this student's data?</strong>
+            <strong>There is no reverting this!</strong>
 `,
         icon: "warning",
         showCancelButton: true,
