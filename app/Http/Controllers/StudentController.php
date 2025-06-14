@@ -50,11 +50,28 @@ class StudentController extends Controller
         }
     }
 
-    public function view()
+    public function view(Request $request)
     {
-        $students = Student::paginate(15); //Changed by Panzerweb to paginate
+        $query = Student::select('*');
 
-        return view('pages.students', compact('students'));
+        if ($request->query('set')) {
+            $set = explode(',', $request->query('set'));
+            $query->where('s_set', $set);
+        }
+        if ($request->query('lvl')) {
+            $lvl = explode(',', $request->query('lvl'));
+            $query->where('s_lvl', $lvl);
+        }
+        if ($request->query('program')) {
+            $program = explode(',', $request->query('program'));
+            $query->where('s_program', $program);
+        }
+
+        $students = $query->paginate(15)->withQueryString(); //Changed by Panzerweb to paginate
+
+        $pageCount = Student::all()->count() / 15; // if remainder exist round off to next number
+
+        return view('pages.students', compact('students', 'pageCount'));
     }
     public function update(Request $request)
     {
@@ -93,7 +110,7 @@ class StudentController extends Controller
 
     public function filter(Request $request)
     {
-        $students = Student::whereAny(['s_fname', 's_studentID', 's_mname', 's_lname'], 'like', $request->query('search') . '%')->get();
+        $students = Student::whereAny(['s_fname', 's_studentID', 's_mname', 's_lname'], 'like', $request->query('search') . '%')->paginate(15)->withQueryString();
 
         if (empty($students->first())) {
             return response()->json([
@@ -124,20 +141,19 @@ class StudentController extends Controller
             $program = explode(',', $request->query('program'));
             $students = $students->where('s_program', $program);
         }
-        $students = $students->get();
+        $students = $students->paginate(15)->withQueryString();
 
         if (empty($students->first())) {
             return response()->json([
                 'message' => 'Student not found',
                 'students' => null,
-                'query' => $request->query(),
+
             ]);
         }
 
         return response()->json([
             'message' => 'Working fine',
             'students' => $students,
-            'query' => $request->query(),
         ]);
     }
 

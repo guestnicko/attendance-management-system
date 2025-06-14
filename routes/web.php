@@ -63,12 +63,19 @@ Route::middleware('auth')->group(function () {
     Route::patch('/updateManyStudent', [StudentController::class, 'updateMany'])->name('multiStudentEdit');
     Route::delete('/deleteManyStudent', [StudentController::class, 'manyDelete'])->name('multiStudentDelete');
 
-    // STUDENT - API => VIA SEARCHBAR
-    Route::get('/students/filter', [StudentController::class, 'filter'])->name('fetchStudent');
+    // STUDENT - API => SEARCH AND FILTER
+    Route::get('/students/filter', [StudentController::class, 'filter'])->name('fetchStudentViaSearch');
+    Route::get('/students/category', [StudentController::class, 'filterByCategory'])->name('fetchStudentsViaCategory');
 
+    // LOG -> API => SEARCH AND FILTER
+    Route::get('/logs/filter', [LogController::class, 'filter'])->name('fetchLogViaSearch');
+    Route::get('/logs/category', [LogController::class, 'filterByCategory'])->name('fetchLogViaCategory');
+    // FINES => VIA SEARCH AND FILTER
+    Route::get('/fines/filter', [FineController::class, 'filter'])->name('fetchFinesViaSearch');
+    Route::get('/fines/category', [FineController::class, 'filterByCategory'])->name('fetchFinesViaCategory');
 
     // STUDENT - API => VIA CATEGORY
-    Route::get('/students/category', [StudentController::class, 'filterByCategory'])->name('fetchViaCategory');
+
 
     // ATTENDANCE RELATED ROUTES
     Route::get('/attendance', [StudentAttendanceController::class, 'view'])->name('attendance');

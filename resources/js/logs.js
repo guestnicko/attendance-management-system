@@ -33,62 +33,21 @@ function GenerateExcelReport() {
     document.querySelector("#exportForm").submit();
 }
 
-async function getCategory() {
-    console.log("working");
-    const program = document.querySelectorAll(
-        '#search_program input[name="program"]:checked'
-    );
-    const lvl = document.querySelectorAll(
-        '#search_lvl input[name="lvl"]:checked'
-    );
-    const set = document.querySelectorAll(
-        '#search_set input[name="set"]:checked'
-    );
-
-    const status = document.querySelectorAll(
-        '#search_status input[name="status "]:checked'
-    );
-    let uri = baseUrl + "/category?";
-    const program_data = Array.from(program).map((cb) => cb.value);
-    const lvl_data = Array.from(lvl).map((cb) => cb.value);
-    const set_data = Array.from(set).map((cb) => cb.value);
-    const status_data = Array.from(status).map((cb) => cb.value);
-    const event_id = document.querySelector("#eventField").value;
-
-    uri += "&&program=";
-    program_data.forEach((element) => {
-        uri += element + ",";
-        document.querySelector("#programField").value += element;
-    });
-    uri += "&&lvl=";
-
-    lvl_data.forEach((element) => {
-        uri += element + ",";
-        document.querySelector("#lvlField").value += element;
-    });
-    uri += "&&set=";
-
-    set_data.forEach((element) => {
-        uri += element + ",";
-        document.querySelector("#setField").value += element;
-    });
-    uri += "&&status=";
-
-    status_data.forEach((element) => {
-        uri += element + ",";
-        document.querySelector("#statusField").value += element;
-    });
-
-    uri += "&&event_id=" + event_id;
-
-    const data = await api.get(uri);
-    // UPDATE TABLE
-    const students = data.data.students;
+window.renderTable = renderTable;
+function renderTable(students) {
     const table = document.getElementById("student_table_body");
     table.innerHTML = "";
+
     if (students) {
-        let i = 1;
         students.forEach((e) => {
+            const date = new Date(student.created_at); // Or your date object
+            const formatter = new Intl.DateTimeFormat("en-US", {
+                // 'en-US' for US format, adjust as needed
+                year: "numeric",
+                month: "long",
+                day: "2-digit",
+            });
+            const formattedDate = formatter.format(date);
             table.innerHTML += `
                         <tr>
                             <td>${i++}</td>
@@ -100,14 +59,24 @@ async function getCategory() {
                             <td>${e.attend_checkIn}</td>
                             <td>${e.attend_checkOut}</td>
                             <td>${e.event_name}</td>
-                            <td>${formatter.format(new Date(e.created_at))}</td>
+                            <td>${formattedDate}</td>
                         </tr>
             `;
-            document.getElementById("std_info_table").innerHTML = "";
+            document.getElementById("std_info_table").style.display = "none"; //Line by Panzerweb: When search is empty, remove the span
+        });
+        Array.from(table_row).forEach((element) => {
+            element.addEventListener("click", (e) => {
+                // element.classList.toggle('selected', 'bg-green-500', 'shadow-lg', 'shadow-green-800')
+                element.classList.toggle("selected");
+                element.classList.toggle("bg-green-400");
+                console.log(element.id);
+            });
         });
     } else {
-        document.getElementById("std_info_table").innerHTML = `
-<h3 class="text-center">No Student Found</h3>
-`;
+        //Code by Panzerweb: If search does not match, display text 'No Student Found'
+        document.getElementById("std_info_table").style.display = "block";
+        document.getElementById(
+            "std_info_table"
+        ).innerHTML = `<h3 class="text-center tracking-wide text-gray-500 text-xl">No Student Found</h3>`;
     }
 }

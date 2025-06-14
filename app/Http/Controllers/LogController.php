@@ -22,7 +22,7 @@ class LogController extends Controller
     {
         $logs = StudentAttendance::leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
             ->join('events', 'events.id', '=', 'student_attendances.event_id')
-            ->get();
+            ->paginate(15);
 
 
         // Get fines with related student and event data
@@ -30,30 +30,31 @@ class LogController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-
+        $pageCount = $logs->lastPage();
         $events = Event::select('*')->orderBy('created_at')->get();
-        return view('pages.logs', compact('logs', 'fines', 'events'));
+        return view('pages.logs', compact('logs', 'fines', 'events', 'pageCount'));
     }
 
-    public function exportFile(Request $request){
+    public function exportFile(Request $request)
+    {
 
         $request->validate([
-            "event_id"=>['required'],
-            "file_type"=>['required']
+            "event_id" => ['required'],
+            "file_type" => ['required']
         ]);
 
 
-        if($request->file_type == "pdf"){
+        if ($request->file_type == "pdf") {
 
-          return $this->generatePDF($request);
+            return $this->generatePDF($request);
         }
 
-        if($request->file_type == "excel"){
+        if ($request->file_type == "excel") {
             return $this->generateExcel($request);
         }
 
 
-        return back()->with(['failed'=>"Something went wrong"]);
+        return back()->with(['failed' => "Something went wrong"]);
     }
 
     protected function generatePDF(Request $request)
@@ -63,86 +64,88 @@ class LogController extends Controller
         // RETRIEVE ALL PRESENT AND ABSENT STUDENT THEN UNION THEM
 
         $students = DB::table('students')->select('*', 'student_attendances.created_at')
-        ->leftJoin('student_attendances', 'students.id', '=', 'student_attendances.id_student')
-        ->where('event_id', $request->event_id);
+            ->leftJoin('student_attendances', 'students.id', '=', 'student_attendances.id_student')
+            ->where('event_id', $request->event_id);
         $absent = DB::table('students')->select('*', 'student_attendances.created_at')
-        ->leftJoin('student_attendances', 'students.id', '=', 'student_attendances.id_student')
-        ->whereNull('event_id');
+            ->leftJoin('student_attendances', 'students.id', '=', 'student_attendances.id_student')
+            ->whereNull('event_id');
 
 
 
-        if($request->s_lvl){
+        if ($request->s_lvl) {
             $students = $students->where('s_lvl', $request->s_lvl);
             $absent = $absent->where('s_lvl', $request->s_lvl);
         }
-        if($request->s_set){
+        if ($request->s_set) {
             $students = $students->where('s_set', $request->s_set);
             $absent = $absent->where('s_set', $request->s_lvl);
-
         }
-        if($request->s_program){
+        if ($request->s_program) {
             $students = $students->where('s_program', $request->s_program);
             $absent = $absent->where('s_program', $request->s_lvl);
-
         }
-        if($request->s_status){
+        if ($request->s_status) {
             $students = $students->where('s_status', $request->s_status);
             $absent = $absent->where('s_status', $request->s_lvl);
-
         }
         $logs = $students->union($absent)->get();
 
         $pdf = PDF::loadView('reports.attendance', compact('logs', 'event'));
 
         return $pdf->download('burh_attendance_report.pdf');
-
-
     }
-    protected function generateExcel(Request $request){
+    protected function generateExcel(Request $request)
+    {
         $request->validate([
-            "event_id"=> ['required']
+            "event_id" => ['required']
         ]);
-        $logs = DB::table('students')->select('students.s_studentID',
-        'students.s_lname', 'students.s_fname',
-        'students.s_program',  'students.s_set',
-        'students.s_lvl',  'student_attendances.attend_checkIn',
-        'student_attendances.attend_checkOut', 'events.event_name',
-        'student_attendances.created_at')
-        ->leftJoin('student_attendances', 'students.id', '=', 'student_attendances.id_student');
+        $logs = DB::table('students')->select(
+            'students.s_studentID',
+            'students.s_lname',
+            'students.s_fname',
+            'students.s_program',
+            'students.s_set',
+            'students.s_lvl',
+            'student_attendances.attend_checkIn',
+            'student_attendances.attend_checkOut',
+            'events.event_name',
+            'student_attendances.created_at'
+        )
+            ->leftJoin('student_attendances', 'students.id', '=', 'student_attendances.id_student');
 
-        if($request->event_id){
+        if ($request->event_id) {
             $logs = $logs->where('event_id', $request->event_id);
         }
-          if($request->s_lvl){
+        if ($request->s_lvl) {
             $logs = $logs->where('s_lvl', $request->s_lvl);
         }
-        if($request->s_set){
+        if ($request->s_set) {
             $logs = $logs->where('s_set', $request->s_set);
         }
-        if($request->s_program){
+        if ($request->s_program) {
             $logs = $logs->where('s_program', $request->s_program);
         }
-        if($request->s_status){
+        if ($request->s_status) {
             $logs = $logs->where('s_status', $request->s_status);
         }
         $logs = $logs->get();
         $students = new StudentAttendanceExport;
         $students->setCollection($logs);
-        return Excel::download( $students, $logs->first()->event_name . "_student_attendance_report.xlsx");
-
+        return Excel::download($students, $logs->first()->event_name . "_student_attendance_report.xlsx");
     }
 
-    protected function generateCSV(Request $request){
+    protected function generateCSV(Request $request)
+    {
         $request->validate([
-            "event_id"=> ['required']
+            "event_id" => ['required']
         ]);
 
         $csv = Csv::class;
     }
 
-    public function filterByCategory(Request $request){
-        $students = StudentAttendance::select('*', 'student_attendances.created_at')->join('students', 'students.id', '=', 'student_attendances.id_student')->join('events', 'events.id', '=', 'student_attendances.event_id')
-        ;
+    public function filterByCategory(Request $request)
+    {
+        $students = StudentAttendance::select('*', 'student_attendances.created_at')->join('students', 'students.id', '=', 'student_attendances.id_student')->join('events', 'events.id', '=', 'student_attendances.event_id');
 
         if ($request->query('set')) {
             $set = explode(',', $request->query('set'));
@@ -157,11 +160,11 @@ class LogController extends Controller
             $students = $students->where('s_program', $program);
         }
 
-        if($request->query('event_id')){
+        if ($request->query('event_id')) {
             $students = $students->where('event_id', $request->query('event_id'));
         }
 
-        $students = $students->get();
+        $students = $students->paginate(15)->withQueryString();
 
         if (empty($students->first())) {
             return response()->json([
@@ -175,6 +178,27 @@ class LogController extends Controller
             'message' => 'Working fine',
             'students' => $students,
             'query' => $request->query(),
+        ]);
+    }
+    public function filter(Request $request)
+    {
+        $students = StudentAttendance::select('*', 'student_attendances.created_at')
+            ->join('students', 'students.id', '=', 'student_attendances.id_student')
+            ->join('events', 'events.id', '=', 'student_attendances.event_id')
+            ->whereAny(['s_fname', 's_studentID', 's_mname', 's_lname'], 'like', $request->query('search') . '%')
+            ->paginate(15)
+            ->withQueryString();
+
+        if (empty($students->first())) {
+            return response()->json([
+                'message' => 'Student not found',
+                'students' => null,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Working fine',
+            'students' => $students,
         ]);
     }
 }
