@@ -21,7 +21,10 @@ function editEvent(data) {
         data.afternoon_checkIn_end;
     if (data.isWholeDay == "true") {
         document.getElementById("isWholeDay").checked = true;
-        afternoon.classList.toggle("hidden");
+        afternoon.classList.remove("hidden");
+    } else {
+        document.getElementById("isWholeDay").checked = false;
+        afternoon.classList.add("hidden");
     }
 
     // document.getElementById('date').value = data.date;
@@ -36,7 +39,9 @@ function deleteEvent(data) {
 // FOR MODAL EVENT WHOLE DAY
 const afternoon = document.querySelector("#afternoon_attendance");
 document.querySelector("#wholeDay").addEventListener("change", function () {
-    afternoon.classList.toggle("hidden");
+    document
+        .querySelector("#create_afternoon_attendance")
+        .classList.toggle("hidden");
 });
 
 document.querySelector("#isWholeDay").addEventListener("change", function () {
