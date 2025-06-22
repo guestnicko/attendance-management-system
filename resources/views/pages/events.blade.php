@@ -485,8 +485,18 @@
             </x-new-modal>
         </div>
 
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="min-w-full w-full text-sm text-center rtl:text-right text-gray-900 font-semibold">
+
+        <div class="w-full border-2">
+            <button class="bg-gray-300 bg-green-300 transition-colors 1s"
+                onclick="navigateTab('pendingEventTable', this.id)" id="pendingEventButton">Pending
+                Events</button>
+            <button class="bg-gray-300 transition-colors 1s" onclick="navigateTab('completedEventTable', this.id)"
+                id="completedEventButton">Completed
+                Events</button>
+        </div>
+        <div class="relative overflow-x-auto shadow-md sm:b-rounded-lg">
+            <table class="min-w-full w-full text-sm text-center rtl:text-right text-gray-900 font-semibold"
+                id="pendingEventTable">
                 <thead class="text-lg font-semibold text-gray-100 uppercase bg-green-700">
                     <tr>
                         <th scope="col" class="py-5">Event Name</th>
@@ -499,7 +509,54 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($events as $event)
+                    @foreach ($pendingEvents as $event)
+                        <tr>
+                            <td>{{ $event->event_name }}</td>
+                            <td>{{ $event->date }}</td>
+                            <td>{{ date_format(date_create($event->checkIn_start), 'h:i A') }}</td>
+                            <td>{{ date_format(date_create($event->checkIn_end), 'h:i A') }}</td>
+                            <td>{{ date_format(date_create($event->checkOut_start), 'h:i A') }}</td>
+                            <td>{{ date_format(date_create($event->checkOut_end), 'h:i A') }}</td>
+                            <td class="flex gap-3 py-3">
+                                <x-edit-button x-on:click="open = true" onclick="editEvent({{ $event }})">
+                                    {{-- Edit Button --}}
+                                </x-edit-button>
+                                <x-delete-button onclick="deleteEvent({{ $event }})">
+                                    {{-- Delete Button --}}
+                                </x-delete-button>
+
+                                {{-- Add Complete Event Button --}}
+                                <form action="{{ route('events.complete', $event->id) }}" method="POST"
+                                    class="inline">
+                                    @csrf
+                                    <button type="submit"
+                                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                        Complete Event
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+
+                </tbody>
+            </table>
+
+
+            <table class="min-w-full w-full text-sm text-center rtl:text-right text-gray-900 font-semibold hidden"
+                id="completedEventTable">
+                <thead class="text-lg font-semibold text-gray-100 uppercase bg-green-700">
+                    <tr>
+                        <th scope="col" class="py-5">Event Name</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Start of Check In</th>
+                        <th scope="col">End of Check In</th>
+                        <th scope="col">Start of Check Out</th>
+                        <th scope="col">End of Check Out</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($completedEvents as $event)
                         <tr>
                             <td>{{ $event->event_name }}</td>
                             <td>{{ $event->date }}</td>

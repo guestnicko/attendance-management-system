@@ -152,17 +152,20 @@ class FineController extends Controller
 
         if ($request->query('set')) {
             $set = explode(',', $request->query('set'));
-            $students = $students->where('s_set', $set);
+            $students = $students->whereIn('s_set', $set);
         }
         if ($request->query('lvl')) {
             $lvl = explode(',', $request->query('lvl'));
-            $students = $students->where('s_lvl', $lvl);
+            $students = $students->whereIn('s_lvl', $lvl);
         }
         if ($request->query('program')) {
             $program = explode(',', $request->query('program'));
-            $students = $students->where('s_program', $program);
+            $students = $students->whereIn('s_program', $program);
         }
-
+        if ($request->query('status')) {
+            $status = explode(',', $request->query('status'));
+            $students = $students->whereIn('s_status', $status);
+        }
         if ($request->query('event_id')) {
             $students = $students->where('event_id', $request->query('event_id'));
         }
