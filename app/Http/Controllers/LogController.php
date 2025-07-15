@@ -145,7 +145,10 @@ class LogController extends Controller
 
     public function filterByCategory(Request $request)
     {
-        $students = StudentAttendance::select('*', 'student_attendances.created_at')->join('students', 'students.id', '=', 'student_attendances.id_student')->join('events', 'events.id', '=', 'student_attendances.event_id');
+
+        $students = StudentAttendance::select('*', 'student_attendances.created_at')
+            ->leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
+            ->join('events', 'events.id', '=', 'student_attendances.event_id');
 
         if ($request->query('set')) {
             $set = explode(',', $request->query('set'));
@@ -186,7 +189,7 @@ class LogController extends Controller
     public function filter(Request $request)
     {
         $students = StudentAttendance::select('*', 'student_attendances.created_at')
-            ->join('students', 'students.id', '=', 'student_attendances.id_student')
+            ->leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
             ->join('events', 'events.id', '=', 'student_attendances.event_id')
             ->whereAny(['s_fname', 's_studentID', 's_mname', 's_lname'], 'like', $request->query('search') . '%')
             ->paginate(15)
@@ -202,6 +205,40 @@ class LogController extends Controller
         return response()->json([
             'message' => 'Working fine',
             'students' => $students,
+        ]);
+    }
+
+    public function filterByEvent(Request $request)
+    {
+        if ($request->query("event_id") == null) {
+            $students = StudentAttendance::select('*', 'student_attendances.created_at')
+                ->leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
+                ->join('events', 'events.id', '=', 'student_attendances.event_id')
+                ->paginate(15)
+                ->withQueryString();
+
+            return response()->json([
+                "message" => "Working fine",
+                "students" => $students
+            ]);
+        }
+        $students = StudentAttendance::select('*', 'student_attendances.created_at')
+            ->leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
+            ->join('events', 'events.id', '=', 'student_attendances.event_id')
+            ->where("event_id", $request->query('event_id'))
+            ->paginate(15)
+            ->withQueryString();
+
+        if (empty($students->first())) {
+            return response()->json([
+                'message' => 'Student not found',
+                'students' => null,
+            ]);
+        }
+
+        return response()->json([
+            "message" => "Working fine",
+            "students" => $students
         ]);
     }
 }

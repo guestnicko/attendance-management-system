@@ -186,4 +186,42 @@ class FineController extends Controller
             'query' => $request->query(),
         ]);
     }
+
+    public function filterByEvent(Request $request)
+    {
+        if ($request->query("event_id") == null) {
+            $students = Student::leftJoin('fines', 'students.id', '=', 'fines.student_id')
+                ->leftJoin('events', 'events.id', '=', 'fines.event_id')
+                ->select('students.*', 'fines.*', 'events.event_name')
+                ->paginate(15)
+                ->withQueryString();
+
+            return response()->json([
+                'message' => 'Working fine',
+                'students' => $students,
+                'query' => $request->query(),
+            ]);
+        }
+
+        $students = Student::leftJoin('fines', 'students.id', '=', 'fines.student_id')
+            ->leftJoin('events', 'events.id', '=', 'fines.event_id')
+            ->select('students.*', 'fines.*', 'events.event_name')
+            ->where("event_id", $request->query('event_id'))
+            ->paginate(15)
+            ->withQueryString();
+
+
+        if (empty($students->first())) {
+            return response()->json([
+                'message' => 'Student not found',
+                'students' => null,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Working fine',
+            'students' => $students,
+            'query' => $request->query(),
+        ]);
+    }
 }

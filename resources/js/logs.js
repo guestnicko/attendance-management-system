@@ -9,13 +9,6 @@ const api = axios.create({
 
 window.GenerateExcelReport = GenerateExcelReport;
 window.GeneratePDFReport = GeneratePDFReport;
-document.getCategory = getCategory;
-const baseUrl = window.location.href;
-
-document.querySelector("#eventField").addEventListener("change", (e) => {
-    document.querySelector("#inputField").value = e.target.value;
-    getCategory();
-});
 
 const formatter = new Intl.DateTimeFormat("ja-JP", {
     day: "2-digit",
@@ -39,8 +32,9 @@ function renderTable(students) {
     table.innerHTML = "";
 
     if (students) {
+        let i = 1;
         students.forEach((e) => {
-            const date = new Date(student.created_at); // Or your date object
+            const date = new Date(e.created_at); // Or your date object
             const formatter = new Intl.DateTimeFormat("en-US", {
                 // 'en-US' for US format, adjust as needed
                 year: "numeric",
@@ -63,14 +57,7 @@ function renderTable(students) {
                         </tr>
             `;
             document.getElementById("std_info_table").style.display = "none"; //Line by Panzerweb: When search is empty, remove the span
-        });
-        Array.from(table_row).forEach((element) => {
-            element.addEventListener("click", (e) => {
-                // element.classList.toggle('selected', 'bg-green-500', 'shadow-lg', 'shadow-green-800')
-                element.classList.toggle("selected");
-                element.classList.toggle("bg-green-400");
-                console.log(element.id);
-            });
+            i++;
         });
     } else {
         //Code by Panzerweb: If search does not match, display text 'No Student Found'

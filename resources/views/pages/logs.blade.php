@@ -68,15 +68,7 @@ $page = 'logs';
                     <x-search :page="$page" :route="route('fetchLogViaSearch')" />
                 </div>
                 <div class="w-full flex items-center justify-end gap-5">
-                    <div class="">
-                        <select name="event_id" id="eventField"
-                            class="block w-full text-lg text-gray-500 bg-transparent border-0 border-b-2 border-violet-500 appearance-none ">
-                            <option value="">Select Event</option>
-                            @foreach ($events as $event)
-                                <option value="{{ $event->id }}">{{ $event->event_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <x-event-filter :events="$events" :route="route('fetchLogViaEvent')" />
 
                     <x-filter :route="route('fetchLogViaCategory')" />
 

@@ -100,7 +100,6 @@
                       ).content,
                   },
               });
-              console.log(response.data)
               return response.data;
           } catch (error) {
               console.error(error);
@@ -146,7 +145,12 @@
           const data = await searchViaCategory('{{ $route }}' + "?" + query);
           // UPDATE TABLE
           const students = data.students;
-          renderTable(students.data);
-          renderPagination(students);
+          if (students != null) {
+              renderTable(students.data);
+              renderPagination(students);
+          } else {
+              renderTable(null);
+              renderPagination(students);
+          }
       }
   </script>

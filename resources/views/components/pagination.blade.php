@@ -84,6 +84,9 @@
     window.renderPagination = renderPagination
 
     function renderPagination(data) {
+        if (data == null) {
+            return;
+        }
         const pagination = document.getElementById("pagination");
         pagination.innerHTML = "";
 
