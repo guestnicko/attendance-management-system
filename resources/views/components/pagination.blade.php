@@ -84,11 +84,19 @@
     window.renderPagination = renderPagination
 
     function renderPagination(data) {
-        if (data == null) {
-            return;
-        }
+
         const pagination = document.getElementById("pagination");
         pagination.innerHTML = "";
+
+        if (data == null) {
+            pagination.innerHTML = `
+            <nav aria-label="Page navigation example">
+
+            </nav>
+            `;
+            return;
+        }
+
 
         pagination.innerHTML += `
                     <nav aria-label="Page navigation example">

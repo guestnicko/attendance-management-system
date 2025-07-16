@@ -32,10 +32,9 @@ class FineController extends Controller
 
     public function calculateEventFines(Event $event)
     {
-
         // Check if student has attendance record for this event
         $logs = DB::table('students')
-            ->leftJoin('student_attendances', 'students.id', '=', 'student_attendances.id_student')
+            ->leftJoin(DB::raw("(SELECT * FROM student_attendances WHERE event_id = {$event->id}) AS sa"), 'students.id', '=', 'sa.id_student')
             ->select('*', 'students.id')
             ->get();
 
