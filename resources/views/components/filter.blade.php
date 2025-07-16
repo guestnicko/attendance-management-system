@@ -73,7 +73,7 @@
               <form id="search_status" onchange="getCategory()" class="">
                   <ul class="space-y-2 text-sm" aria-labelledby="dropdownDefault">
                       <label for="" class="font-semibold text-gray-100">Status</label>
-                      @foreach (['ENROLLED', 'DROPPED', 'GRADUATED'] as $status)
+                      @foreach (['ENROLLED', 'DROPPED', 'GRADUATED', 'TO BE UPDATED'] as $status)
                           <li class="flex items-center">
                               <input value="{{ $status }}" type="checkbox" name="status"
                                   class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
@@ -100,7 +100,6 @@
                       ).content,
                   },
               });
-              console.log(response.data)
               return response.data;
           } catch (error) {
               console.error(error);
@@ -117,10 +116,13 @@
           const set = document.querySelectorAll(
               '#search_set input[name="set"]:checked'
           );
+          const status = document.querySelectorAll(
+              '#search_status input[name="status"]:checked'
+          );
           const program_data = Array.from(program).map((cb) => cb.value);
           const lvl_data = Array.from(lvl).map((cb) => cb.value);
           const set_data = Array.from(set).map((cb) => cb.value);
-
+          const status_data = Array.from(status).map((cb) => cb.value);
           query += "&&program=";
           program_data.forEach((element) => {
               query += element + ",";
@@ -135,10 +137,20 @@
           set_data.forEach((element) => {
               query += element + ",";
           });
+          query += "&&status=";
+
+          status_data.forEach((element) => {
+              query += element + ",";
+          });
           const data = await searchViaCategory('{{ $route }}' + "?" + query);
           // UPDATE TABLE
           const students = data.students;
-          renderTable(students.data);
-          renderPagination(students);
+          if (students != null) {
+              renderTable(students.data);
+              renderPagination(students);
+          } else {
+              renderTable(null);
+              renderPagination(students);
+          }
       }
   </script>

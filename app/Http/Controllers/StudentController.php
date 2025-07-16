@@ -56,15 +56,19 @@ class StudentController extends Controller
 
         if ($request->query('set')) {
             $set = explode(',', $request->query('set'));
-            $query->where('s_set', $set);
+            $query->whereIn('s_set',  $set);
         }
         if ($request->query('lvl')) {
             $lvl = explode(',', $request->query('lvl'));
-            $query->where('s_lvl', $lvl);
+            $query->whereIn('s_lvl',  $lvl);
         }
         if ($request->query('program')) {
             $program = explode(',', $request->query('program'));
-            $query->where('s_program', $program);
+            $query->whereIn('s_program', $program);
+        }
+        if ($request->query('status')) {
+            $status = explode(',', $request->query('status'));
+            $students = $query->whereIn('s_status', $status);
         }
 
         $students = $query->paginate(15)->withQueryString(); //Changed by Panzerweb to paginate
@@ -131,17 +135,24 @@ class StudentController extends Controller
 
         if ($request->query('set')) {
             $set = explode(',', $request->query('set'));
-            $students = $students->where('s_set', $set);
+            $students = $students->whereIn('s_set', $set);
         }
         if ($request->query('lvl')) {
             $lvl = explode(',', $request->query('lvl'));
-            $students = $students->where('s_lvl', $lvl);
+            $students = $students->whereIn('s_lvl', $lvl);
         }
         if ($request->query('program')) {
             $program = explode(',', $request->query('program'));
-            $students = $students->where('s_program', $program);
+            $students = $students->whereIn('s_program', $program);
         }
+        if ($request->query('status')) {
+            $status = explode(',', $request->query('status'));
+            $students = $students->whereIn('s_status', $status);
+        }
+
         $students = $students->paginate(15)->withQueryString();
+
+
 
         if (empty($students->first())) {
             return response()->json([

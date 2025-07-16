@@ -152,17 +152,20 @@ class FineController extends Controller
 
         if ($request->query('set')) {
             $set = explode(',', $request->query('set'));
-            $students = $students->where('s_set', $set);
+            $students = $students->whereIn('s_set', $set);
         }
         if ($request->query('lvl')) {
             $lvl = explode(',', $request->query('lvl'));
-            $students = $students->where('s_lvl', $lvl);
+            $students = $students->whereIn('s_lvl', $lvl);
         }
         if ($request->query('program')) {
             $program = explode(',', $request->query('program'));
-            $students = $students->where('s_program', $program);
+            $students = $students->whereIn('s_program', $program);
         }
-
+        if ($request->query('status')) {
+            $status = explode(',', $request->query('status'));
+            $students = $students->whereIn('s_status', $status);
+        }
         if ($request->query('event_id')) {
             $students = $students->where('event_id', $request->query('event_id'));
         }
@@ -174,6 +177,44 @@ class FineController extends Controller
                 'message' => 'Student not found',
                 'students' => null,
                 'query' => $request->query(),
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Working fine',
+            'students' => $students,
+            'query' => $request->query(),
+        ]);
+    }
+
+    public function filterByEvent(Request $request)
+    {
+        if ($request->query("event_id") == null) {
+            $students = Student::leftJoin('fines', 'students.id', '=', 'fines.student_id')
+                ->leftJoin('events', 'events.id', '=', 'fines.event_id')
+                ->select('students.*', 'fines.*', 'events.event_name')
+                ->paginate(15)
+                ->withQueryString();
+
+            return response()->json([
+                'message' => 'Working fine',
+                'students' => $students,
+                'query' => $request->query(),
+            ]);
+        }
+
+        $students = Student::leftJoin('fines', 'students.id', '=', 'fines.student_id')
+            ->leftJoin('events', 'events.id', '=', 'fines.event_id')
+            ->select('students.*', 'fines.*', 'events.event_name')
+            ->where("event_id", $request->query('event_id'))
+            ->paginate(15)
+            ->withQueryString();
+
+
+        if (empty($students->first())) {
+            return response()->json([
+                'message' => 'Student not found',
+                'students' => null,
             ]);
         }
 

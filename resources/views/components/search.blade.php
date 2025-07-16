@@ -37,9 +37,7 @@
         e.preventDefault();
         console.log("form submitted")
     })
-    document.getElementById("searchInput").addEventListener('keypress', (e) => {
-        console.log(e.value)
-    });
+
 
     async function search(data, uri) {
         uri = uri + "?search=" + data.value;
@@ -51,8 +49,14 @@
         });
         // UPDATE TABLE
         const students = response.data.students;
-        console.log(students.links)
-        renderTable(students.data);
-        renderPagination(students);
+
+        if (students != null) {
+            renderTable(students.data);
+            renderPagination(students);
+        } else {
+            renderTable(null);
+            renderPagination(students);
+        }
+
     }
 </script>

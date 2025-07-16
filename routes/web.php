@@ -70,10 +70,11 @@ Route::middleware('auth')->group(function () {
     // LOG -> API => SEARCH AND FILTER
     Route::get('/logs/filter', [LogController::class, 'filter'])->name('fetchLogViaSearch');
     Route::get('/logs/category', [LogController::class, 'filterByCategory'])->name('fetchLogViaCategory');
+    Route::get("/logs/event", [LogController::class, "filterByEvent"])->name("fetchLogViaEvent");
     // FINES => VIA SEARCH AND FILTER
     Route::get('/fines/filter', [FineController::class, 'filter'])->name('fetchFinesViaSearch');
     Route::get('/fines/category', [FineController::class, 'filterByCategory'])->name('fetchFinesViaCategory');
-
+    Route::get("/fines/events", [FineController::class, "filterByEvent"])->name("fetchFinesViaEvent");
     // STUDENT - API => VIA CATEGORY
 
 
