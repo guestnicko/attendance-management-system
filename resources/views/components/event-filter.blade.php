@@ -10,7 +10,7 @@
   </div>
 
   <script>
-      async function search(uri, data) {
+      async function Eventsearch(uri, data) {
           uri = uri + "?event_id=" + data;
           const response = await axios.get(uri, {
               headers: {
@@ -23,7 +23,7 @@
 
       async function fetchLogsByEvent(uri) {
           const event = document.querySelector("#eventField");
-          const students = await search(uri, event.value);
+          const students = await Eventsearch(uri, event.value);
           // UPDATE TABLE
           if (students != null) {
               renderTable(students.data);
