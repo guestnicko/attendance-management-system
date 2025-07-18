@@ -241,4 +241,12 @@ class LogController extends Controller
             "students" => $students
         ]);
     }
+
+    public function clearLogsByEvent(Request $request)
+    {
+        $request->validate([
+            "event_id" => ['required']
+        ]);
+        Event::where("event_id", $request->event_id)->delete();
+    }
 }

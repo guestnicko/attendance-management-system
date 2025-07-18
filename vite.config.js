@@ -14,12 +14,15 @@ export default defineConfig({
     ],
     server: {
         proxy: {
-            "/app": ["http://127.0.0.1:8000", "http://localhost/"], // Proxy Laravel requests to your Laravel app
+            "/app": ["http://127.0.0.1", "http://localhost"], // Proxy Laravel requests to your Laravel app
         },
         cors: {
-            origin: ["http://127.0.0.1:8000", "http://localhost"], // Allow your Laravel app to access the Vite server
+            origin: ["http://127.0.0.1", "http://localhost"], // Allow your Laravel app to access the Vite server
             methods: ["GET", "POST", "PUT", "DELETE"],
             allowedHeaders: ["Content-Type", "Authorization"],
+        },
+        hmr: {
+            host: "localhost",
         },
     },
 });

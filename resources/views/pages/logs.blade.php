@@ -31,7 +31,8 @@ $page = 'logs';
 
             </div>
             <div>
-                <button class="bg-gray-800 hover:bg-gray-700 text-white rounded-md text-md flex p-3 items-center">
+                <button class="bg-gray-800 hover:bg-gray-700 text-white rounded-md text-md flex p-3 items-center"
+                    onclick="">
 
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
