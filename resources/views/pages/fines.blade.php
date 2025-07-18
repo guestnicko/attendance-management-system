@@ -77,15 +77,15 @@ $page = 'fines';
                     <thead class="text-lg font-semibold text-gray-100 uppercase bg-green-700">
                         <tr">
                             <th scope="col" class="py-5">No.</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Program</th>
-                            <th scope="col">Set</th>
-                            <th scope="col">Level</th>
-                            <th scope="col">Missed Actions</th>
-                            <th scope="col">Fine Amount</th>
-                            <th scope="col">Total Fines</th>
-                            <th scope="col">Event</th>
-                            <th scope="col">Date</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Name</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Program</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Set</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Level</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Missed Actions</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Fine Amount</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Total Fines</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Event</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Date</th>
                             </tr>
                     </thead>
                     <tbody id="student_table_body">

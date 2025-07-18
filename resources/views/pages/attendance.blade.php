@@ -237,11 +237,37 @@
                                 <td>{{$student->s_set}}</td>
                                 <td>{{$student->s_lvl}}</td>
 
+                                {{-- Morning Attendance --}}
+                                <td>
+                                    @if ($student->attend_checkIn)
+                                        {{ date_format(date_create($student->attend_checkIn), 'h:i: A') }}
+                                    @else
+                                        <span class="text-red-500">Absent</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($student->attend_checkOut)
+                                        {{ date_format(date_create($student->attend_checkOut), 'h:i: A') }}
+                                    @else
+                                        <span class="text-red-500">Absent</span>
+                                    @endif
+                                </td>
                                 
-                                <td>{{$student->attend_checkIn ? date_format(date_create($student->attend_checkIn), 'h:i: A') : '---'}}</td>
-                                <td>{{$student->attend_checkOut ? date_format(date_create($student->attend_checkOut), 'h:i: A') : '---'}}</td>
-                                <td>{{$student->attend_afternoon_checkIn ? date_format(date_create($student->attend_afternoon_checkIn), 'h:i: A') : '---'}}</td>
-                                <td>{{$student->attend_afternoon_checkOut ? date_format(date_create($student->attend_afternoon_checkOut), 'h:i: A') : '---'}}</td>
+                                {{-- Afternoon Attendance --}}
+                                <td>
+                                    @if ($student->attend_afternoon_checkIn)
+                                        {{ date_format(date_create($student->attend_afternoon_checkIn), 'h:i: A') }}
+                                    @else
+                                        <span class="text-red-500">Absent</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($student->attend_afternoon_checkOut)
+                                        {{ date_format(date_create($student->attend_afternoon_checkOut), 'h:i: A') }}
+                                    @else
+                                        <span class="text-red-500">Absent</span>
+                                    @endif
+                                </td>
                                 
                                 <td class="text-wrap">{{date_format(date_create($student->created_at), 'Y/m/d')}}</td>
                             </tr>

@@ -573,15 +573,17 @@
             <table id="tableContainer" class="min-w-full w-full text-sm text-left rtl:text-right" >
                 <thead class="text-lg font-semibold text-gray-100 uppercase bg-green-700">
                     <tr>
-                        <td class="p-2">No.</td>
-                        <td>Name</td>
-                        <td>Program</td>
-                        <td>Set</td>
-                        <td>Year Level</td>
-                        <td>Time In</td>
-                        <td>Time Out</td>
-                        <td>Event</td>
-                        <td>Date</td>
+                        {{-- <td class="p-2">No.</td> --}}
+                        <td class="py-5 border border-green-800 text-center">Name</td>
+                        <td class="py-5 border border-green-800 text-center">Program</td>
+                        <td class="py-5 border border-green-800 text-center">Set</td>
+                        <td class="py-5 border border-green-800 text-center">Year Level</td>
+                        <td class="py-5 border border-green-800 text-center">Morning Time In</td>
+                        <td class="py-5 border border-green-800 text-center">Morning Time Out</td>
+                        <td class="py-5 border border-green-800 text-center">Afternoon Time In</td>
+                        <td class="py-5 border border-green-800 text-center">Afternoon Time Out</td>
+                        <td class="py-5 border border-green-800 text-center">Event</td>
+                        <td class="py-5 border border-green-800 text-center">Date</td>
                     </tr>
                 </thead>
                 <tbody class="border-3 shadow-lg text-gray-950 text-base hover:bg-gray-400 cursor-pointer">
@@ -590,13 +592,42 @@
                     @endphp
                     @foreach ($attendances as $attendance)
                         <tr class="font-semibold shadow-lg border-3">
-                            <td class="py-5 px-3">{{ $index++ }}</td>
-                            <td>{{ $attendance->s_fname . ' ' . $attendance->s_lname }}</td>
+                            {{-- <td>{{ $index++ }}</td> --}}
+                            <td class="py-5 px-3">{{ $attendance->s_fname . ' ' . $attendance->s_lname }}</td>
                             <td>{{ $attendance->s_program }}</td>
                             <td>{{ $attendance->s_set }}</td>
                             <td>{{ $attendance->s_lvl }}</td>
-                            <td>{{ $attendance->attend_checkIn ? date('h:i A', strtotime($attendance->attend_checkIn)) : 'N/A' }}</td>
-                            <td>{{ $attendance->attend_checkOut ? date('h:i A', strtotime($attendance->attend_checkOut)) : 'N/A' }}</td>
+
+                            {{-- Morning Attendances --}}
+                            <td>
+                                @if ($attendance->attend_checkIn)
+                                    {{ date('h:i A', strtotime($attendance->attend_checkIn)) }}
+                                @else
+                                    <span class="text-red-500">Absent</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($attendance->attend_checkOut)
+                                    {{ date('h:i A', strtotime($attendance->attend_checkOut)) }}
+                                @else
+                                    <span class="text-red-500">Absent</span>
+                                @endif
+                            </td>
+                            {{-- Afternoon Attendances --}}
+                            <td>
+                                @if ($attendance->attend_afternoon_checkIn)
+                                    {{ date('h:i A', strtotime($attendance->attend_afternoon_checkIn)) }}
+                                @else
+                                    <span class="text-red-500">Absent</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($attendance->attend_afternoon_checkOut)
+                                    {{ date('h:i A', strtotime($attendance->attend_afternoon_checkOut)) }}
+                                @else
+                                    <span class="text-red-500">Absent</span>
+                                @endif
+                            </td>
                             <td>{{ $attendance->event_name }}</td>
                             <td>{{ $attendance->date }}</td>
                         </tr>
