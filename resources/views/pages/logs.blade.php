@@ -80,14 +80,16 @@ $page = 'logs';
                     <thead class="text-lg font-semibold text-gray-100 uppercase bg-green-700">
                         <tr>
                             <th scope="col" class="py-5">No.</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Program</th>
-                            <th scope="col">Set</th>
-                            <th scope="col">Level</th>
-                            <th scope="col">Time In</th>
-                            <th scope="col">Time Out</th>
-                            <th scope="col">Event</th>
-                            <th scope="col">Date</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Name</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Program</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Set</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Level</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Morning Time In</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Morning Time Out</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Afternoon Time In</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Afternoon Time Out</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Event</th>
+                            <th scope="col" class="py-5 border border-green-800 text-center">Date</th>
                         </tr>
                     </thead>
                     <tbody id="student_table_body">
@@ -102,12 +104,39 @@ $page = 'logs';
                                 <td>{{ $log->s_program }}</td>
                                 <td>{{ $log->s_set }}</td>
                                 <td>{{ $log->s_lvl }}</td>
-                                <td>{{ $log->attend_checkIn ? date('h:i A', strtotime($log->attend_checkIn)) : '-' }}
-                                </td>
-                                <td>{{ $log->attend_checkOut ? date('h:i A', strtotime($log->attend_checkOut)) : '-' }}
-                                </td>
+
+                                {{-- Morning Attendances --}}
+                               <td>
+                                @if ($log->attend_checkIn)
+                                    {{ date('h:i A', strtotime($log->attend_checkIn)) }}
+                                @else
+                                    <span class="text-red-500">Absent</span>
+                                @endif
+                               </td>
+                               <td>
+                                @if ($log->attend_checkOut)
+                                    {{ date('h:i A', strtotime($log->attend_checkOut)) }}
+                                @else
+                                    <span class="text-red-500">Absent</span>
+                                @endif
+                               </td>
+                                {{-- Afternoon Attendances --}}
+                               <td>
+                                @if ($log->attend_afternoon_checkIn)
+                                    {{ date('h:i A', strtotime($log->attend_afternoon_checkIn)) }}
+                                @else
+                                    <span class="text-red-500">Absent</span>
+                                @endif
+                               </td>
+                               <td>
+                                @if ($log->attend_afternoon_checkOut)
+                                    {{ date('h:i A', strtotime($log->attend_afternoon_checkOut)) }}
+                                @else
+                                    <span class="text-red-500">Absent</span>
+                                @endif
+                               </td>
                                 <td>{{ $log->event_name }}</td>
-                                <td>{{ $log->date ? date('M d, Y', strtotime($log->date)) : '-' }}</td>
+                                <td>{{ $log->date ? date('M d, Y', strtotime($log->date)) : '---' }}</td>
                             </tr>
                         @endforeach
                     </tbody>

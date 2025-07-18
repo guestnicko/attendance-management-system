@@ -68,7 +68,7 @@ form.addEventListener("submit", async (event) => {
     } 
     else if (response.AlreadyRecorded) { //if student is already recorded, call function
         console.log(response.data);
-        // console.log(response.event_data);
+        console.log(eventData);
         console.log("You are already recorded");
         AttendanceAlreadyRecorded(objProperty, eventData);
     }
@@ -99,6 +99,7 @@ form_auto.addEventListener("submit", async (event) => {
     } 
     else if (response.AlreadyRecorded) { //if student is already recorded, call function
         console.log(response.data);
+        console.log(eventData);
         console.log("You are already recorded");
         AttendanceAlreadyRecorded(objProperty, eventData);
     }
@@ -145,14 +146,25 @@ function AttendanceRecorded(objProperty, attendCheckIn, attendCheckOut, attend_a
         timeInfo += `
             <p class="text-md text-gray-500 mt-1 font-semibold">Morning Attendance</p>
             <p class="text-md text-gray-500 mt-1">Time In: ${formatTime(attendCheckIn)}</p>
+        `;
+    }
+
+    if (attendCheckOut) {
+        timeInfo += `
+            <p class="text-md text-gray-500 mt-1 font-semibold">Morning Attendance</p>
             <p class="text-md text-gray-500 mt-1">Time Out: ${formatTime(attendCheckOut)}</p>
         `;
     }
 
-    if (attend_afternoon_checkIn || attend_afternoon_checkOut) {
+    if (attend_afternoon_checkIn) {
         timeInfo += `
             <p class="text-md text-gray-500 mt-4 font-semibold">Afternoon Attendance</p>
             <p class="text-md text-gray-500 mt-1">Time In: ${formatTime(attend_afternoon_checkIn)}</p>
+        `;
+    }
+    if (attend_afternoon_checkOut) {
+        timeInfo += `
+            <p class="text-md text-gray-500 mt-4 font-semibold">Afternoon Attendance</p>
             <p class="text-md text-gray-500 mt-1">Time Out: ${formatTime(attend_afternoon_checkOut)}</p>
         `;
     }
@@ -209,10 +221,10 @@ function AttendanceAlreadyRecorded(objProperty, eventData){
                 </p>
                 <p class="text-md text-gray-500 mt-1">Set: ${objProperty.s_set}</p>
 
-                <p class="text-md text-gray-500 mt-1">Time In (Morning): ${eventData.attend_checkIn}</p>
-                <p class="text-md text-gray-500 mt-1">Time Out (Morning): ${eventData.attend_checkOut}</p>
-                <p class="text-md text-gray-500 mt-1">Time In (Afternoon): ${eventData.attend_afternoon_checkIn}</p>
-                <p class="text-md text-gray-500 mt-1">Time Out (Afternoon): ${eventData.attend_afternoon_checkOut}</p>
+                <p class="text-md text-gray-500 mt-1">Time In (Morning): ${eventData.attend_checkIn ?? '---'}</p>
+                <p class="text-md text-gray-500 mt-1">Time Out (Morning): ${eventData.attend_checkOut ?? '---'}</p>
+                <p class="text-md text-gray-500 mt-1">Time In (Afternoon): ${eventData.attend_afternoon_checkIn ?? '---'}</p>
+                <p class="text-md text-gray-500 mt-1">Time Out (Afternoon): ${eventData.attend_afternoon_checkOut ?? '---'}</p>
             </div>
         `,
         showConfirmButton: false,

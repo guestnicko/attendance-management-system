@@ -183,6 +183,8 @@ class StudentAttendanceController extends Controller
 
         $myStudent = Student::whereAny(['s_rfid', 's_studentID'], $request->s_rfid)->get()->first();
 
+        // This get the latest student attendance
+        $studentsEvent = StudentAttendance::where('student_rfid', $request->s_rfid)->get()->last();
 
         // AMBOT NGANO GI ADD NAKO NI, OKAY MAN SO FAR
         // $studentsEvent = StudentAttendance::where('student_rfid', $request->s_rfid)->get()->first(); //Get the corresponding student_attendance data
@@ -212,7 +214,7 @@ class StudentAttendanceController extends Controller
 
 
         if($event->isWholeDay == 'true'){
-             return $this->recordWholeDayEvent($request, $event, $myStudent); //Updated method to 4 parameters
+             return $this->recordWholeDayEvent($request, $event, $myStudent, $studentsEvent); //Updated method to 4 parameters
         }
 
 
@@ -231,6 +233,10 @@ class StudentAttendanceController extends Controller
         // All JSON `data` added are implemented to ensure integrity that data is sent with full disclosure
         // Also helps in debugging and tracing errors, you can also add "bug-line" => "Line number" as a key-pair value
         // of all json response return statements to trace errors.
+
+        /*
+            P.S: Restored event_data as JSON Object to record event data from student attendance table
+        */
 
         if ($time > $event->checkIn_start && $time < $event->checkIn_end && !empty(StudentAttendance::where('event_id',$event->id )->where("student_rfid", $request->s_rfid)->get()->first())
         ) {
@@ -310,8 +316,8 @@ class StudentAttendanceController extends Controller
         ]);
 
     }
-    // GITANNGAL NAKO ANG 4th Parameter and Event Data na JSON data
-    protected function recordWholeDayEvent(Request $request, Event $event, Student $myStudent){
+
+    protected function recordWholeDayEvent(Request $request, Event $event, Student $myStudent, StudentAttendance $studentEvent){
         $time = date("H:i:s");
 
         if (
@@ -334,6 +340,7 @@ class StudentAttendanceController extends Controller
                 "message" =>"Student's attendance is already recorded",
                 "isRecorded" => false,
                 "data" => $myStudent,
+                "event_data" => $studentEvent,
                 "AlreadyRecorded"=>true
             ]);
         }
@@ -343,6 +350,7 @@ class StudentAttendanceController extends Controller
                 "message" =>"Student's attendance is already recorded",
                 "isRecorded" => false,
                 "data" => $myStudent,
+                "event_data" => $studentEvent,
                 "AlreadyRecorded"=>true
             ]);
         }
@@ -351,6 +359,7 @@ class StudentAttendanceController extends Controller
                 "message" =>"Student's attendance is already recorded",
                 "isRecorded" => false,
                 "data" => $myStudent,
+                "event_data" => $studentEvent,
                 "AlreadyRecorded"=>true
             ]);
         }
@@ -359,6 +368,7 @@ class StudentAttendanceController extends Controller
                 "message" =>"Student's attendance is already recorded",
                 "isRecorded" => false,
                 "data" => $myStudent,
+                "event_data" => $studentEvent,
                 "AlreadyRecorded"=>true
             ]);
         }
@@ -376,6 +386,7 @@ class StudentAttendanceController extends Controller
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
                 "data" => $myStudent,
+                "event_data" => $studentEvent,
                 "attend_checkIn"=> $time,
             ]);
         }
@@ -395,6 +406,7 @@ class StudentAttendanceController extends Controller
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
                 "data" => $myStudent,
+                "event_data" => $studentEvent,
                 "attend_checkOut"=> $time,
             ]);
         }
@@ -411,6 +423,7 @@ class StudentAttendanceController extends Controller
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
                 "data" => $myStudent,
+                "event_data" => $studentEvent,
                 "attend_afternoon_checkOut"=> $time,
             ]);
         } if ($time > $event->afternoon_checkIn_start && $time < $event->afternoon_checkIn_end && empty(StudentAttendance::where('event_id',$event->id )->where("id_student", $myStudent->id)->get()->first())) {
@@ -426,6 +439,7 @@ class StudentAttendanceController extends Controller
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
                 "data" => $myStudent,
+                "event_data" => $studentEvent,
                 "attend_afternoon_checkIn"=> $time,
             ]);
         }
@@ -443,6 +457,7 @@ class StudentAttendanceController extends Controller
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
                 "data" => $myStudent,
+                "event_data" => $studentEvent,
                 "attend_checkOut"=> $time,
             ]);
         }
@@ -460,6 +475,7 @@ class StudentAttendanceController extends Controller
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
                 "data" => $myStudent,
+                "event_data" => $studentEvent,
                 "attend_afternoon_checkIn"=> $time,
             ]);
         }
@@ -475,6 +491,7 @@ class StudentAttendanceController extends Controller
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
                 "data" => $myStudent,
+                "event_data" => $studentEvent,
                 "attend_afternoon_checkOut"=> $time,
             ]);
         }

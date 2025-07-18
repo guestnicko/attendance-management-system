@@ -44,14 +44,16 @@ function renderTable(students) {
             const formattedDate = formatter.format(date);
             table.innerHTML += `
                         <tr>
-                            <td>${i++}</td>
+                            <td class="py-5">${i++}</td>
                             <td>${e.s_fname} ${e.s_lname}</td>
                             <td>${e.s_program}</td>
                             <td>${e.s_set}</td>
                             <td>${e.s_lvl}</td>
 
-                            <td>${e.attend_checkIn}</td>
-                            <td>${e.attend_checkOut}</td>
+                            <td>${e.attend_checkIn ?? '<span class="text-red-500">Absent</span>'}</td>
+                            <td>${e.attend_checkOut ?? '<span class="text-red-500">Absent</span>'}</td>
+                            <td>${e.attend_afternoon_checkIn ?? '<span class="text-red-500">Absent</span>'}</td>
+                            <td>${e.attend_afternoon_checkOut ?? '<span class="text-red-500">Absent</span>'}</td>
                             <td>${e.event_name}</td>
                             <td>${formattedDate}</td>
                         </tr>
