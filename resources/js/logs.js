@@ -43,17 +43,29 @@ function renderTable(students) {
             });
             const formattedDate = formatter.format(date);
             table.innerHTML += `
-                        <tr>
+                        <tr class= "table_row shadow-lg border-3">
                             <td class="py-5">${i++}</td>
                             <td>${e.s_fname} ${e.s_lname}</td>
                             <td>${e.s_program}</td>
                             <td>${e.s_set}</td>
                             <td>${e.s_lvl}</td>
 
-                            <td>${e.attend_checkIn ?? '<span class="text-red-500">Absent</span>'}</td>
-                            <td>${e.attend_checkOut ?? '<span class="text-red-500">Absent</span>'}</td>
-                            <td>${e.attend_afternoon_checkIn ?? '<span class="text-red-500">Absent</span>'}</td>
-                            <td>${e.attend_afternoon_checkOut ?? '<span class="text-red-500">Absent</span>'}</td>
+                            <td>${
+                                e.attend_checkIn ??
+                                '<span class="text-red-500">Absent</span>'
+                            }</td>
+                            <td>${
+                                e.attend_checkOut ??
+                                '<span class="text-red-500">Absent</span>'
+                            }</td>
+                            <td>${
+                                e.attend_afternoon_checkIn ??
+                                '<span class="text-red-500">Absent</span>'
+                            }</td>
+                            <td>${
+                                e.attend_afternoon_checkOut ??
+                                '<span class="text-red-500">Absent</span>'
+                            }</td>
                             <td>${e.event_name}</td>
                             <td>${formattedDate}</td>
                         </tr>
@@ -66,6 +78,6 @@ function renderTable(students) {
         document.getElementById("std_info_table").style.display = "block";
         document.getElementById(
             "std_info_table"
-        ).innerHTML = `<h3 class="text-center tracking-wide text-gray-500 text-xl">No Student Found</h3>`;
+        ).innerHTML = `<h3 class="py-4 text-center tracking-wide text-gray-500 text-xl">No Student Found</h3>`;
     }
 }

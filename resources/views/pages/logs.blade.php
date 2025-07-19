@@ -93,7 +93,6 @@ $page = 'logs';
                         </tr>
                     </thead>
                     <tbody id="student_table_body">
-                        {{-- Removed Hard-coded data --- This is now ready for dynamic data --}}
                         @php
                             $i = 1;
                         @endphp
@@ -106,35 +105,35 @@ $page = 'logs';
                                 <td>{{ $log->s_lvl }}</td>
 
                                 {{-- Morning Attendances --}}
-                               <td>
-                                @if ($log->attend_checkIn)
-                                    {{ date('h:i A', strtotime($log->attend_checkIn)) }}
-                                @else
-                                    <span class="text-red-500">Absent</span>
-                                @endif
-                               </td>
-                               <td>
-                                @if ($log->attend_checkOut)
-                                    {{ date('h:i A', strtotime($log->attend_checkOut)) }}
-                                @else
-                                    <span class="text-red-500">Absent</span>
-                                @endif
-                               </td>
+                                <td>
+                                    @if ($log->attend_checkIn)
+                                        {{ date('h:i A', strtotime($log->attend_checkIn)) }}
+                                    @else
+                                        <span class="text-red-500">Absent</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($log->attend_checkOut)
+                                        {{ date('h:i A', strtotime($log->attend_checkOut)) }}
+                                    @else
+                                        <span class="text-red-500">Absent</span>
+                                    @endif
+                                </td>
                                 {{-- Afternoon Attendances --}}
-                               <td>
-                                @if ($log->attend_afternoon_checkIn)
-                                    {{ date('h:i A', strtotime($log->attend_afternoon_checkIn)) }}
-                                @else
-                                    <span class="text-red-500">Absent</span>
-                                @endif
-                               </td>
-                               <td>
-                                @if ($log->attend_afternoon_checkOut)
-                                    {{ date('h:i A', strtotime($log->attend_afternoon_checkOut)) }}
-                                @else
-                                    <span class="text-red-500">Absent</span>
-                                @endif
-                               </td>
+                                <td>
+                                    @if ($log->attend_afternoon_checkIn)
+                                        {{ date('h:i A', strtotime($log->attend_afternoon_checkIn)) }}
+                                    @else
+                                        <span class="text-red-500">Absent</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($log->attend_afternoon_checkOut)
+                                        {{ date('h:i A', strtotime($log->attend_afternoon_checkOut)) }}
+                                    @else
+                                        <span class="text-red-500">Absent</span>
+                                    @endif
+                                </td>
                                 <td>{{ $log->event_name }}</td>
                                 <td>{{ $log->date ? date('M d, Y', strtotime($log->date)) : '---' }}</td>
                             </tr>
