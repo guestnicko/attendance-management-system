@@ -6,16 +6,20 @@
         .modal-backdrop {
             z-index: 60;
         }
+
         .modal-content {
             z-index: 61;
         }
+
         #tableContainer {
             z-index: 10;
             position: relative;
         }
+
         [x-cloak] {
             display: none !important;
         }
+
         .fixed {
             z-index: 50;
         }
@@ -54,24 +58,23 @@
             });
         </script>
     @endif
-        {{-- Code by Panzerweb: Added second error handling for sweet alert --}}
-        {{-- Error popup modified by Panzerweb --}}
+    {{-- Code by Panzerweb: Added second error handling for sweet alert --}}
+    {{-- Error popup modified by Panzerweb --}}
     @if (session('error'))
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const errors = @json(session('error'));
-            console.log(errors);
-            let errorList = '<ul class="pl-5 text-sm text-red-700">';
-            for (const [key, value] of Object.entries(errors.details)) {
-                errorList += `<li><strong>${key}:</strong> ${value}</li>`;
-            }
-            errorList += '</ul>';
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const errors = @json(session('error'));
+                console.log(errors);
+                let errorList = '<ul class="pl-5 text-sm text-red-700">';
+                for (const [key, value] of Object.entries(errors.details)) {
+                    errorList += `<li><strong>${key}:</strong> ${value}</li>`;
+                }
+                errorList += '</ul>';
 
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops!',
-                html: 
-                `   <h2 class="text-lg font-semibold text-red-600">Something is wrong!</h2><br>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops!',
+                    html: `   <h2 class="text-lg font-semibold text-red-600">Something is wrong!</h2><br>
                     <div class="w-full max-w-md mx-auto">
                         <div class="">
                             <button onclick="toggleAccordion()" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
@@ -92,7 +95,7 @@
                                     <div class="bg-gray-200 p-4 rounded-md border border-red-200">
                                         <p class="text-md font-medium text-red-800 mb-2">Error Message:</p>
                                         <p class="text-sm text-red-700 italic">
-                                            The error shows that either a <b>Student RFID</b> or <b>Student ID</b> has been duplicated, or there are <b> empty fields </b>, please check carefully input details of inserted data.   
+                                            The error shows that either a <b>Student RFID</b> or <b>Student ID</b> has been duplicated, or there are <b> empty fields </b>, please check carefully input details of inserted data.
                                         </p>
                                         <div class="bg-gray-100 p-4 rounded-md border border-red-200">
                                             <p class="text-sm font-medium text-red-800 mb-2">Details affected:</p>
@@ -101,40 +104,34 @@
 
                                         <span class="text-sm"><strong>Full error message: </strong>${errors.message}</span>
                                     </div>
-                                    
+
                             </div>
                         </div>
-                    </div>`,         
-                showConfirmButton: true,
+                    </div>`,
+                    showConfirmButton: true,
+                });
             });
-        });
-    </script>
+        </script>
     @endif
 
-    {{-- <x-slot name="header">
-        <div class="flex items-center gap-3">
-            <div class="">
-
-            </div>
-            <div class="">
-                <img src="{{asset('images/icons/default-image.svg')}}" alt="">
-            </div>
-        </div>
-    </x-slot> --}}
 
     <div class="flex gap-5 mb-4">
         <div class="bg-gray-900 h-auto basis-1/2 p-3 rounded-md flex flex-col justify-between">
             <div class="flex justify-between">
                 <div class="py-1 px-3">
-                    <h2 class="text-4xl font-semibold text-green-500">Welcome, <span class="text-gray-200">{{ ucwords(auth()->user()->admin_uname) }}</span></h2>
+                    <h2 class="text-4xl font-semibold text-green-500">Welcome, <span
+                            class="text-gray-200">{{ ucwords(auth()->user()->admin_uname) }}</span></h2>
                     <p class="text-gray-200 pt-1">RFID Attendance Management System</p>
                 </div>
                 <div class="py-1 px-3">
-                    <a href="{{route('profile.edit')}}">
-                        <button type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                            </svg>                
+                    <a href="{{ route('profile.edit') }}">
+                        <button type="button"
+                            class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            </svg>
                         </button>
                     </a>
                 </div>
@@ -144,7 +141,8 @@
                     class="bg-gradient-to-r from-lime-500 to-lime-600 hover:bg-green-700 hover:scale-105 ease-linear transition-all text-white rounded-2xl px-4 py-4 text-lg flex items-center gap-1">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-7">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M15.91 11.672a.375.375 0 0 1 0 .656l-5.603 3.113a.375.375 0 0 1-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112Z" />
                     </svg>
@@ -173,7 +171,7 @@
                         <p class="text-lg font-medium opacity-90">Enrolled Students</p>
                     </div>
                 </div>
-    
+
                 <!-- Graduates Card -->
                 <div onclick="window.location.href = '{{ route('students') }}'"
                     class="flex items-center gap-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg p-4 shadow-lg hover:shadow-xl hover:scale-105 transition-all cursor-pointer">
@@ -191,14 +189,15 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 
 
     <div class="flex items-center justify-between bg-white p-3 rounded-lg">
         <div class="flex gap-5">
             <div id="clockdate">
-                <div class="clockdate-wrapper bg-gray-800 p-2 max-w-xs w-full text-center rounded-xl mx-auto shadow-lg border-2 border-gray-900">
+                <div
+                    class="clockdate-wrapper bg-gray-800 p-2 max-w-xs w-full text-center rounded-xl mx-auto shadow-lg border-2 border-gray-900">
                     <div id="clock" class="bg-gray-800 text-lime-500 text-2xl font-sans shadow-sm"></div>
                     <div id="date" class="tracking-widest text-sm font-sans text-white"></div>
                 </div>
@@ -231,25 +230,27 @@
 
                         <div class="flex flex-col mb-3">
                             <label for="">Day or Event:</label>
-                            <input type="text" placeholder="Enter Event Name" name="event_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <input type="text" placeholder="Enter Event Name" name="event_name"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         </div>
 
                         <div class="flex flex-col mb-3">
                             <label for="">Event Date:</label>
-                            <input type="date" name="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <input type="date" name="date"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         </div>
 
                         <p class="text-xl text-gray-900 font-bold">Check In:</p>
                         <div class="flex gap-5 mb-3">
                             <div class="w-full">
-                                <label for="start-time"
-                                    class="block mb-2 text-sm font-medium text-gray-900">Start
+                                <label for="start-time" class="block mb-2 text-sm font-medium text-gray-900">Start
                                     time:</label>
                                 <div class="relative">
                                     <div
                                         class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
                                         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                            viewBox="0 0 24 24">
                                             <path fill-rule="evenodd"
                                                 d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
                                                 clip-rule="evenodd" />
@@ -261,8 +262,7 @@
                                 </div>
                             </div>
                             <div class="w-full">
-                                <label for="end-time"
-                                    class="block mb-2 text-sm font-medium text-gray-900">End
+                                <label for="end-time" class="block mb-2 text-sm font-medium text-gray-900">End
                                     time:</label>
                                 <div class="relative">
                                     <div
@@ -284,8 +284,7 @@
                         <p class="text-xl text-gray-900 font-bold">Check Out:</p>
                         <div class="flex gap-5 mb-3">
                             <div class="w-full">
-                                <label for="start-time"
-                                    class="block mb-2 text-sm font-medium text-gray-900">Start
+                                <label for="start-time" class="block mb-2 text-sm font-medium text-gray-900">Start
                                     time:</label>
                                 <div class="relative">
                                     <div
@@ -304,8 +303,7 @@
                                 </div>
                             </div>
                             <div class="w-full">
-                                <label for="end-time"
-                                    class="block mb-2 text-sm font-medium text-gray-900">End
+                                <label for="end-time" class="block mb-2 text-sm font-medium text-gray-900">End
                                     time:</label>
                                 <div class="relative">
                                     <div
@@ -329,15 +327,14 @@
                             <label for="">Whole Day?</label>
                         </div>
 
-{{-- AFTERNOON ATTENDANCE --}}
+                        {{-- AFTERNOON ATTENDANCE --}}
 
                         <div id="afternoon_attendance" class="hidden transition-all">
                             <p class="text-2xl font-bold text-gray-900">Afternoon Attendance</p>
                             <p class="text-xl font-semibold text-gray-900">Check In:</p>
                             <div class="flex gap-5 mb-3">
                                 <div class="w-full">
-                                    <label for="start-time"
-                                        class="block mb-2 text-sm font-medium text-gray-900">Start
+                                    <label for="start-time" class="block mb-2 text-sm font-medium text-gray-900">Start
                                         time:</label>
                                     <div class="relative">
                                         <div
@@ -356,8 +353,7 @@
                                     </div>
                                 </div>
                                 <div class="w-full">
-                                    <label for="end-time"
-                                        class="block mb-2 text-sm font-medium text-gray-900">End
+                                    <label for="end-time" class="block mb-2 text-sm font-medium text-gray-900">End
                                         time:</label>
                                     <div class="relative">
                                         <div
@@ -379,8 +375,7 @@
                             <p class="text-xl text-gray-900 font-bold">Check Out:</p>
                             <div class="flex gap-5 mb-3">
                                 <div class="w-full">
-                                    <label for="start-time"
-                                        class="block mb-2 text-sm font-medium text-gray-900">Start
+                                    <label for="start-time" class="block mb-2 text-sm font-medium text-gray-900">Start
                                         time:</label>
                                     <div class="relative">
                                         <div
@@ -399,8 +394,7 @@
                                     </div>
                                 </div>
                                 <div class="w-full">
-                                    <label for="end-time"
-                                        class="block mb-2 text-sm font-medium text-gray-900">End
+                                    <label for="end-time" class="block mb-2 text-sm font-medium text-gray-900">End
                                         time:</label>
                                     <div class="relative">
                                         <div
@@ -456,39 +450,46 @@
                                     <label for="">
                                         RFID
                                     </label>
-                                    <input type="text" placeholder="Scan RFID" name="s_rfid" id="s_rfid" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    <input type="text" placeholder="Scan RFID" name="s_rfid" id="s_rfid"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 </div>
                                 <div class="grid grid-cols-1">
                                     <label for="">Student ID:</label>
-                                    <input type="text" placeholder="Enter Student ID (Ex. 2023-00069)" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                    <input type="text" placeholder="Enter Student ID (Ex. 2023-00069)"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                         name="s_studentID" id="s_studentID">
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 mt-5 mx-7">
                                 <label for="">First Name:</label>
-                                <input type="text" placeholder="Enter Firstname" name="s_fname" id="s_fname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <input type="text" placeholder="Enter Firstname" name="s_fname" id="s_fname"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             </div>
                             <div class="grid grid-cols-1 mt-5 mx-7">
                                 <label for="">Last Name:</label>
-                                <input type="text" placeholder="Enter Lastname" name="s_lname" id="s_lname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <input type="text" placeholder="Enter Lastname" name="s_lname" id="s_lname"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
 
                                 <div class="grid grid-cols-1">
                                     <label for="">Middle Name</label>
-                                    <input type="text" placeholder="Enter Middlename" name="s_mname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                    <input type="text" placeholder="Enter Middlename" name="s_mname"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                         id="s_mname">
                                 </div>
                                 <div class="grid grid-cols-1">
                                     <label for="">Suffix</label>
-                                    <input type="text" placeholder="Enter Suffix" name="s_suffix" id="s_suffix" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    <input type="text" placeholder="Enter Suffix" name="s_suffix" id="s_suffix"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8 mt-5 mx-7">
 
                                 <div class="grid grid-cols-1">
                                     <label for="">Program</label>
-                                    <select name="s_program" id="s_program" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    <select name="s_program" id="s_program"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                         <option selected value="">Select Program</option>
                                         <option value="BSIT">BSIT</option>
                                         <option value="BSIS">BSIS</option>
@@ -496,7 +497,8 @@
                                 </div>
                                 <div class="grid grid-cols-1">
                                     <label for="">Year Level</label>
-                                    <select name="s_lvl" id="s_lvl" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    <select name="s_lvl" id="s_lvl"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                         <option selected value="">Select Year Level</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -506,7 +508,8 @@
                                 </div>
                                 <div class="grid grid-cols-1">
                                     <label for="">Set</label>
-                                    <select name="s_set" id="s_set" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    <select name="s_set" id="s_set"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                         <option selected value="">Select Set</option>
                                         <option value="A">A</option>
                                         <option value="B">B</option>
@@ -552,25 +555,31 @@
 
             {{-- full-screen-btn --}}
             <button id="fullscreenToggle" class="bg-lime-600 text-white px-4 py-2 rounded-md mb-2">
-                <svg height="15px" width="15px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                    viewBox="0 0 512 512"  xml:space="preserve">
-                <style type="text/css">
-                    .st0{fill:#000000;}
-                </style>
-                <g>
-                    <polygon class="st0" points="345.495,0 394.507,49.023 287.923,155.607 356.384,224.086 462.987,117.493 511.991,166.515
-                        511.991,0 	"/>
-                    <polygon class="st0" points="155.615,287.914 49.022,394.507 0.009,345.494 0.009,512 166.515,512 117.493,462.978
-                        224.087,356.375 	"/>
-                    <polygon class="st0" points="356.384,287.914 287.923,356.375 394.507,462.978 345.495,512 511.991,512 511.991,345.485
-                        462.977,394.507 	"/>
-                    <polygon class="st0" points="166.505,0 0.009,0 0.009,166.506 49.022,117.493 155.615,224.086 224.087,155.607 117.501,49.023 	"/>
-                </g>
+                <svg height="15px" width="15px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve">
+                    <style type="text/css">
+                        .st0 {
+                            fill: #000000;
+                        }
+                    </style>
+                    <g>
+                        <polygon class="st0"
+                            points="345.495,0 394.507,49.023 287.923,155.607 356.384,224.086 462.987,117.493 511.991,166.515
+                        511.991,0 	" />
+                        <polygon class="st0"
+                            points="155.615,287.914 49.022,394.507 0.009,345.494 0.009,512 166.515,512 117.493,462.978
+                        224.087,356.375 	" />
+                        <polygon class="st0"
+                            points="356.384,287.914 287.923,356.375 394.507,462.978 345.495,512 511.991,512 511.991,345.485
+                        462.977,394.507 	" />
+                        <polygon class="st0"
+                            points="166.505,0 0.009,0 0.009,166.506 49.022,117.493 155.615,224.086 224.087,155.607 117.501,49.023 	" />
+                    </g>
                 </svg>
             </button>
         </div>
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg" >
-            <table id="tableContainer" class="min-w-full w-full text-sm text-left rtl:text-right" >
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table id="tableContainer" class="min-w-full w-full text-sm text-left rtl:text-right">
                 <thead class="text-lg font-semibold text-gray-100 uppercase bg-green-700">
                     <tr>
                         {{-- <td class="p-2">No.</td> --}}
@@ -653,7 +662,7 @@
 
         // FOR MODAL EVENT WHOLE DAY
         const afternoon = document.querySelector("#afternoon_attendance");
-        document.querySelector("#wholeDay").addEventListener("change", function () {
+        document.querySelector("#wholeDay").addEventListener("change", function() {
             afternoon.classList.toggle("hidden");
         });
 

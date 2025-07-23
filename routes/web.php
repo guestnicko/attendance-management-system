@@ -49,8 +49,7 @@ Route::middleware('auth')->group(function () {
 
     // LOGS RELATED ROUTES
     Route::get('/logs', [LogController::class, 'viewLogs'])->name('logs');
-    Route::post('/logs/export-file', [LogController::class, 'exportFile'])->name('logs.export');
-    Route::post('/logs/clear-fines', [LogController::class, 'clearFines'])->name('logs.clear-fines');
+    Route::post('/logs/clear-fines', [LogController::class, 'clearFines'])->name('logs.clear-logs');
 
     // STUDENT LOGS - API => VIA CATEGORY
     Route::get('/logs/category', [LogController::class, 'filterByCategory'])->name('fetchViaCategory');
@@ -71,10 +70,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/logs/filter', [LogController::class, 'filter'])->name('fetchLogViaSearch');
     Route::get('/logs/category', [LogController::class, 'filterByCategory'])->name('fetchLogViaCategory');
     Route::get("/logs/event", [LogController::class, "filterByEvent"])->name("fetchLogViaEvent");
+
     // FINES => VIA SEARCH AND FILTER
     Route::get('/fines/filter', [FineController::class, 'filter'])->name('fetchFinesViaSearch');
     Route::get('/fines/category', [FineController::class, 'filterByCategory'])->name('fetchFinesViaCategory');
     Route::get("/fines/events", [FineController::class, "filterByEvent"])->name("fetchFinesViaEvent");
+
+
     // STUDENT - API => VIA CATEGORY
 
 
@@ -99,6 +101,11 @@ Route::middleware('auth')->group(function () {
     // Fine Settings Routes
     Route::get('/fines', [FineController::class, 'view'])->name('fines.view');
     Route::put('/fines/settings', [FinesController::class, 'updateSettings'])->name('fines.settings.update');
+    Route::delete("/fines/clear", [FineController::class, "clearLogs"])->name("fines.clear");
+
+    // EXPORT RELATED ROUTES
+    Route::post("/fines/export-file", [FineController::class, "exportFile"])->name("fines.export");
+    Route::post('/logs/export-file', [LogController::class, 'exportFile'])->name('logs.export');
 });
 
 

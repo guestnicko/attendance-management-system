@@ -10,35 +10,27 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class StudentAttendanceExport implements FromCollection, WithHeadings, WithStyles
+class FinesExport implements FromCollection, WithHeadings, WithStyles
 {
     /**
      * @return \Illuminate\Support\Collection
      */
     private $students;
-    private $wholeDay;
 
     public function collection()
     {
+
         return $this->students;
     }
 
     public function setCollection($request)
     {
         $this->students = $request;
-
-        if ($request != null && $request->first() != null) {
-            $this->wholeDay = $request->first()->isWholeDay;
-        }
     }
 
     public function headings(): array
     {
-        if ($this->wholeDay == "true") {
-            return ["Student ID", "Last Name", "First Name", "Program", "Set", "Year Level", "Morning Check In", "Morning Check Out", "Afternoon Check In", "Afternoon Check Out", "Event Name", "isWholeDay", "Date"];
-        } else {
-            return ["Student ID", "Last Name", "First Name", "Program", "Set", "Year Level", "Check In", "Check Out", "Event Name", "Date"];
-        }
+        return ["Student ID", "Last Name", "First Name", "Program", "Set", "Year Level", "Fines Amount", "Total Fines", "Event Name", "Date"];
     }
 
     public function styles(Worksheet $sheet)

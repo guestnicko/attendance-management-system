@@ -37,7 +37,6 @@ class LogController extends Controller
 
     public function exportFile(Request $request)
     {
-
         $request->validate([
             "event_id" => ['required'],
             "file_type" => ['required']
@@ -54,7 +53,10 @@ class LogController extends Controller
         }
 
 
-        return back()->with(['failed' => "Something went wrong"]);
+        return response()->json([
+            "message" => "api coded successfully",
+            "request" => $request
+        ]);
     }
 
     protected function generatePDF(Request $request)
@@ -62,76 +64,108 @@ class LogController extends Controller
         $event = Event::findOrfail($request->event_id);
 
         // RETRIEVE ALL PRESENT AND ABSENT STUDENT THEN UNION THEM
+        $students = StudentAttendance::select('*', 'student_attendances.created_at')
+            ->leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
+            ->join('events', 'events.id', '=', 'student_attendances.event_id');
 
-        $students = DB::table('students')->select('*', 'student_attendances.created_at')
-            ->leftJoin('student_attendances', 'students.id', '=', 'student_attendances.id_student')
-            ->where('event_id', $request->event_id);
-        $absent = DB::table('students')->select('*', 'student_attendances.created_at')
-            ->leftJoin('student_attendances', 'students.id', '=', 'student_attendances.id_student')
-            ->whereNull('event_id');
-
-
-
-        if ($request->s_lvl) {
-            $students = $students->where('s_lvl', $request->s_lvl);
-            $absent = $absent->where('s_lvl', $request->s_lvl);
+        if ($request->set) {
+            $set = explode(',', $request->set);
+            $students = $students->whereIn('s_set', $set);
         }
-        if ($request->s_set) {
-            $students = $students->where('s_set', $request->s_set);
-            $absent = $absent->where('s_set', $request->s_lvl);
+        if ($request->lvl) {
+            $lvl = explode(',', $request->lvl);
+            $students = $students->whereIn('s_lvl', $lvl);
         }
-        if ($request->s_program) {
-            $students = $students->where('s_program', $request->s_program);
-            $absent = $absent->where('s_program', $request->s_lvl);
+        if ($request->program) {
+            $program = explode(',', $request->program);
+            $students = $students->whereIn('s_program', $program);
         }
-        if ($request->s_status) {
-            $students = $students->where('s_status', $request->s_status);
-            $absent = $absent->where('s_status', $request->s_lvl);
+        if ($request->status) {
+            $status = explode(',', $request->status);
+            $students = $students->whereIn('s_status', $status);
         }
-        $logs = $students->union($absent)->get();
-
+        if ($request->event_id) {
+            $students = $students->where('event_id', $request->event_id);
+        }
+        $logs = $students->get();
         $pdf = PDF::loadView('reports.attendance', compact('logs', 'event'));
 
-        return $pdf->download('burh_attendance_report.pdf');
+        return $pdf->download("sample.pdf");
     }
     protected function generateExcel(Request $request)
     {
         $request->validate([
             "event_id" => ['required']
         ]);
-        $logs = DB::table('students')->select(
-            'students.s_studentID',
-            'students.s_lname',
-            'students.s_fname',
-            'students.s_program',
-            'students.s_set',
-            'students.s_lvl',
-            'student_attendances.attend_checkIn',
-            'student_attendances.attend_checkOut',
-            'events.event_name',
-            'student_attendances.created_at'
-        )
-            ->leftJoin('student_attendances', 'students.id', '=', 'student_attendances.id_student');
+        $event = Event::findOrfail($request->event_id);
+        $wholeDay = $event->isWholeDay;
+        // RETRIEVE ALL PRESENT AND ABSENT STUDENT THEN UNION THEM
 
+        if ($wholeDay != "false" && $wholeDay) {
+            $students = StudentAttendance::select([
+                'students.s_studentID',
+                's_lname',
+                's_fname',
+                's_program',
+                's_set',
+                's_lvl',
+                'attend_checkIn',
+                'attend_checkOut',
+                'attend_afternoon_checkIn',
+                'attend_afternoon_checkOut',
+                'event_name',
+                "isWholeDay",
+                'student_attendances.created_at'
+            ])
+                ->leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
+                ->join('events', 'events.id', '=', 'student_attendances.event_id');
+        } else {
+            $students = StudentAttendance::select([
+                'students.s_studentID',
+                's_lname',
+                's_fname',
+                's_program',
+                's_set',
+                's_lvl',
+                'attend_checkIn',
+                'attend_checkOut',
+
+                'event_name',
+                'student_attendances.created_at'
+            ])
+                ->leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
+                ->join('events', 'events.id', '=', 'student_attendances.event_id');
+        }
         if ($request->event_id) {
-            $logs = $logs->where('event_id', $request->event_id);
+            $students = $students->where('event_id', $request->event_id);
         }
-        if ($request->s_lvl) {
-            $logs = $logs->where('s_lvl', $request->s_lvl);
+        if ($request->set) {
+            $set = explode(',', $request->set);
+            $students = $students->whereIn('s_set', $set);
         }
-        if ($request->s_set) {
-            $logs = $logs->where('s_set', $request->s_set);
+        if ($request->lvl) {
+            $lvl = explode(',', $request->lvl);
+            $students = $students->whereIn('s_lvl', $lvl);
         }
-        if ($request->s_program) {
-            $logs = $logs->where('s_program', $request->s_program);
+        if ($request->program) {
+            $program = explode(',', $request->program);
+            $students = $students->whereIn('s_program', $program);
         }
-        if ($request->s_status) {
-            $logs = $logs->where('s_status', $request->s_status);
+        if ($request->status) {
+            $status = explode(',', $request->status);
+            $students = $students->whereIn('s_status', $status);
         }
-        $logs = $logs->get();
-        $students = new StudentAttendanceExport;
-        $students->setCollection($logs);
-        return Excel::download($students, $logs->first()->event_name . "_student_attendance_report.xlsx");
+        if ($request->event_id) {
+            $students = $students->where('event_id', $request->event_id);
+        }
+
+        $students = $students->get();
+        if ($students->empty()) {
+            return back()->with(["empty" => "No logs found"]);
+        }
+        $logs = new StudentAttendanceExport;
+        $logs->setCollection($students);
+        return Excel::download($logs, $event->event_name . "_student_attendance_report.xlsx");
     }
 
     protected function generateCSV(Request $request)

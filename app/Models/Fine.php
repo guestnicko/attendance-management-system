@@ -21,6 +21,7 @@ class Fine extends Model
         'total_fines',
     ];
 
+
     public function student()
     {
         return $this->belongsTo(Student::class, 'student_rfid', 's_rfid');
