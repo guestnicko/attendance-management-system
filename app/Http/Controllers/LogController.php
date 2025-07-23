@@ -88,8 +88,16 @@ class LogController extends Controller
             $students = $students->where('event_id', $request->event_id);
         }
         $logs = $students->get();
+        if (empty($logs->first())) {
+            return back()->with(["empty" => "No logs found"]);
+        }
         $pdf = PDF::loadView('reports.attendance', compact('logs', 'event'));
-
+        $wholeDay = $event->isWholeDay;
+        if ($wholeDay != "false" && $wholeDay) {
+            $pdf = PDF::loadView('reports.attendance-wholeDay', compact('logs', 'event'));
+        } else {
+            $pdf = PDF::loadView('reports.attendance', compact('logs', 'event'));
+        }
         return $pdf->download("sample.pdf");
     }
     protected function generateExcel(Request $request)
@@ -160,7 +168,7 @@ class LogController extends Controller
         }
 
         $students = $students->get();
-        if ($students->empty()) {
+        if (empty($students->first())) {
             return back()->with(["empty" => "No logs found"]);
         }
         $logs = new StudentAttendanceExport;

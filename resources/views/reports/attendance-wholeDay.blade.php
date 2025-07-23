@@ -6,6 +6,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+
         }
 
         table {
@@ -19,10 +20,13 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
+            font-size: 9px;
         }
 
         th {
             background-color: #f2f2f2;
+            font-size: 12px;
+
         }
 
         h1 {

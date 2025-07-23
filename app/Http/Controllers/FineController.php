@@ -250,7 +250,7 @@ class FineController extends Controller
         $event = Event::findOrfail($request->event_id);
 
         // RETRIEVE ALL PRESENT AND ABSENT STUDENT THEN UNION THEM
-        $students = Student::leftJoin('fines', 'students.id', '=', 'fines.student_id')
+        $students = Fine::leftJoin('students', 'students.id', '=', 'fines.student_id')
             ->leftJoin('events', 'events.id', '=', 'fines.event_id')
             ->select('students.*', 'fines.*', 'events.event_name');
 
@@ -275,6 +275,11 @@ class FineController extends Controller
         }
 
         $logs = $students->get();
+        if (empty($logs->first())) {
+
+            return back()->with(["empty" => "No logs found"]);
+        }
+
         $pdf = PDF::loadView('reports.fines', compact('logs', 'event'));
 
         return $pdf->download("sample_fines.pdf");
@@ -326,7 +331,7 @@ class FineController extends Controller
 
         $students = $students->get();
 
-        if (empty($students)) {
+        if (empty($students->first())) {
             return back()->with(["empty" => "No logs found"]);
         }
 

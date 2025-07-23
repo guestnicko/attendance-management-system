@@ -66,13 +66,10 @@
                     <td>{{ $log->s_program }}</td>
                     <td>{{ $log->s_set }}</td>
                     <td>{{ $log->s_lvl }}</td>
-                    <td>{{ $log->attend_checkIn ? date('h:i A', strtotime($log->attend_checkIn)) : '-' }}</td>
-                    <td>{{ $log->attend_checkOut ? date('h:i A', strtotime($log->attend_checkOut)) : '-' }}</td>
-                    <td>{{ $log->attend_afternoon_checkIn ? date('h:i A', strtotime($log->attend_afternoon_checkIn)) : '-' }}
-                    </td>
-                    <td>{{ $log->attend_afternoon_checkOut ? date('h:i A', strtotime($log->attend_afternoon_checkOut)) : '-' }}
-                    </td>
+
                     <td>{{ $event->event_name }}</td>
+                    <td>{{ $log->fines_amount }}</td>
+                    <td>{{ $log->total_fines }}</td>
                     <td>{{ $event->date }}</td>
                 </tr>
             @endforeach
