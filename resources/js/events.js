@@ -61,18 +61,26 @@ function navigateTab(table, button) {
     if (button == "pendingEventButton") {
         document
             .getElementById("completedEventButton")
-            .classList.remove("bg-green-300");
+            .classList.remove("bg-gray-900", "text-green-500", "font-semibold");
         document
             .getElementById("pendingEventButton")
-            .classList.add("bg-green-300");
+            .classList.add("bg-gray-900", "text-green-500", "font-semibold");
     } else if (button == "completedEventButton") {
         document
             .getElementById("completedEventButton")
-            .classList.add("bg-green-300");
+            .classList.add("bg-gray-900", "text-green-500", "font-semibold");
         document
             .getElementById("pendingEventButton")
-            .classList.remove("bg-green-300");
+            .classList.remove("bg-gray-900", "text-green-500", "font-semibold");
     }
 }
 
 document.navigateTab = navigateTab;
+
+// Load the pending event as default
+let pendingEventButton = document.getElementById("pendingEventButton");
+
+document.addEventListener("DOMContentLoaded", () => {
+    pendingEventButton.classList.add("bg-gray-900", "text-green-500", "font-semibold");
+
+})
