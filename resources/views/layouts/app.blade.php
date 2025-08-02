@@ -15,45 +15,63 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Prevent modal flashing on page load -->
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .alpine-not-ready {
+            opacity: 0;
+        }
+
+        .alpine-ready {
+            opacity: 1;
+        }
+    </style>
 </head>
 
 <body class="font-sans antialiased bg-gray-200" onload="startTime()">
-    <div class="min-h-full w-full bg-gray-200">
+    <div class="min-h-full w-full bg-gray-200" x-data="globalModal">
         <!-- Navigation Bar -->
         <nav class="bg-green-700 w-full fixed top-0 right-0 left-0 z-10">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center justify-between">
-                    <div class="flex items-center">
+                    <!-- Left Section: Logo -->
+                    <div class="flex items-center mr-10">
                         <div class="shrink-0">
                             <img class="h-14 w-auto" src="{{ asset('images/logos/fox.png') }}" alt="Your Company">
                         </div>
-                        <div class="hidden md:block">
-                            <div class="ml-10 flex items-baseline space-x-4 w-100">
-                                <div class="font-black">
-                                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">Dashboard</x-nav-link>
-                                </div>
+                    </div>
 
-                                <div class="font-black">
-                                    <x-nav-link href="{{ route('logs') }}" :active="request()->routeIs('logs')">Logs</x-nav-link>
-                                </div>
-                                <div class="font-black">
-                                    <x-nav-link href="{{ route('fines.view') }}" :active="request()->routeIs('fines.view')">Fines</x-nav-link>
-                                </div>
-                                <div class="font-black">
-                                    <x-nav-link href="{{ route('students') }}" :active="request()->routeIs('students')">Students</x-nav-link>
+                    <!-- Center Section: Navigation Links -->
+                    <div class="hidden md:block flex-1 flex justify-center">
+                        <div class="flex items-baseline space-x-8">
+                            <div class="font-black">
+                                <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">Dashboard</x-nav-link>
+                            </div>
 
-                                </div>
+                            <div class="font-black">
+                                <x-nav-link href="{{ route('logs') }}" :active="request()->routeIs('logs')">Logs</x-nav-link>
+                            </div>
+                            <div class="font-black">
+                                <x-nav-link href="{{ route('fines.view') }}" :active="request()->routeIs('fines.view')">Fines</x-nav-link>
+                            </div>
+                            <div class="font-black">
+                                <x-nav-link href="{{ route('students') }}" :active="request()->routeIs('students')">Students</x-nav-link>
+                            </div>
 
-                                <div class="font-black">
-                                    <x-nav-link href="{{ route('events') }}" :active="request()->routeIs('events')">Events</x-nav-link>
-
-                                </div>
-
+                            <div class="font-black">
+                                <x-nav-link href="{{ route('events') }}" :active="request()->routeIs('events')">Events</x-nav-link>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Right Section: Notifications and Profile -->
                     <div class="hidden md:block">
-                        <div class="ml-4 flex items-center md:ml-6">
+                        <div class="flex items-center space-x-4">
+                            <!-- Notifications -->
                             <button type="button"
                                 class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                 <span class="sr-only">View notifications</span>
@@ -64,20 +82,18 @@
                                 </svg>
                             </button>
 
-                            <!-- Profile dropdown -->
-                            <div class="relative ml-3">
+                            <!-- Profile Dropdown -->
+                            <div class="relative">
                                 <div>
                                     <button type="button" onclick="toggleDropdown()" id="user-menu-button"
                                         class="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                                        id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                        aria-expanded="false" aria-haspopup="true">
                                         <span class="sr-only">Open user menu</span>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="size-10 text-green-400">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                         </svg>
-
-                                        {{-- <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt=""> --}}
                                     </button>
                                 </div>
                                 <div id="user-menu"
@@ -102,7 +118,6 @@
                                         </div>
                                     </form>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -116,9 +131,9 @@
                 class="max-h-[100px] fixed z-0 opacity-25 bottom-0 hover:opacity-100 transition-opacity duration-100">
 
             @isset($header)
-                <header class="px-5">
-                    {{ $header }}
-                </header>
+            <header class="px-5">
+                {{ $header }}
+            </header>
             @endisset
 
             <main class="mt-4 px-5">

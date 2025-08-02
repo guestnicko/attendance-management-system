@@ -23,6 +23,21 @@
         .fixed {
             z-index: 50;
         }
+        
+        /* Ensure modals are hidden by default */
+        .modal-hidden {
+            display: none !important;
+        }
+        
+        /* Prevent modal flashing on page load */
+        [x-data] {
+            opacity: 0;
+            transition: opacity 0.1s ease-in-out;
+        }
+        
+        [x-data].alpine-ready {
+            opacity: 1;
+        }
     </style>
 
     {{-- Implemented Sweet Alert Pop Ups on Conditionals --}}

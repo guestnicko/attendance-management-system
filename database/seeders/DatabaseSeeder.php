@@ -3,6 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Student;
+use App\Models\Event;
+use App\Models\StudentAttendance;
+use App\Models\Fine;
+use App\Models\Log;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,8 +18,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Create admin users
         User::factory()->create([
             'admin_fname' => 'Test',
             'admin_lname' => 'User',
@@ -24,8 +28,19 @@ class DatabaseSeeder extends Seeder
             'admin_email' => 'test@example.com',
         ]);
 
+        // Create additional admin users
+        User::factory(3)->create([
+            'admin_type' => 'admin',
+        ]);
+
+        // Call specific seeders
         $this->call([
-            FineSettingsSeeder::class
+            FineSettingsSeeder::class,
+            StudentSeeder::class,
+            EventSeeder::class,
+            AttendanceSeeder::class,
+            FineSeeder::class,
+            LogSeeder::class,
         ]);
     }
 }

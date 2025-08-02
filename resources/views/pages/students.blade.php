@@ -4,55 +4,56 @@ $page = 'students';
 <x-app-layout>
     @vite(['resources/js/students.js'])
     @if ($errors->any())
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops!...",
-                    html: `
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                icon: "error",
+                title: "Oops!...",
+                html: `
                     <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside text-left">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 `,
-                    showConfirmButton: true,
-                });
+                showConfirmButton: true,
             });
-        </script>
+        });
+    </script>
     @endif
 
     {{-- Session Error Handling from Import Controller --}}
     {{-- UPDATE: This error handling pop ups is not exclusive to the Import Controller anymore --}}
     @if (session('success'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: '{{ session('success') }}',
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '{{ session('
+                success ') }}',
+                showConfirmButton: false,
+                timer: 1500,
             });
-        </script>
+        });
+    </script>
     @endif
     {{-- Error popup modified by Panzerweb --}}
     @if (session('error'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                const errors = @json(session('error'));
-                console.log(errors);
-                let errorList = '<ul class="pl-5 text-sm text-red-700">';
-                for (const [key, value] of Object.entries(errors.details)) {
-                    errorList += `<li><strong>${key}:</strong> ${value}</li>`;
-                }
-                errorList += '</ul>';
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const errors = @json(session('error'));
+            console.log(errors);
+            let errorList = '<ul class="pl-5 text-sm text-red-700">';
+            for (const [key, value] of Object.entries(errors.details)) {
+                errorList += `<li><strong>${key}:</strong> ${value}</li>`;
+            }
+            errorList += '</ul>';
 
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops!',
-                    html: `   <h2 class="text-lg font-semibold text-red-600">Something is wrong!</h2><br>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                html: `   <h2 class="text-lg font-semibold text-red-600">Something is wrong!</h2><br>
                         <div class="w-full max-w-md mx-auto">
                             <div class="">
                                 <button onclick="toggleAccordion()" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
@@ -86,10 +87,10 @@ $page = 'students';
                                 </div>
                             </div>
                         </div>`,
-                    showConfirmButton: true,
-                });
+                showConfirmButton: true,
             });
-        </script>
+        });
+    </script>
     @endif
 
     <x-slot name="header">
@@ -122,8 +123,8 @@ $page = 'students';
         </div>
     </div>
     {{-- Edit Student Information --}}
-    <div x-data="{ open: false }"="mt-4">
-        <div x-show.important="open" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div x-data="{ open: false }" class="mt-4">
+        <div x-show="open" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div x-on:click.outside="open = false" class="max-w-[1000px] bg-white p-6 rounded-lg shadow-lg">
                 <div class="border-b-2 border-green-500 mb-5">
                     <h1 class="text-2xl font-bold">
@@ -131,7 +132,7 @@ $page = 'students';
                     </h1>
                 </div>
                 <div class="mb-5">
-                    <form id="updateForm" action="{{ route('updateStudent') }}" x-ref ="updateForm" method="POST"
+                    <form id="updateForm" action="{{ route('updateStudent') }}" x-ref="updateForm" method="POST"
                         enctype="multipart/form-data" class="flex items-center">
                         @csrf
                         @method('PATCH')
@@ -327,7 +328,7 @@ $page = 'students';
                             Add Student Information
                         </x-slot>
                         <x-slot name="content">
-                            <form id="studentForm"action="{{ route('addStudent') }}" x-ref ="studentForm"
+                            <form id="studentForm" action="{{ route('addStudent') }}" x-ref="studentForm"
                                 method="POST" enctype="multipart/form-data" class="flex items-center">
                                 @csrf
                                 <div class="basis-3/4 justify-start">
@@ -459,30 +460,30 @@ $page = 'students';
                     </thead>
                     <tbody id="student_table_body">
                         @isset($students)
-                            @foreach ($students as $student)
-                                {{-- Added tr elements for rows to fix UI --}}
-                                <tr class="table_row" id="{{ $student->id }}">
-                                    <td>{{ $student->s_studentID }}</td>
-                                    <td>{{ $student->s_fname }}</td>
-                                    <td>{{ $student->s_lname }}</td>
-                                    <td>{{ $student->s_mname }}</td>
-                                    <td>{{ $student->s_suffix }}</td>
-                                    <td>{{ $student->s_lvl }}</td>
-                                    <td>{{ $student->s_set }}</td>
-                                    <td>{{ $student->s_program }}</td>
-                                    <td>{{ $student->s_status }}</td>
-                                    <td class="flex gap-3 py-3">
-                                        <x-edit-button x-on:click="open = true"
-                                            onclick="updateStudent({{ $student }}, '{{ asset('storage/' . $student['s_image']) }}')">
-                                            {{-- Edit Button --}}
-                                        </x-edit-button>
-                                        <x-delete-button onclick="deleteStudent({{ $student }})">
-                                            {{-- Delete button --}}
-                                        </x-delete-button>
+                        @foreach ($students as $student)
+                        {{-- Added tr elements for rows to fix UI --}}
+                        <tr class="table_row" id="{{ $student->id }}">
+                            <td>{{ $student->s_studentID }}</td>
+                            <td>{{ $student->s_fname }}</td>
+                            <td>{{ $student->s_lname }}</td>
+                            <td>{{ $student->s_mname }}</td>
+                            <td>{{ $student->s_suffix }}</td>
+                            <td>{{ $student->s_lvl }}</td>
+                            <td>{{ $student->s_set }}</td>
+                            <td>{{ $student->s_program }}</td>
+                            <td>{{ $student->s_status }}</td>
+                            <td class="flex gap-3 py-3">
+                                <x-edit-button x-on:click="open = true"
+                                    onclick="updateStudent({{ $student }}, '{{ asset('storage/' . $student['s_image']) }}')">
+                                    {{-- Edit Button --}}
+                                </x-edit-button>
+                                <x-delete-button onclick="deleteStudent({{ $student }})">
+                                    {{-- Delete button --}}
+                                </x-delete-button>
 
-                                    </td>
-                                </tr>
-                            @endforeach
+                            </td>
+                        </tr>
+                        @endforeach
                         @endisset
                     </tbody>
                 </table>
@@ -521,7 +522,7 @@ $page = 'students';
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option value="">Keep Current</option>
                         @foreach (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] as $set)
-                            <option value="{{ $set }}">{{ $set }}</option>
+                        <option value="{{ $set }}">{{ $set }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -532,7 +533,7 @@ $page = 'students';
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option value="">Keep Current</option>
                         @foreach (['ENROLLED', 'GRADUATED', 'DROPPED', 'TO BE UPDATED'] as $status)
-                            <option value="{{ $status }}">{{ $status }}</option>
+                        <option value="{{ $status }}">{{ $status }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -551,7 +552,7 @@ $page = 'students';
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option value="">Keep Current</option>
                         @foreach (['1' => 'First Year', '2' => 'Second Year', '3' => 'Third Year', '4' => 'Fourth Year'] as $key => $value)
-                            <option value="{{ $key }}">{{ $value }}</option>
+                        <option value="{{ $key }}">{{ $value }}</option>
                         @endforeach
                     </select>
                 </div>
