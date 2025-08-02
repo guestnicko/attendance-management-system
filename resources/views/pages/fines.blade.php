@@ -19,6 +19,37 @@ $page = 'fines';
     </x-slot>
 
 
+    @if (session('success'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('success') }}',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            });
+        </script>
+    @endif
+    @if ($errors->any())
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops!...",
+                    html: `
+                   <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside text-left">
+                       @foreach ($errors->all() as $error)
+                           <li>{{ $error }}</li>
+                       @endforeach
+                   </ul>
+               `,
+                    showConfirmButton: true,
+                });
+            });
+        </script>
+    @endif
 
     {{-- Content --}}
     <div class="bg-white p-3 rounded-md">

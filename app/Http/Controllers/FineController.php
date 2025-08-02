@@ -224,8 +224,12 @@ class FineController extends Controller
     }
     public function clearLogs(Request $request)
     {
-        dd($request);
-        return back()->with(["success" => "Fines Log Cleared Successfully"]);
+        $request->validate([
+            "event_id" => ["required"]
+        ]);
+        Fine::where("event_id", $request->event_id)->delete();
+
+        return back()->with(["success" => "Fine logs cleared succesfully"]);
     }
     public function exportFile(Request $request)
     {

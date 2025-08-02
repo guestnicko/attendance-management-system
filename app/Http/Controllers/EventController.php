@@ -89,7 +89,8 @@ class EventController extends Controller
     {
         $pendingEvents = Event::where('event_status', "pending")->get();
         $completedEvents = Event::where('event_status', "completed")->get();
-        return view('pages.events', compact('pendingEvents', 'completedEvents'));
+        $deletedEvents = Event::onlyTrashed()->get();
+        return view('pages.events', compact('pendingEvents', 'completedEvents', "deletedEvents"));
     }
 
     public function delete(Request $request)
@@ -99,7 +100,7 @@ class EventController extends Controller
         ]);
 
         Event::find($request->id)->delete();
-        return back()->with(["successful" => "Event deleted successfully"]);
+        return back()->with(["success" => "Event deleted successfully"]);
     }
 
     public function update(Request $request)

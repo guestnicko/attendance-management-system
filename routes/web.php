@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
 
     // LOGS RELATED ROUTES
     Route::get('/logs', [LogController::class, 'viewLogs'])->name('logs');
-    Route::post('/logs/clear-fines', [LogController::class, 'clearFines'])->name('logs.clear-logs');
+    Route::post('/logs/clear-logs', [LogController::class, 'clearLogs'])->name('logs.clear-logs');
 
     // STUDENT LOGS - API => VIA CATEGORY
     Route::get('/logs/category', [LogController::class, 'filterByCategory'])->name('fetchViaCategory');
@@ -101,7 +101,7 @@ Route::middleware('auth')->group(function () {
     // Fine Settings Routes
     Route::get('/fines', [FineController::class, 'view'])->name('fines.view');
     Route::put('/fines/settings', [FinesController::class, 'updateSettings'])->name('fines.settings.update');
-    Route::delete("/fines/clear", [FineController::class, "clearLogs"])->name("fines.clear");
+    Route::post("/fines/clear", [FineController::class, "clearLogs"])->name("fines.clear");
 
     // EXPORT RELATED ROUTES
     Route::post("/fines/export-file", [FineController::class, "exportFile"])->name("fines.export");

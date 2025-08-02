@@ -3,37 +3,37 @@
 
     {{-- Implemented Sweet Alert Pop Ups on Conditionals --}}
     @if ($errors->any())
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                icon: "error",
-                title: "Oops!...",
-                html: `
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops!...",
+                    html: `
                    <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside text-left">
                        @foreach ($errors->all() as $error)
                            <li>{{ $error }}</li>
                        @endforeach
                    </ul>
                `,
-                showConfirmButton: true,
+                    showConfirmButton: true,
+                });
             });
-        });
-    </script>
+        </script>
     @endif
 
     @if (session('success'))
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: '{{ session('
-                success ') }}',
-                showConfirmButton: false,
-                timer: 1500,
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('
+                                                                            success ') }}',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
             });
-        });
-    </script>
+        </script>
     @endif
 
 
@@ -493,11 +493,16 @@
                 <button class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-gray-300 transition rounded-tl-md"
                     onclick="navigateTab('pendingEventTable', this.id)" id="pendingEventButton">Pending
                     Events
+
                 </button>
                 <button class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-gray-300 transition rounded-tr-md"
-                    onclick="navigateTab('completedEventTable', this.id)"
-                    id="completedEventButton">Completed
+                    onclick="navigateTab('completedEventTable', this.id)" id="completedEventButton">Completed
                     Events
+                </button>
+
+                <button class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-gray-300 transition rounded-tr-md"
+                    onclick="navigateTab('deletedEventTable', this.id)" id="deletedEventButton">
+                    Deleted Events
                 </button>
             </div>
 
@@ -519,35 +524,46 @@
                 </thead>
                 <tbody>
                     @if (@empty($pendingEvents))
-                    @foreach ($pendingEvents as $event)
-                    <tr>
-                        <td>{{ $event->event_name }}</td>
-                        <td>{{ $event->date }}</td>
-                        <td>{{ date_format(date_create($event->checkIn_start), 'h:i A') }}</td>
-                        <td>{{ date_format(date_create($event->checkIn_end), 'h:i A') }}</td>
-                        <td>{{ date_format(date_create($event->checkOut_start), 'h:i A') }}</td>
-                        <td>{{ date_format(date_create($event->checkOut_end), 'h:i A') }}</td>
-                        <td class="flex gap-3 py-3">
-                            <x-edit-button x-on:click="open = true" onclick="editEvent({{ $event }})">
-                                {{-- Edit Button --}}
-                            </x-edit-button>
-                            <x-delete-button onclick="deleteEvent({{ $event }})">
-                                {{-- Delete Button --}}
-                            </x-delete-button>
+                        @foreach ($pendingEvents as $event)
+                            <tr>
+                                <td>{{ $event->event_name }}</td>
+                                <td>{{ $event->date }}</td>
+                                <td>{{ date_format(date_create($event->checkIn_start), 'h:i A') }}</td>
+                                <td>{{ date_format(date_create($event->checkIn_end), 'h:i A') }}</td>
+                                <td>{{ date_format(date_create($event->checkOut_start), 'h:i A') }}</td>
+                                <td>{{ date_format(date_create($event->checkOut_end), 'h:i A') }}</td>
+                                <td class="flex gap-3 py-3">
+                                    <x-edit-button x-on:click="open = true" onclick="editEvent({{ $event }})">
+                                        {{-- Edit Button --}}
+                                    </x-edit-button>
+                                    <x-delete-button onclick="deleteEvent({{ $event }})">
+                                        {{-- Delete Button --}}
+                                    </x-delete-button>
 
-                            {{-- Add Complete Event Button --}}
-                            <form action="{{ route('events.complete', $event->id) }}" method="POST"
-                                class="inline">
-                                @csrf
-                                <button type="submit"
-                                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                                    Complete Event
-                                </button>
-                            </form>
+                                    {{-- Add Complete Event Button --}}
+                                    <form action="{{ route('events.complete', $event->id) }}" method="POST"
+                                        class="inline">
+                                        @csrf
+                                        <button type="submit"
+                                            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                            Complete Event
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                        {{-- Add Complete Event Button --}}
+                        <form action="{{ route('events.complete', $event->id) }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit"
+                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                Complete Event
+                            </button>
+                        </form>
                         </td>
-                    </tr>
+                        </tr>
                     @endforeach
-                    @else
+                @else
                     <tr>
                         <td colspan="7" class="text-center py-5 text-lg text-gray-600">No Pending Events</td>
                     </tr>
@@ -572,39 +588,75 @@
                 </thead>
                 <tbody>
                     @if (!@empty($completedEvents))
-                    @foreach ($completedEvents as $event)
-                    <tr>
-                        <td>{{ $event->event_name }}</td>
-                        <td>{{ $event->date }}</td>
-                        <td>{{ date_format(date_create($event->checkIn_start), 'h:i A') }}</td>
-                        <td>{{ date_format(date_create($event->checkIn_end), 'h:i A') }}</td>
-                        <td>{{ date_format(date_create($event->checkOut_start), 'h:i A') }}</td>
-                        <td>{{ date_format(date_create($event->checkOut_end), 'h:i A') }}</td>
-                        <td class="flex gap-3 py-3">
-                            <x-edit-button x-on:click="open = true" onclick="editEvent({{ $event }})">
-                                {{-- Edit Button --}}
-                            </x-edit-button>
-                            <x-delete-button onclick="deleteEvent({{ $event }})">
-                                {{-- Delete Button --}}
-                            </x-delete-button>
+                        @foreach ($completedEvents as $event)
+                            <tr>
+                                <td>{{ $event->event_name }}</td>
+                                <td>{{ $event->date }}</td>
+                                <td>{{ date_format(date_create($event->checkIn_start), 'h:i A') }}</td>
+                                <td>{{ date_format(date_create($event->checkIn_end), 'h:i A') }}</td>
+                                <td>{{ date_format(date_create($event->checkOut_start), 'h:i A') }}</td>
+                                <td>{{ date_format(date_create($event->checkOut_end), 'h:i A') }}</td>
+                                <td class="flex gap-3 py-3">
+                                    <x-edit-button x-on:click="open = true" onclick="editEvent({{ $event }})">
+                                        {{-- Edit Button --}}
+                                    </x-edit-button>
+                                    <x-delete-button onclick="deleteEvent({{ $event }})">
+                                        {{-- Delete Button --}}
+                                    </x-delete-button>
 
-                            {{-- Add Complete Event Button --}}
-                            <form action="{{ route('events.complete', $event->id) }}" method="POST"
-                                class="inline">
-                                @csrf
-                                <button type="submit"
-                                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                                    Complete Event
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
+                                </td>
+                            </tr>
+                        @endforeach
                     @else
-                    <tr>
-                        <td colspan="7" class="text-center py-5 text-lg text-gray-600">No Completed Events</td>
-                    </tr>
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-lg text-gray-600">No Completed Events</td>
+                        </tr>
                     @endif
+                </tbody>
+            </table>
+            <table class="min-w-full w-full text-sm text-center rtl:text-right text-gray-900 font-semibold hidden"
+                id="deletedEventTable">
+                <thead class="text-lg font-semibold text-gray-100 uppercase bg-green-700">
+                    <tr>
+                        <th scope="col" class="py-5">Event Name</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Start of Check In</th>
+                        <th scope="col">End of Check In</th>
+                        <th scope="col">Start of Check Out</th>
+                        <th scope="col">End of Check Out</th>
+                        <th scope="col">Actions</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!empty($deletedEvents))
+                        @foreach ($deletedEvents as $event)
+                            <tr>
+                                <td>{{ $event->event_name }}</td>
+                                <td> {{ $event->deleted_at }}</td>
+                                <td>{{ date_format(date_create($event->checkIn_start), 'h:i A') }}</td>
+                                <td>{{ date_format(date_create($event->checkIn_end), 'h:i A') }}</td>
+                                <td>{{ date_format(date_create($event->checkOut_start), 'h:i A') }}</td>
+                                <td>{{ date_format(date_create($event->checkOut_end), 'h:i A') }}</td>
+                                <td class="flex gap-3 py-3">
+                                    <x-edit-button x-on:click="open = true" onclick="editEvent({{ $event }})">
+                                        {{-- Edit Button --}}
+                                    </x-edit-button>
+                                    <x-delete-button onclick="deleteEvent({{ $event }})">
+                                        {{-- Delete Button --}}
+                                    </x-delete-button>
+
+
+                                </td>
+
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-lg text-gray-600">No Pending Events</td>
+                        </tr>
+                    @endif
+
                 </tbody>
             </table>
         </div>

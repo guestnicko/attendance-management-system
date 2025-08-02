@@ -25,7 +25,28 @@
                 {{-- FORMS FOR EXPORTING PDFS AND EXCELS --}}
                 <form id="exportForm" method="POST" action="{{ $route }}">
                     @csrf
-
+                    <div class="form-group">
+                        <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Prepared By:
+                        </label>
+                        <input type="text" id="" name="prepared_by"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Events</label>
+                        @if ($events != '')
+                            <select name="event_id" id="eventFieldExport"
+                                onchange="fetchLogsByEvent('{{ $route }}')"
+                                class="block w-full text-lg text-gray-500 bg-transparent border-0 border-b-2 border-violet-500 appearance-none ">
+                                <option value="" selected>Select Event</option>
+                                @foreach ($events as $event)
+                                    <option value="{{ $event->id }}">{{ $event->event_name }}</option>
+                                @endforeach
+                            </select>
+                        @else
+                            <p class="p-3">No Events Found</p>
+                        @endif
+                    </div>
                     <!-- Dropdown menu -->
                     <div class="z-10 w-auto p-3 bg-white rounded-lg shadow dark:bg-gray-700 border-2">
                         <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
@@ -106,21 +127,7 @@
 
 
 
-                        <div class="form-group">
-                            <label for="">Events</label>
-                            @if ($events != '')
-                                <select name="event_id" id="eventField"
-                                    onchange="fetchLogsByEvent('{{ $route }}')"
-                                    class="block w-full text-lg text-gray-500 bg-transparent border-0 border-b-2 border-violet-500 appearance-none ">
-                                    <option value="" selected>Select Event</option>
-                                    @foreach ($events as $event)
-                                        <option value="{{ $event->id }}">{{ $event->event_name }}</option>
-                                    @endforeach
-                                </select>
-                            @else
-                                <p class="p-3">No Events Found</p>
-                            @endif
-                        </div>
+
                     </div>
                     <input type="text" name="file_type" id="file_type" hidden>
                 </form>
@@ -171,7 +178,7 @@
         const lvl_data = Array.from(lvl).map((cb) => cb.value);
         const set_data = Array.from(set).map((cb) => cb.value);
         const status_data = Array.from(status).map((cb) => cb.value);
-        const event_id = document.querySelector("#eventField").value;
+        const event_id = document.querySelector("#eventFieldExport").value;
         document.querySelector("#file_type").value = type;
         document.querySelector("#exportForm").submit();
 

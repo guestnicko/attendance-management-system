@@ -13,6 +13,8 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            min-height: 700px;
+
         }
 
         th,
@@ -78,12 +80,18 @@
                     </td>
                     <td>{{ $log->attend_afternoon_checkOut ? date('h:i A', strtotime($log->attend_afternoon_checkOut)) : '-' }}
                     </td>
-                    <td>{{ $event->event_name }}</td>
-                    <td>{{ $event->date }}</td>
+
                 </tr>
             @endforeach
         </tbody>
     </table>
+
+    <hr>
+
+    <footer>
+        Prepared By:
+        <p>{{ $request->prepared_by }}</p>
+    </footer>
 </body>
 
 </html>

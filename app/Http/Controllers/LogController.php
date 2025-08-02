@@ -39,12 +39,12 @@ class LogController extends Controller
     {
         $request->validate([
             "event_id" => ['required'],
-            "file_type" => ['required']
+            "file_type" => ['required'],
+            "prepared_by" => ['required']
         ]);
 
 
         if ($request->file_type == "pdf") {
-
             return $this->generatePDF($request);
         }
 
@@ -53,10 +53,7 @@ class LogController extends Controller
         }
 
 
-        return response()->json([
-            "message" => "api coded successfully",
-            "request" => $request
-        ]);
+        return back()->withErrors(["failed" => "Export is successful"]);
     }
 
     protected function generatePDF(Request $request)
@@ -91,12 +88,11 @@ class LogController extends Controller
         if (empty($logs->first())) {
             return back()->with(["empty" => "No logs found"]);
         }
-        $pdf = PDF::loadView('reports.attendance', compact('logs', 'event'));
         $wholeDay = $event->isWholeDay;
         if ($wholeDay != "false" && $wholeDay) {
-            $pdf = PDF::loadView('reports.attendance-wholeDay', compact('logs', 'event'));
+            $pdf = PDF::loadView('reports.attendance-wholeDay', compact('logs', 'event', "request"));
         } else {
-            $pdf = PDF::loadView('reports.attendance', compact('logs', 'event'));
+            $pdf = PDF::loadView('reports.attendance', compact('logs', 'event', "request"));
         }
         return $pdf->download("sample.pdf");
     }
@@ -282,5 +278,14 @@ class LogController extends Controller
             "message" => "Working fine",
             "students" => $students
         ]);
+    }
+    public function clearLogs(Request $request)
+    {
+        $request->validate([
+            "event_id" => ["required"]
+        ]);
+        StudentAttendance::where("event_id", $request->event_id)->delete();
+
+        return back()->with(["success" => "Logs cleared succesfully"]);
     }
 }

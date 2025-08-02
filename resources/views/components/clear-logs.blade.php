@@ -1,7 +1,6 @@
 @props(['route' => '', 'events' => ''])
 
 
-
 <div x-data="{ open: false }" class="transition-all flex justify-end ">
 
     <button x-on:click="open = ! open"
@@ -26,9 +25,10 @@
             </div>
             <div class="mb-5 overflow-y-scroll max-h-[400px] min-h-[200px]">
                 {{-- MODAL BODY --}}
-                <div class="">
+                <form class="" method="POST" action="{{ $route }}" id="clearLogsForm">
+                    @csrf
                     @if ($events != '')
-                        <select name="event_id" id="eventField" onchange="fetchLogsByEvent('{{ $route }}')"
+                        <select name="event_id" id="clear_eventField"
                             class="block w-full text-lg text-gray-500 bg-transparent border-0 border-b-2 border-violet-500 appearance-none ">
                             <option value="" selected>Select Event</option>
                             @foreach ($events as $event)
@@ -39,12 +39,12 @@
                         <p class="p-3">No Events Found</p>
                     @endif
 
-                </div>
+                </form>
             </div>
 
             <div class="flex justify-end gap-4">
                 {{-- MODAL FOOTER --}}
-                <button x-on:click="open = ! open"
+                <button x-on:click="open = ! open" onclick="clearLogs()"
                     class="bg-gray-800 hover:bg-gray-700 text-white rounded-md text-md flex p-3 items-center">
 
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -61,3 +61,9 @@
         </div>
     </div>
 </div>
+
+<script>
+    function clearLogs() {
+        document.querySelector("#clearLogsForm").submit();
+    }
+</script>
