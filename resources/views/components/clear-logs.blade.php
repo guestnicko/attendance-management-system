@@ -15,7 +15,7 @@
 
         Clear Logs
     </button>
-    <div x-show.important="open" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div x-show="open" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
         <div x-on:click.outside="open = false"
             class="max-w-[1000px] bg-gray-100 text-gray-950 p-6 rounded-lg shadow-lg min-w-[400px]">
             <div class="border-b-2 border-green-500 mb-5 ">
