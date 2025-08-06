@@ -48,7 +48,6 @@ async function post(form) {
             "Content-Type": "application/json",
         },
     });
-    console.log(response.data);
     return response.data;
 }
 
@@ -58,21 +57,26 @@ form.addEventListener("submit", async (event) => {
     const response = await post(new FormData(event.target));
     // 3 VARIABLES ARE USED TO FETCH JSON DATA
     let objProperty = response.data;
-    let eventData = response.event_data; //Fetch event.data
     let attendCheckIn = response.attend_checkIn;
     let attendCheckOut = response.attend_checkOut;
     let attendAfternoonCheckIn = response.attend_afternoon_checkIn; //Fetch the afternoon time-in/out
     let attendAfternoonCheckOut = response.attend_afternoon_checkOut;
     if (response.isRecorded) {
-        AttendanceRecorded(objProperty, attendCheckIn, attendCheckOut, attendAfternoonCheckIn, attendAfternoonCheckOut); //Added 3 arguments to retrieve the data
-    } 
-    else if (response.AlreadyRecorded) { //if student is already recorded, call function
-        console.log(response.data);
-        console.log(eventData);
+        AttendanceRecorded(
+            objProperty,
+            attendCheckIn,
+            attendCheckOut,
+            attendAfternoonCheckIn,
+            attendAfternoonCheckOut
+        ); //Added 3 arguments to retrieve the data
+    } else if (response.AlreadyRecorded) {
+        //if student is already recorded, call function
+        console.log("in rfid log");
         console.log("You are already recorded");
-        AttendanceAlreadyRecorded(objProperty, eventData);
-    }
-    else{ //If invalid, then call this function
+        AttendanceAlreadyRecorded(objProperty, response.data);
+    } else {
+        //If invalid, then call this function
+
         console.log(response.data);
         AttendanceNotRecorded();
     }
@@ -89,21 +93,23 @@ form_auto.addEventListener("submit", async (event) => {
     let response = await post(new FormData(event.target));
     // 3 VARIABLES ARE USED TO FETCH JSON DATA
     let objProperty = response.data;
-    let eventData = response.event_data; //Fetch event.data
     let attendCheckIn = response.attend_checkIn;
     let attendCheckOut = response.attend_checkOut;
     let attendAfternoonCheckIn = response.attend_afternoon_checkIn; //Fetch the afternoon time-in/out
     let attendAfternoonCheckOut = response.attend_afternoon_checkOut;
     if (response.isRecorded) {
-        AttendanceRecorded(objProperty, attendCheckIn, attendCheckOut, attendAfternoonCheckIn, attendAfternoonCheckOut); //Added 3 arguments to retrieve the data
-    } 
-    else if (response.AlreadyRecorded) { //if student is already recorded, call function
-        console.log(response.data);
-        console.log(eventData);
+        AttendanceRecorded(
+            objProperty,
+            attendCheckIn,
+            attendCheckOut,
+            attendAfternoonCheckIn,
+            attendAfternoonCheckOut
+        ); //Added 3 arguments to retrieve the data
+    } else if (response.AlreadyRecorded) {
+        //if student is already recorded, call function
         console.log("You are already recorded");
-        AttendanceAlreadyRecorded(objProperty, eventData);
-    }
-    else{
+        AttendanceAlreadyRecorded(objProperty, response.data);
+    } else {
         console.log(response.data);
         AttendanceNotRecorded();
     }
@@ -130,13 +136,23 @@ function error(status, content) {}
 
 // ENHANCE THE POP UP TO SHOW THE DETAILS OF THE STUDENT AND ITS CHECKIN AND OUT
 // ADDED ADDITIONAL TWO PARAMETERS FOR AFTERNOON DETAILS
-function AttendanceRecorded(objProperty, attendCheckIn, attendCheckOut, attend_afternoon_checkIn, attend_afternoon_checkOut) {
+function AttendanceRecorded(
+    objProperty,
+    attendCheckIn,
+    attendCheckOut,
+    attend_afternoon_checkIn,
+    attend_afternoon_checkOut
+) {
     console.log("Student Attendance Recorded: " + objProperty.s_fname);
 
     function formatTime(timeStr) {
-        if (!timeStr) return '---';
+        if (!timeStr) return "---";
         const date = new Date(`1970-01-01T${timeStr}`); // Attach dummy date for parsing
-        return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+        return date.toLocaleTimeString([], {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+        });
     }
 
     // Dynamically build time sections
@@ -145,27 +161,35 @@ function AttendanceRecorded(objProperty, attendCheckIn, attendCheckOut, attend_a
     if (attendCheckIn || attendCheckOut) {
         timeInfo += `
             <p class="text-md text-gray-500 mt-1 font-semibold">Morning Attendance</p>
-            <p class="text-md text-gray-500 mt-1">Time In: ${formatTime(attendCheckIn)}</p>
+            <p class="text-md text-gray-500 mt-1">Time In: ${formatTime(
+                attendCheckIn
+            )}</p>
         `;
     }
 
     if (attendCheckOut) {
         timeInfo += `
             <p class="text-md text-gray-500 mt-1 font-semibold">Morning Attendance</p>
-            <p class="text-md text-gray-500 mt-1">Time Out: ${formatTime(attendCheckOut)}</p>
+            <p class="text-md text-gray-500 mt-1">Time Out: ${formatTime(
+                attendCheckOut
+            )}</p>
         `;
     }
 
     if (attend_afternoon_checkIn) {
         timeInfo += `
             <p class="text-md text-gray-500 mt-4 font-semibold">Afternoon Attendance</p>
-            <p class="text-md text-gray-500 mt-1">Time In: ${formatTime(attend_afternoon_checkIn)}</p>
+            <p class="text-md text-gray-500 mt-1">Time In: ${formatTime(
+                attend_afternoon_checkIn
+            )}</p>
         `;
     }
     if (attend_afternoon_checkOut) {
         timeInfo += `
             <p class="text-md text-gray-500 mt-4 font-semibold">Afternoon Attendance</p>
-            <p class="text-md text-gray-500 mt-1">Time Out: ${formatTime(attend_afternoon_checkOut)}</p>
+            <p class="text-md text-gray-500 mt-1">Time Out: ${formatTime(
+                attend_afternoon_checkOut
+            )}</p>
         `;
     }
 
@@ -205,12 +229,11 @@ function AttendanceNotRecorded() {
 }
 
 // Function to show a pop-up about a student is already recorded
-function AttendanceAlreadyRecorded(objProperty, eventData){
-    console.log("Student Attendance is already Recorded");
+function AttendanceAlreadyRecorded(objProperty, eventData) {
     Swal.fire({
         icon: "warning",
         title: "Student is already recorded!",
-        html:`
+        html: `
             <div class="text-center">
                 <h2 class="text-2xl font-semibold text-gray-800">Details:</h2>
                 <h3 class="text-3xl font-bold text-red-600 my-2">
@@ -219,12 +242,22 @@ function AttendanceAlreadyRecorded(objProperty, eventData){
                 <p class="text-lg font-medium text-gray-700">
                     ${objProperty.s_program} - Year Level: ${objProperty.s_lvl}
                 </p>
-                <p class="text-md text-gray-500 mt-1">Set: ${objProperty.s_set}</p>
+                <p class="text-md text-gray-500 mt-1">Set: ${
+                    objProperty.s_set
+                }</p>
 
-                <p class="text-md text-gray-500 mt-1">Time In (Morning): ${eventData.attend_checkIn ?? '---'}</p>
-                <p class="text-md text-gray-500 mt-1">Time Out (Morning): ${eventData.attend_checkOut ?? '---'}</p>
-                <p class="text-md text-gray-500 mt-1">Time In (Afternoon): ${eventData.attend_afternoon_checkIn ?? '---'}</p>
-                <p class="text-md text-gray-500 mt-1">Time Out (Afternoon): ${eventData.attend_afternoon_checkOut ?? '---'}</p>
+                <p class="text-md text-gray-500 mt-1">Time In (Morning): ${
+                    eventData.attend_checkIn ?? "---"
+                }</p>
+                <p class="text-md text-gray-500 mt-1">Time Out (Morning): ${
+                    eventData.attend_checkOut ?? "---"
+                }</p>
+                <p class="text-md text-gray-500 mt-1">Time In (Afternoon): ${
+                    eventData.attend_afternoon_checkIn ?? "---"
+                }</p>
+                <p class="text-md text-gray-500 mt-1">Time Out (Afternoon): ${
+                    eventData.attend_afternoon_checkOut ?? "---"
+                }</p>
             </div>
         `,
         showConfirmButton: false,
@@ -233,9 +266,26 @@ function AttendanceAlreadyRecorded(objProperty, eventData){
 }
 
 function loadTable(data) {
+    console.log(data);
+    const checkType = (type, element) => {
+        if (type == "true") {
+            return `<td>${
+                element.attend_afternoon_checkIn
+                    ? element.attend_afternoon_checkIn
+                    : "---"
+            }</td>
+            <td>${
+                element.attend_afternoon_checkOut
+                    ? element.attendAfternoonCheckOut
+                    : "---"
+            }</td>`;
+        }
+        return "";
+    };
+
     const table = document.querySelector("#student_table_body");
     table.innerHTML = "";
-    data.forEach((element) => {
+    data.students.forEach((element) => {
         console.log(element);
         table.innerHTML += `
     <tr>
@@ -243,10 +293,11 @@ function loadTable(data) {
         <td>${element.s_program}</td>
         <td>${element.s_set}</td>
         <td>${element.s_lvl}</td>
-        <td>${element.attend_checkIn ? element.attend_checkIn : '---'}</td>
-        <td>${element.attend_checkOut ? element.attend_checkOut : '---'}</td>
-        <td>${element.attend_afternoon_checkIn ? element.attend_afternoon_checkIn : '---'}</td>
-        <td>${element.attend_afternoon_checkOut ? element.attendAfternoonCheckOut : '---'}</td>
+        <td>${element.attend_checkIn ? element.attend_checkIn : "---"}</td>
+        <td>${element.attend_checkOut ? element.attend_checkOut : "---"}</td>
+        ${checkType(data.event.isWholeDay, element)}
+
+
         <td>${formatter.format(new Date(element.created_at))}</td>
     </tr>
     `;

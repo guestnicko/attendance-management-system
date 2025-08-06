@@ -30,18 +30,45 @@
             text-align: center;
         }
 
-        .header {
-            margin-bottom: 30px;
-            text-align: center;
+        .college-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .college-name {
+            font-weight: bold;
+            font-size: 20px;
+            line-height: 1.2;
+        }
+
+        .college-subname {
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        .logo {
+            max-width: 70px;
+            max-height: 70px;
         }
     </style>
 </head>
 
 <body>
-    <div class="header">
+    <header class="header">
+        <div class="college-info">
+            <img src="{{ public_path('images/logos/IC.svg') }}" alt="Logo 1" class="logo">
+            <img src="{{ public_path('images/logos/ICSA.svg') }}" alt="Logo 2" class="logo">
+        </div>
+        <hr>
+        <p>
         <h1>Attendance Report</h1>
-        <p>Generated on: {{ date('Y-m-d H:i:s') }}</p>
-    </div>
+        Event Name: {{ $event->event_name }} <br>
+        Event Date: {{ date('M d, Y', strtotime($event->created_at)) }} <br>
+        Generated on: {{ date('Y-m-d H:i:s') }} <br>
+        </p>
+    </header>
+    <hr>
+
 
     <table>
         <thead>

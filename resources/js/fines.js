@@ -2,6 +2,7 @@ window.renderTable = renderTable;
 function renderTable(students) {
     const table = document.getElementById("student_table_body");
     table.innerHTML = "";
+    console.log(students);
     if (students) {
         students.forEach((student, index) => {
             const date = new Date(student.created_at); // Or your date object

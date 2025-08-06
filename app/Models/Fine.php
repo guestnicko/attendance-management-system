@@ -21,7 +21,9 @@ class Fine extends Model
         'total_fines',
     ];
 
-
+    protected $casts = [
+        "total_fines" => "decimal:2"
+    ];
     public function student()
     {
         return $this->belongsTo(Student::class, 'student_rfid', 's_rfid');

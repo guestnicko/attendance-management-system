@@ -83,7 +83,7 @@ Route::middleware('auth')->group(function () {
     // ATTENDANCE RELATED ROUTES
     Route::get('/attendance', [StudentAttendanceController::class, 'view'])->name('attendance');
     Route::post('/student-attendance', [StudentAttendanceController::class, 'recordAttendance'])->name('attendanceStudent');
-    Route::get('/studentAttendace/recent', [StudentAttendanceController::class, 'recent'])->name('getAttendanceRecent');
+    Route::get('/studentAttendace/recent', [StudentAttendanceController::class, 'retrieveRecentLogs'])->name('getAttendanceRecent');
     Route::get('/student_Attendance', [StudentAttendanceController::class, 'formatAttendance'])->name('try');    // Route::post
 
     // EVENTS RELATED ROUTES

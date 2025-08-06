@@ -28,7 +28,7 @@
                     icon: 'success',
                     title: 'Success!',
                     text: '{{ session('
-                                                                            success ') }}',
+                                                                                                                                                                                                                                                                                                                                                success ') }}',
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -45,6 +45,7 @@
         </div>
     </x-slot>
     <div class="mt-4" x-data="{ open: false }">
+        {{-- EDIT EVENT MODAL --}}
         <div x-show="open" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div x-on:click.outside="open = false" class="max-w-[1000px] bg-white p-6 rounded-lg shadow-lg">
                 <div class="border-b-2 border-gray-300 mb-5">
@@ -61,7 +62,11 @@
                             <label for="">Day or Event:</label>
                             <input type="text" placeholder="Enter Event Name" name="event_name" id="evn_name">
                         </div>
-
+                        <div class="flex flex-col mb-3">
+                            <label for="" class="mb-2">Event Fines:</label>
+                            <input type="number" placeholder="Enter Event Fine" name="fines_amount" id="evn_fines"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        </div>
                         <div class="flex flex-col mb-3">
                             <label for="">Event Date:</label>
                             <input type="date" name="date" id="evn_date"
@@ -260,6 +265,7 @@
         </div>
 
 
+        {{-- CREATE EVENT MODAL --}}
         <div class="flex justify-between items-center mb-3">
 
             <x-new-modal>
@@ -286,7 +292,11 @@
                             <input type="text" placeholder="Enter Event Name" name="event_name"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         </div>
-
+                        <div class="flex flex-col mb-3">
+                            <label for="" class="mb-2">Event Fines:</label>
+                            <input type="number" placeholder="Enter Event Fine" name="fines_amount"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        </div>
                         <div class="flex flex-col mb-3">
                             <label for="">Event Date:</label>
                             <input type="date" name="date"
@@ -495,7 +505,7 @@
                     Events
 
                 </button>
-                <button class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-gray-300 transition rounded-tr-md"
+                <button class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-gray-300 transition "
                     onclick="navigateTab('completedEventTable', this.id)" id="completedEventButton">Completed
                     Events
                 </button>
@@ -523,7 +533,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (@empty($pendingEvents))
+                    @if (!empty($pendingEvents->first()))
                         @foreach ($pendingEvents as $event)
                             <tr>
                                 <td>{{ $event->event_name }}</td>
@@ -552,21 +562,10 @@
                                 </td>
                             </tr>
                         @endforeach
-                        {{-- Add Complete Event Button --}}
-                        <form action="{{ route('events.complete', $event->id) }}" method="POST" class="inline">
-                            @csrf
-                            <button type="submit"
-                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                                Complete Event
-                            </button>
-                        </form>
-                        </td>
+                    @else
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-lg text-gray-600">No Pending Events</td>
                         </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td colspan="7" class="text-center py-5 text-lg text-gray-600">No Pending Events</td>
-                    </tr>
                     @endif
 
                 </tbody>
@@ -587,7 +586,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (!@empty($completedEvents))
+                    @if (!empty($completedEvents->first()))
                         @foreach ($completedEvents as $event)
                             <tr>
                                 <td>{{ $event->event_name }}</td>
@@ -629,7 +628,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (!empty($deletedEvents))
+                    @if (!empty($deletedEvents->first()))
                         @foreach ($deletedEvents as $event)
                             <tr>
                                 <td>{{ $event->event_name }}</td>
@@ -653,7 +652,7 @@
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="7" class="text-center py-5 text-lg text-gray-600">No Pending Events</td>
+                            <td colspan="7" class="text-center py-5 text-lg text-gray-600">No Deleted Events</td>
                         </tr>
                     @endif
 

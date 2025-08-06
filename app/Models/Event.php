@@ -25,6 +25,7 @@ class Event extends Model
         "afternoon_checkOut_end",
         "date",
         "admin_id",
-        "status"
+        "status",
+        "fines_amount"
     ];
 }

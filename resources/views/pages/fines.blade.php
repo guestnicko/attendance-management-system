@@ -50,7 +50,6 @@ $page = 'fines';
             });
         </script>
     @endif
-
     {{-- Content --}}
     <div class="bg-white p-3 rounded-md">
         <div class="mt-4 overflow-x-auto shadow-md sm:rounded-lg">
@@ -59,6 +58,7 @@ $page = 'fines';
             </h3>
             <div class="flex justify-between my-5 mx-1">
                 <x-search :page="$page" :route="route('fetchFinesViaSearch')" />
+
                 <div class="w-full flex items-center justify-end gap-5">
                     <x-event-filter :events="$events" :route="route('fetchFinesViaEvent')" />
                     <x-filter :page="$page" :route="route('fetchFinesViaCategory')" />

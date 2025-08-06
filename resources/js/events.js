@@ -7,6 +7,7 @@ function editEvent(data) {
     document.getElementById("evn_name").value = data.event_name;
     document.getElementById("evn_id").value = data.id;
     document.getElementById("evn_date").value = data.date;
+    document.getElementById("evn_fines").value = data.fines_amount;
     document.getElementById("in_start").value = data.checkIn_start;
     document.getElementById("in_end").value = data.checkIn_end;
     document.getElementById("out_start").value = data.checkOut_start;

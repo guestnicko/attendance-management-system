@@ -25,6 +25,7 @@ class EventController extends Controller
             "checkIn_end" => ['required', "date_format:H:i", "after:checkIn_start"],
             "checkOut_start" => ['required', "date_format:H:i", "after:checkIn_end"],
             "checkOut_end" => ['required', "date_format:H:i", "after:checkOut_start"],
+            "fines_amount" => ["required", "integer"]
         ]);
 
         if (strtotime($fields['date']) < strtotime(date("M d, Y"))) {
@@ -64,6 +65,8 @@ class EventController extends Controller
                 "afternoon_checkOut_start" => $request->afternoon_checkOut_start,
                 "afternoon_checkOut_end" => $request->afternoon_checkOut_end,
                 'date' => $fields['date'],
+                "fines_amount" => $request->fines_amount,
+
                 'admin_id' => Auth::id(), // Get the current authenticated user's ID
                 "isWholeDay" => "true"
             ]);
@@ -113,6 +116,8 @@ class EventController extends Controller
             "checkIn_end" => ['required', "after:checkIn_start"],
             "checkOut_start" => ['required', "after:checkIn_end"],
             "checkOut_end" => ['required', "after:checkOut_start"],
+            "fines_amount" => ["required", "integer"]
+
         ]);
 
         $event = Event::find($request->id);
@@ -140,6 +145,7 @@ class EventController extends Controller
             'checkIn_end' => $request->checkIn_end,
             'checkOut_start' => $request->checkOut_start,
             'checkOut_end' => $request->checkOut_end,
+            "fines_amount" => $request->fines_amount
         ]);
 
         return back()->with('success', 'Event updated successfully');

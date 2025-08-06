@@ -29,12 +29,10 @@ class Student extends Model
         return $this->hasMany(Fine::class)->orderBy('created_at', 'desc');
     }
 
-    public function getTotalFinesAttribute()
-    {
-        return $this->fines->sum('total_fines');
-    }
 
-    public function student_attendances(){
+
+    public function student_attendances()
+    {
         return $this->hasMany(StudentAttendance::class, 'id_student');
     }
 }

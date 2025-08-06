@@ -29,6 +29,7 @@ class FineController extends Controller
             ->paginate(15);
         // $logs = Fine::with("student", "event")->get();
 
+
         $events = Event::select('*')->orderBy('created_at')->get();
         $pageCount = $logs->lastPage();
         return view('pages.fines', compact('logs', 'events', "pageCount"));
@@ -38,10 +39,27 @@ class FineController extends Controller
     {
 
         // Check if student has attendance record for this event
-        $logs = DB::table('students')
-            ->leftJoin('student_attendances', 'students.id', '=', 'student_attendances.id_student')
-            ->select('*', 'students.id')
-            ->get();
+        $logs = DB::select("
+            SELECT
+                s.id AS id,
+                s.s_fname,
+                s.s_lname,
+                COALESCE(a.attend_checkIn, 0) AS attend_checkIn, -- default value if no log
+                COALESCE(a.attend_checkOut, 0) AS attend_checkOut, -- default value if no log
+                COALESCE(a.attend_afternoon_checkIn, 0) AS attend_afternoon_checkIn, -- default value if no log
+                COALESCE(a.attend_afternoon_checkOut, 0) AS attend_afternoon_checkOut, -- default value if no log
+                e.event_name
+            FROM students s
+            LEFT JOIN student_attendances a
+                ON s.id = a.id_student
+                AND a.event_id = :event_id1  -- Replace 123 with your specific event ID
+            LEFT JOIN events e
+                ON e.id = :event_id2  -- Fetch event details directly
+            ORDER BY s.id;
+        ", [
+            "event_id1" => $event->id,
+            "event_id2" => $event->id,
+        ]);
 
         // Calculate missed actions and fines
         foreach ($logs as $attendance) {
@@ -49,22 +67,24 @@ class FineController extends Controller
             if ($event->isWholeDay == "true") {
                 $missedActions = $this->calculateMissedActionsWholeDay($attendance);
             } else {
+
                 $missedActions = $this->calculateMissedActions($attendance);
             }
             $missedCount = array_sum(array_map(fn($v) => $v ? 1 : 0, $missedActions));
 
-            if ($missedCount > 0) {
-                $totalFines = $missedCount * self::FINE_AMOUNT;
+            if ($missedCount >= 0) {
+                $totalFines = $missedCount * $event->fines_amount;
                 // Create or update fine record
                 Fine::updateOrCreate(
                     [
                         'event_id' => $event->id,
                         'student_id' => $attendance->id
                     ],
+
                     [
                         'student_id' => $attendance->id,
                         'event_id' => $event->id,
-                        'fines_amount' => self::FINE_AMOUNT,
+                        'fines_amount' => $event->fines_amount,
                         'morning_checkIn_missed' => $missedActions['morning_checkIn_missed'],
                         'morning_checkOut_missed' => $missedActions['morning_checkOut_missed'],
                         'afternoon_checkIn_missed' => $missedActions['afternoon_checkIn_missed'],
@@ -79,8 +99,8 @@ class FineController extends Controller
     private function calculateMissedActions(?stdClass $attendance): array
     {
 
-
         if (!$attendance) {
+
             return [
                 'morning_checkIn_missed' => true,
                 'morning_checkOut_missed' => true,
@@ -122,12 +142,19 @@ class FineController extends Controller
 
     public function filter(Request $request)
     {
-        $students = Student::leftJoin('fines', 'students.id', '=', 'fines.student_id')
-            ->leftJoin('events', 'events.id', '=', 'fines.event_id')
-            ->select('students.*', 'fines.*', 'events.event_name')
-            ->whereAny(['s_fname', 's_studentID', 's_lname'], 'like', $request->query('search') . '%')
+        $search = $request->query('search') . '%';
+
+        $students = Student::join('fines', 'fines.student_id', '=', 'students.id')
+            ->join('events', 'events.id', '=', 'fines.event_id')
+            ->select("fines.*", "students.*", "events.event_name")
+            ->where(function ($query) use ($search) {
+                $query->where('s_fname', 'like', $search)
+                    ->orWhere('s_studentID', 'like', $search)
+                    ->orWhere('s_lname', 'like', $search);
+            })
             ->paginate(15)
             ->withQueryString();
+
 
         if (empty($students->first())) {
             return response()->json([

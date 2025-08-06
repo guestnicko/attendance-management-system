@@ -3,25 +3,25 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-                    if (!sessionStorage.getItem('preload-attendance')) {
-                        Swal.fire({
-                            title: "Auto-attendance is on",
-                            timer: 1500,
-                            showConfirmButton: false,
-                        });
-                    }
-                    sessionStorage.setItem('preload-attendance', 'true');
-                    document.addEventListener('DOMContentLoaded', function() {
-                        if (!sessionStorage.getItem('preload-attendance')) {
-                            Swal.fire({
-                                title: "Auto-attendance is on",
-                                timer: 1500,
-                                showConfirmButton: false,
-                            });
-                        }
-                        sessionStorage.setItem('preload-attendance', 'true');
-                    })
+            if (!sessionStorage.getItem('preload-attendance')) {
+                Swal.fire({
+                    title: "Auto-attendance is on",
+                    timer: 1500,
+                    showConfirmButton: false,
+                });
+            }
+            sessionStorage.setItem('preload-attendance', 'true');
+            document.addEventListener('DOMContentLoaded', function() {
+                if (!sessionStorage.getItem('preload-attendance')) {
+                    Swal.fire({
+                        title: "Auto-attendance is on",
+                        timer: 1500,
+                        showConfirmButton: false,
+                    });
                 }
+                sessionStorage.setItem('preload-attendance', 'true');
+            })
+        });
     </script>
 
     <x-slot name="header">
@@ -31,12 +31,10 @@
         <div class="flex justify-between">
             <div class="">
                 <h2 class="text-2xl font-bold text-gray-800">
-                    Event name:
-                    Event name:
 
                     @if ($event)
                         <span class="text-gray-600">
-                            {{ $event->event_name }}
+                            Event name: {{ $event->event_name }}
                         </span>
                     @else
                         <script>
@@ -91,10 +89,7 @@
                         </div>
                         <div class="block">
                             {{-- Line by Panzerweb --}}
-                            <h2
-                                class="bg-yellow-100 text-yellow-800 text-lg font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">
-                                Morning
-                            </h2>
+
                             <h2 class="text-md font-bold text-gray-100">
                                 Check In:
                                 <span class="text-gray-200 font-light">
@@ -240,10 +235,17 @@
                         <td class="py-5 border border-green-800">Program</td>
                         <td class="py-5 border border-green-800">Set</td>
                         <td class="py-5 border border-green-800">Year Level</td>
-                        <td class="py-5 border border-green-800">Morning Time In</td>
-                        <td class="py-5 border border-green-800">Morning Time Out</td>
-                        <td class="py-5 border border-green-800">Afternoon Time In</td>
-                        <td class="py-5 border border-green-800">Afternoon Time Out</td>
+
+                        @if ($event != null && $event->isWholeDay != 'false')
+                            <td class="py-5 border border-green-800">Morning Time In</td>
+                            <td class="py-5 border border-green-800">Morning Time Out</td>
+                            <td class="py-5 border border-green-800">Afternoon Time In</td>
+                            <td class="py-5 border border-green-800">Afternoon Time Out</td>
+                        @else
+                            <td class="py-5 border border-green-800">Time In</td>
+                            <td class="py-5 border border-green-800">Time Out</td>
+                        @endif
+
                         <td class="py-5 border border-green-800">Date</td>
                     </tr>
                 </thead>
@@ -255,6 +257,7 @@
                                 <td>{{ $student->s_program }}</td>
                                 <td>{{ $student->s_set }}</td>
                                 <td>{{ $student->s_lvl }}</td>
+
 
                                 {{-- Morning Attendance --}}
                                 <td>
@@ -271,24 +274,27 @@
                                         <span class="text-red-500">Absent</span>
                                     @endif
                                 </td>
+                                @if ($event->isWholeDay != 'false')
+                                    {{-- Afternoon Attendance --}}
+                                    <td>
+                                        @if ($student->attend_afternoon_checkIn)
+                                            {{ date_format(date_create($student->attend_afternoon_checkIn), 'h:i: A') }}
+                                        @else
+                                            <span class="text-red-500">Absent</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($student->attend_afternoon_checkOut)
+                                            {{ date_format(date_create($student->attend_afternoon_checkOut), 'h:i: A') }}
+                                        @else
+                                            <span class="text-red-500">Absent</span>
+                                        @endif
+                                    </td>
+                                @endif
 
-                                {{-- Afternoon Attendance --}}
-                                <td>
-                                    @if ($student->attend_afternoon_checkIn)
-                                        {{ date_format(date_create($student->attend_afternoon_checkIn), 'h:i: A') }}
-                                    @else
-                                        <span class="text-red-500">Absent</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($student->attend_afternoon_checkOut)
-                                        {{ date_format(date_create($student->attend_afternoon_checkOut), 'h:i: A') }}
-                                    @else
-                                        <span class="text-red-500">Absent</span>
-                                    @endif
-                                </td>
 
-                                <td class="text-wrap">{{ date_format(date_create($student->created_at), 'Y/m/d') }}</td>
+                                <td class="text-wrap">{{ date_format(date_create($student->created_at), 'Y/m/d') }}
+                                </td>
                             </tr>
                         @endforeach
                     @endisset

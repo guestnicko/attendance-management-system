@@ -14,7 +14,7 @@ class StudentController extends Controller
         // Create method modified by Panzerweb: includes a try-catch
         try {
             $fields = $request->validate([
-                's_rfid' => ['required', 'unique:students,s_rfid'],
+                's_rfid' => ['unique:students,s_rfid'],
                 's_studentID' => ['required', 'unique:students,s_studentID'],
                 's_fname' => ['required'],
                 's_lname' => ['required'],

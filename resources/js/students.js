@@ -175,8 +175,9 @@ function renderTable(students) {
             table.innerHTML +=
                 ` <tr class="table_row" id="${e.id}">
                                 <td>${e.s_studentID}</td>
+                                 <td>${e.s_lname}</td>
                                 <td>${e.s_fname}</td>
-                                <td>${e.s_lname}</td>
+
                                 <td>${e.s_mname}</td>
                                 <td>${e.s_suffix}</td>
                                 <td>${e.s_lvl}</td>

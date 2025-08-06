@@ -25,8 +25,10 @@ return new class extends Migration
             $table->time('afternoon_checkOut_end')->nullable();
             $table->string('isWholeDay')->default('false');
             $table->string('event_status')->default('pending');
+            $table->integer('fines_amount')->default(25);
             $table->foreignId('admin_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
