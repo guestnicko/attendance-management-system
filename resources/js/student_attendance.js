@@ -39,6 +39,17 @@ function startInterval() {
     }, 500);
 }
 
+// Formats time to user-friendly format
+function formatTime(timeStr) {
+    if (!timeStr) return "---";
+    const date = new Date(`1970-01-01T${timeStr}`); // Attach dummy date for parsing
+    return date.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+    });
+}
+
 async function post(form) {
     let isRecorded = false;
     const response = await axios.post(form.get("uri"), form, {
@@ -71,9 +82,8 @@ form.addEventListener("submit", async (event) => {
         ); //Added 3 arguments to retrieve the data
     } else if (response.AlreadyRecorded) {
         //if student is already recorded, call function
-        console.log("in rfid log");
-        console.log("You are already recorded");
-        AttendanceAlreadyRecorded(objProperty, response.data);
+        console.log("Already recorded | Data: ", response.event_data);
+        AttendanceAlreadyRecorded(objProperty, response.event_data);
     } else {
         //If invalid, then call this function
 
@@ -144,16 +154,6 @@ function AttendanceRecorded(
     attend_afternoon_checkOut
 ) {
     console.log("Student Attendance Recorded: " + objProperty.s_fname);
-
-    function formatTime(timeStr) {
-        if (!timeStr) return "---";
-        const date = new Date(`1970-01-01T${timeStr}`); // Attach dummy date for parsing
-        return date.toLocaleTimeString([], {
-            hour: "numeric",
-            minute: "2-digit",
-            hour12: true,
-        });
-    }
 
     // Dynamically build time sections
     let timeInfo = "";
@@ -230,6 +230,7 @@ function AttendanceNotRecorded() {
 
 // Function to show a pop-up about a student is already recorded
 function AttendanceAlreadyRecorded(objProperty, eventData) {
+
     Swal.fire({
         icon: "warning",
         title: "Student is already recorded!",
@@ -247,16 +248,16 @@ function AttendanceAlreadyRecorded(objProperty, eventData) {
                 }</p>
 
                 <p class="text-md text-gray-500 mt-1">Time In (Morning): ${
-                    eventData.attend_checkIn ?? "---"
+                    formatTime(eventData.attend_checkIn) ?? "---"
                 }</p>
                 <p class="text-md text-gray-500 mt-1">Time Out (Morning): ${
-                    eventData.attend_checkOut ?? "---"
+                    formatTime(eventData.attend_checkOut) ?? "---"
                 }</p>
                 <p class="text-md text-gray-500 mt-1">Time In (Afternoon): ${
-                    eventData.attend_afternoon_checkIn ?? "---"
+                    formatTime(eventData.attend_afternoon_checkIn) ?? "---"
                 }</p>
                 <p class="text-md text-gray-500 mt-1">Time Out (Afternoon): ${
-                    eventData.attend_afternoon_checkOut ?? "---"
+                    formatTime(eventData.attend_afternoon_checkOut) ?? "---"
                 }</p>
             </div>
         `,
@@ -268,16 +269,17 @@ function AttendanceAlreadyRecorded(objProperty, eventData) {
 function loadTable(data) {
     console.log(data);
     const checkType = (type, element) => {
+        // Returns afternoon column
         if (type == "true") {
             return `<td>${
                 element.attend_afternoon_checkIn
-                    ? element.attend_afternoon_checkIn
-                    : "---"
+                    ? formatTime(element.attend_afternoon_checkIn)
+                    : '<span class="text-red-500">Absent</span>'
             }</td>
             <td>${
                 element.attend_afternoon_checkOut
-                    ? element.attendAfternoonCheckOut
-                    : "---"
+                    ? formatTime(element.attendAfternoonCheckOut)
+                    : '<span class="text-red-500">Absent</span>'
             }</td>`;
         }
         return "";
@@ -293,8 +295,8 @@ function loadTable(data) {
         <td>${element.s_program}</td>
         <td>${element.s_set}</td>
         <td>${element.s_lvl}</td>
-        <td>${element.attend_checkIn ? element.attend_checkIn : "---"}</td>
-        <td>${element.attend_checkOut ? element.attend_checkOut : "---"}</td>
+        <td>${element.attend_checkIn ? formatTime(element.attend_checkIn) : '<span class="text-red-500">Absent</span>'}</td>
+        <td>${element.attend_checkOut ? formatTime(element.attend_checkOut) : '<span class="text-red-500">Absent</span>'}</td>
         ${checkType(data.event.isWholeDay, element)}
 
 

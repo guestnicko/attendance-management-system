@@ -3,6 +3,7 @@ import "flowbite"; //I restored Flowbite kay wala nigana ang Dropdowns na gikan 
 import Swal from "sweetalert2"; //Added Sweet Alert module
 import "./bootstrap";
 import { toggleDropdown, triggerDropdownOnLoad } from "./component";
+import { testStudentForm } from "./students";
 
 console.log("Testing App------- Developer");
 
@@ -29,3 +30,4 @@ window.triggerDropdownOnLoad = triggerDropdownOnLoad;
 
 //Sweet AlertJS
 window.Swal = Swal;
+window.testStudentForm =  testStudentForm;
