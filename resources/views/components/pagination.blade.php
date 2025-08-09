@@ -3,7 +3,7 @@
     <nav aria-label="Page navigation example">
         <ul class="inline-flex -space-x-px text-base h-10">
             <li>
-                <button onclick="prevPage()"
+                <button onclick="prevPage('{{ url()->current() }}')"
                     class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                     Previous
                 </button>
@@ -21,14 +21,14 @@
                             class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
                     </li>
                     <li>
-                        <button href="?page={{ $lastpage }}"
-                            class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ $lastpage }}</button>
+                        <a href="?page={{ $lastpage }}"
+                            class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ $lastpage }}</a>
                     </li>
                 @endif
             @endfor
 
 
-            <button onclick="nextPage()"
+            <button onclick="nextPage('{{ url()->current() }}')"
                 class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                 Next</button>
             {{ $page }}
@@ -39,19 +39,9 @@
 
 <script>
     const queryParams = new URLSearchParams(window.location.search);
-    const navigatePage = (page) => {
-        var url = "";
-        const pageQuery = queryParams.get("page");
-        queryParams.forEach((value, key) => {
-            if (key != "page") {
-                url += `${key}=${value}&&`;
-            }
-            console.log(key);
-        });
-        url += "page=" + page;
-        window.location.href = "job_listings.php?" + url;
-    };
-    const nextPage = () => {
+    const Baseurl = window.location;
+
+    const nextPage = (Baseurl) => {
         var url = "";
         let pageQuery = queryParams.get("page");
 
@@ -66,7 +56,7 @@
         window.location.href = Baseurl + "?" + url
     };
 
-    const prevPage = () => {
+    const prevPage = (Baseurl) => {
         var url = "";
         const pageQuery = queryParams.get("page");
         queryParams.forEach((value, key) => {
@@ -127,7 +117,7 @@
             }
         }
         pagination.innerHTML += `
-                        <button onclick="navigate(${data.next_page_url})"
+                        <button onclick="navigate('${data.next_page_url}')"
                             class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                             Next</button>
                         </li>

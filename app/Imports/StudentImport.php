@@ -25,21 +25,39 @@ class StudentImport implements ToModel, WithStartRow
         // }
 
         // the code for determining if there is a duplicate entry
-        $studentID = $row[1];
+        $studentID = $row[0];
+        if (!$studentID) {
+            return new Student([
+                "s_rfid" => NULL,
+                "s_studentID" => $row[0] ? $row[0] : NULL,
+                "s_fname" => $row[1],
+                "s_lname" => $row[2],
+                "s_mname" => $row[3],
+                "s_suffix" => $row[4],
+                "s_program" => $row[5],
+                "s_lvl" => $row[6],
+                "s_set" => $row[7],
+                "s_image" => NULL,
+                "s_status" => "TO BE UPDATED",
+            ]);
+        }
+
         $doesExist = Student::select('id as doesExist',)->where('s_studentID', $studentID)->get();
+
         if ($doesExist->count() > 0) {
             return [];
         }
+
         return new Student([
             "s_rfid" => NULL,
-            "s_studentID" => $row[1],
-            "s_fname" => $row[2],
-            "s_lname" => $row[3],
-            "s_mname" => $row[4],
-            "s_suffix" => $row[5],
-            "s_program" => $row[6],
-            "s_lvl" => $row[7],
-            "s_set" => $row[8],
+            "s_studentID" => $row[0] ? $row[0] : NULL,
+            "s_fname" => $row[1],
+            "s_lname" => $row[2],
+            "s_mname" => $row[3],
+            "s_suffix" => $row[4],
+            "s_program" => $row[5],
+            "s_lvl" => $row[6],
+            "s_set" => $row[7],
             "s_image" => NULL,
             "s_status" => "TO BE UPDATED",
         ]);

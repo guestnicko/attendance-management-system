@@ -76,6 +76,7 @@ class EventController extends Controller
 
         // Create event with all required fields
         Event::create([
+            "fines_amount" => $request->fines_amount,
             'event_name' => $fields['event_name'],
             'checkIn_start' => $fields['checkIn_start'],
             'checkIn_end' => $fields['checkIn_end'],

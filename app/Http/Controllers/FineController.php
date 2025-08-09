@@ -24,7 +24,7 @@ class FineController extends Controller
         // RETRIEVE ALL STUDENT
         $logs = DB::table('students')
             ->leftJoin('fines', 'students.id', '=', 'fines.student_id')
-            ->leftJoin('events', 'events.id', '=', 'fines.event_id')
+            ->join('events', 'events.id', '=', 'fines.event_id')
             ->select('students.*', 'fines.*', 'events.event_name')
             ->paginate(15);
         // $logs = Fine::with("student", "event")->get();
