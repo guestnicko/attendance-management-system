@@ -505,7 +505,7 @@
                     Events
 
                 </button>
-                <button class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-gray-300 transition "
+                <button class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-gray-300 transition"
                     onclick="navigateTab('completedEventTable', this.id)" id="completedEventButton">Completed
                     Events
                 </button>
@@ -562,10 +562,21 @@
                                 </td>
                             </tr>
                         @endforeach
-                    @else
-                        <tr>
-                            <td colspan="7" class="text-center py-5 text-lg text-gray-600">No Pending Events</td>
+                        {{-- Add Complete Event Button --}}
+                        {{-- Gi comment nako DON kay mugawas siya sa event page, ma duplicate ang complete button --}}
+                        {{-- <form action="{{ route('events.complete', $event->id) }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit"
+                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                Complete Event
+                            </button>
+                        </form> --}}
+                        </td>
                         </tr>
+                @else
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-lg text-gray-600">No Pending Events</td>
+                    </tr>
                     @endif
 
                 </tbody>
