@@ -65,6 +65,9 @@
                             <div class="font-black">
                                 <x-nav-link href="{{ route('events') }}" :active="request()->routeIs('events')">Events</x-nav-link>
                             </div>
+                            <div class="font-black">
+                                <x-nav-link href="{{ route('sets.view') }}" :active="request()->routeIs('sets.view')">Sets</x-nav-link>
+                            </div>
                         </div>
                     </div>
 
