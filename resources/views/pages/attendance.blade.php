@@ -87,6 +87,12 @@
                                 </span>
                             </h2>
                         </div>
+                        @if ($event->isWholeDay != 'false')
+                            <h2
+                                class="bg-yellow-100 text-yellow-800 text-lg font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">
+                                Morning
+                            </h2>
+                        @endif
                         <div class="block">
                             {{-- Line by Panzerweb --}}
 

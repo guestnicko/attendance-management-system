@@ -209,8 +209,8 @@ function AttendanceRecorded(
                 ${timeInfo}
             </div>
         `,
-        showConfirmButton: true,
-        // timer: 1500,
+        showConfirmButton: false,
+        timer: 1000,
         customClass: {
             popup: "bg-white shadow-lg rounded-xl p-6",
             title: "text-xl font-bold text-gray-900",

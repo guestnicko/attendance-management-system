@@ -26,6 +26,13 @@ class StudentImport implements ToModel, WithStartRow
 
         // the code for determining if there is a duplicate entry
         $studentID = $row[0];
+        if (
+            $row[0] == null && $row[1] == null && $row[2] == null && $row[3] == null
+            && $row[4] == null && $row[5] == null && $row[6] == null && $row[7] == null
+        ) {
+            return [];
+        }
+
         if (!$studentID) {
             return new Student([
                 "s_rfid" => NULL,

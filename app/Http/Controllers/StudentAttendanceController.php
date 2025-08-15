@@ -184,10 +184,9 @@ class StudentAttendanceController extends Controller
         $myStudent = Student::whereAny(['s_rfid', 's_studentID'], $request->s_rfid)->get()->first();
 
         // This get the latest student attendance
-        $studentsEvent = StudentAttendance::where('student_rfid', $request->s_rfid)->get()->last();
+        $studentsEvent = StudentAttendance::where('id_student', $myStudent->id)->get()->last();
 
-        // AMBOT NGANO GI ADD NAKO NI, OKAY MAN SO FAR
-        // $studentsEvent = StudentAttendance::where('student_rfid', $request->s_rfid)->get()->first(); //Get the corresponding student_attendance data
+
 
 
         // CHECK IF STUDENT EXIST IN THE MASTERLIST
@@ -215,6 +214,7 @@ class StudentAttendanceController extends Controller
 
 
         if ($event->isWholeDay == 'true') {
+
             return $this->recordWholeDayEvent($request, $event, $myStudent, $studentsEvent); //Updated method to 4 parameters
         }
 
@@ -320,11 +320,9 @@ class StudentAttendanceController extends Controller
         ]);
     }
 
-    // ayaw na error please, butangan raman diay kag question mark 
-    // Exact code: ?StudentAttendance $studentEvent
-    // Para ma accept ang null and dli ka niya i reject
     protected function recordWholeDayEvent(Request $request, Event $event, Student $myStudent, ?StudentAttendance $studentEvent)
     {
+
         $time = date("H:i:s");
 
         if (

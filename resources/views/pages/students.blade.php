@@ -133,7 +133,7 @@ $page = 'students';
                 </div>
                 <div class="mb-5">
                     <form id="updateForm" action="{{ route('updateStudent') }}" x-ref="updateForm" method="POST"
-                        enctype="multipart/form-data" class="flex items-center">
+                        enctype="multipart/form-data" class="flex items-center overflow-y-scroll max-h-[400px]">
                         @csrf
                         @method('PATCH')
                         <input type="text" name="id" id="s_ID" hidden>
@@ -329,7 +329,8 @@ $page = 'students';
                         </x-slot>
                         <x-slot name="content">
                             <form id="studentForm" action="{{ route('addStudent') }}" x-ref="studentForm"
-                                method="POST" enctype="multipart/form-data" class="flex items-center">
+                                method="POST" enctype="multipart/form-data"
+                                class="flex items-center overflow-y-scroll max-h-[500px]">
                                 @csrf
                                 <div class="basis-3/4 justify-start">
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">

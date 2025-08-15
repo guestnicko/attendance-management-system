@@ -174,16 +174,16 @@ function renderTable(students) {
             const data = JSON.stringify(e);
             table.innerHTML +=
                 ` <tr class="table_row" id="${e.id}">
-                                <td>${e.s_studentID}</td>
-                                 <td>${e.s_lname}</td>
-                                <td>${e.s_fname}</td>
+                                <td>${e.s_studentID ?? "-"}</td>
+                                 <td>${e.s_lname ?? ""}</td>
+                                <td>${e.s_fname ?? ""}</td>
 
-                                <td>${e.s_mname}</td>
-                                <td>${e.s_suffix}</td>
-                                <td>${e.s_lvl}</td>
-                                <td>${e.s_set}</td>
-                                <td>${e.s_program}</td>
-                                <td>${e.s_status}</td>
+                                <td>${e.s_mname ?? ""}</td>
+                                <td>${e.s_suffix ?? ""}</td>
+                                <td>${e.s_lvl ?? ""}</td>
+                                <td>${e.s_set ?? ""}</td>
+                                <td>${e.s_program ?? ""}</td>
+                                <td>${e.s_status ?? ""}</td>
                                 <td class="flex gap-3 py-3">
 
                                     <button
