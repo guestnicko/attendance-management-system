@@ -320,7 +320,10 @@ class StudentAttendanceController extends Controller
         ]);
     }
 
-    protected function recordWholeDayEvent(Request $request, Event $event, Student $myStudent, StudentAttendance $studentEvent)
+    // ayaw na error please, butangan raman diay kag question mark 
+    // Exact code: ?StudentAttendance $studentEvent
+    // Para ma accept ang null and dli ka niya i reject
+    protected function recordWholeDayEvent(Request $request, Event $event, Student $myStudent, ?StudentAttendance $studentEvent)
     {
         $time = date("H:i:s");
 
