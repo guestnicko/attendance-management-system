@@ -1,22 +1,36 @@
 <x-app-layout>
     <x-slot name="header">
-        <h1 class="text-4xl font-semibold">
-            Registered Class Sets
-        </h1>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">
+                Registered Class Sets
+            </h1>
+
+            @isset($totalSets)
+                <div class="flex items-center text-gray-700">
+                    <span class="mr-2 text-lg">Total Number of Sets:</span>
+                    <span class="px-3 py-1 bg-gray-800 text-green-400 text-lg font-semibold rounded-2xl">
+                        {{ $totalSets }}
+                    </span>
+                </div>
+            @endisset
+        </div>
     </x-slot>
     
 
     <div class="inline-flex rounded-md shadow-xs" role="group">
-        <button type="button" class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-gray-300 transition rounded-s-lg">
+        <a href="{{ route('sets.view', ['program' => 'BSIT']) }}"
+        class="px-4 py-2 bg-gray-800 hover:bg-gray-900 transition-all
+                {{request('program', 'BSIT') === 'BSIT' ? 'text-green-600 font-semibold' : 'text-gray-300'}} transition rounded-s-lg">
             BSIT
-        </button>
-
-        <button type="button" class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-gray-300 transition rounded-e-lg">
+        </a>
+        <a href="{{ route('sets.view', ['program' => 'BSIS']) }}"
+        class="px-4 py-2 bg-gray-800 hover:bg-gray-900 transition-all
+                {{request('program', 'BSIT') === 'BSIS' ? 'text-green-600 font-semibold' : 'text-gray-300'}} transition rounded-e-lg">
             BSIS
-        </button>
+        </a>
     </div>
 
-    <div class="flex flex-col my-2">
+    <div class="grid grid-cols-4 gap-4 my-2">
        @isset($sets)
             @foreach ($sets as $set)
             <div class="flex w-full max-w-xl bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-200">
@@ -33,12 +47,9 @@
                         <h2 class="text-gray-800 font-semibold text-lg">
                             Set: <span class="font-normal">{{ $set->s_set }}</span>
                         </h2>
-                        <span class="text-sm bg-gray-100 text-gray-600 px-3 py-1 rounded-full border">
-                            {{ $set->total_students }} Students
-                        </span>
                     </div>
                     <p class="text-sm text-gray-500">
-                        Academic Year: 2025 • Active
+                        {{ $set->total_students }} / 40 Students
                     </p>
                 </div>
             </div>
