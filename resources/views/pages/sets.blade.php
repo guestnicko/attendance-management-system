@@ -45,7 +45,7 @@
                 <div class="flex flex-col justify-center flex-1 p-4">
                     <div class="flex justify-between items-center mb-1">
                         <h2 class="text-gray-800 font-semibold text-lg">
-                            Set: <span class="font-normal">{{ $set->s_set }}</span>
+                            Set: <span class="font-normal">{{ $set->s_lvl . $set->s_set }}</span>
                         </h2>
                     </div>
                     <p class="text-sm text-gray-500">

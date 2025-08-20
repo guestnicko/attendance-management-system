@@ -14,9 +14,10 @@ class SetController extends Controller
         $program = $request->get('program', 'BSIT');
 
         // Necessary query to get sets
-        $query = Student::select('s_set', 's_program', DB::raw('COUNT(*) as total_students'))
-            ->groupBy('s_set', 's_program')
+        $query = Student::select('s_set', 's_program', 's_lvl', DB::raw('COUNT(*) as total_students'))
+            ->groupBy('s_set', 's_program', 's_lvl')
             ->orderBy('s_program')
+            ->orderBy('s_lvl')
             ->orderBy('s_set');
 
         if(in_array($program, ['BSIT', 'BSIS'])){
@@ -27,7 +28,7 @@ class SetController extends Controller
 
         // Query to get count of all sets
         $countOfSets = Student::select(DB::raw('COUNT(DISTINCT s_set) AS countSets'))
-        ->groupBy('s_program')
+        ->groupBy('s_program', 's_lvl')
         ->orderBy('s_program')
         ->get();
 
