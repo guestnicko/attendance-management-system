@@ -7,7 +7,7 @@ const form = document.getElementById("attendanceForm");
 const form_auto = document.getElementById("auto_attendanceForm");
 
 // Only set global functions if elements exist
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
     window.startInterval = startInterval;
     window.stopInterval = stopInterval;
 }
@@ -156,7 +156,7 @@ async function get() {
         console.warn("getURI element not found");
         return { students: [] };
     }
-    
+
     let uri = getURIElement.value;
     let isFetch = false;
     try {
@@ -224,7 +224,7 @@ function AttendanceRecorded(
     }
 
     // Check if Swal is available before using it
-    if (typeof Swal !== 'undefined') {
+    if (typeof Swal !== "undefined") {
         Swal.fire({
             icon: "success",
             title: "Attendance Recorded!",
@@ -255,7 +255,7 @@ function AttendanceRecorded(
 
 function AttendanceNotRecorded() {
     console.log("Student Attendance Not Recorded");
-    if (typeof Swal !== 'undefined') {
+    if (typeof Swal !== "undefined") {
         Swal.fire({
             icon: "warning",
             title: "Student Attendance Not Recorded!",
@@ -269,7 +269,7 @@ function AttendanceNotRecorded() {
 
 // Function to show a pop-up about a student is already recorded
 function AttendanceAlreadyRecorded(objProperty, eventData) {
-    if (typeof Swal !== 'undefined') {
+    if (typeof Swal !== "undefined") {
         Swal.fire({
             icon: "warning",
             title: "Student is already recorded!",
@@ -280,7 +280,9 @@ function AttendanceAlreadyRecorded(objProperty, eventData) {
                         ${objProperty.s_fname} ${objProperty.s_lname}
                     </h3>
                     <p class="text-lg font-medium text-gray-700">
-                        ${objProperty.s_program} - Year Level: ${objProperty.s_lvl}
+                        ${objProperty.s_program} - Year Level: ${
+                objProperty.s_lvl
+            }
                     </p>
                     <p class="text-md text-gray-500 mt-1">Set: ${
                         objProperty.s_set
@@ -310,13 +312,13 @@ function AttendanceAlreadyRecorded(objProperty, eventData) {
 
 function loadTable(data) {
     console.log(data);
-    
+
     // Check if data and students exist
     if (!data || !data.students) {
         console.warn("No data or students found");
         return;
     }
-    
+
     const checkType = (type, element) => {
         // Returns afternoon column
         if (type == "true") {
@@ -339,7 +341,7 @@ function loadTable(data) {
         console.warn("student_table_body not found");
         return;
     }
-    
+
     table.innerHTML = "";
     data.students.forEach((element) => {
         console.log(element);
@@ -349,9 +351,17 @@ function loadTable(data) {
         <td>${element.s_program}</td>
         <td>${element.s_set}</td>
         <td>${element.s_lvl}</td>
-        <td>${element.attend_checkIn ? formatTime(element.attend_checkIn) : '<span class="text-red-500">Absent</span>'}</td>
-        <td>${element.attend_checkOut ? formatTime(element.attend_checkOut) : '<span class="text-red-500">Absent</span>'}</td>
-        ${checkType(data.event?.isWholeDay, element)}
+        <td>${
+            element.attend_checkIn
+                ? formatTime(element.attend_checkIn)
+                : '<span class="text-red-500">Absent</span>'
+        }</td>
+        <td>${
+            element.attend_checkOut
+                ? formatTime(element.attend_checkOut)
+                : '<span class="text-red-500">Absent</span>'
+        }</td>
+        ${checkType(data.event.isWholeDay, element)}
 
 
         <td>${formatter.format(new Date(element.created_at))}</td>
@@ -361,6 +371,6 @@ function loadTable(data) {
 }
 
 // Clean up interval when page unloads
-window.addEventListener('beforeunload', () => {
+window.addEventListener("beforeunload", () => {
     stopInterval();
 });
