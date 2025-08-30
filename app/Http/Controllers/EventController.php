@@ -127,7 +127,6 @@ class EventController extends Controller
             "checkOut_start" => ['required', "after:checkIn_end"],
             "checkOut_end" => ['required', "after:checkOut_start"],
             "fines_amount" => ["required", "integer"]
-
         ]);
 
         $event = Event::find($request->id);

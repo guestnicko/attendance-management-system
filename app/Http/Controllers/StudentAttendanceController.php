@@ -520,7 +520,7 @@ class StudentAttendanceController extends Controller
             ->get()
             ->first();
 
-        $students = StudentAttendance::join('students', 'students.id', '=', 'student_attendances.id_student')->select('*', 'student_attendances.created_at');
+        $students = StudentAttendance::join('students', 'students.id', '=', 'student_attendances.id_student')->select('*', 'student_attendances.created_at')->limit(10);
 
         if (($time < $event->checkIn_end && $time > $event->checkIn_start)) {
             $students = $students

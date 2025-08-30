@@ -20,14 +20,21 @@ export default defineConfig({
         }),
     ],
     server: {
-        host: '127.0.0.1',
-        port: 5173,
-        hmr: {
-            host: '127.0.0.1',
+        proxy: {
+            "/app": [
+                "http://127.0.0.1:8000",
+                "http://localhost/",
+                "http://192.168.0.72",
+            ], // Proxy Laravel requests to your Laravel app
         },
         cors: {
-            origin: ["http://127.0.0.1:8000", "http://localhost:8000"],
-            credentials: true,
+            origin: [
+                "http://127.0.0.1:8000",
+                "http://localhost",
+                "http://192.168.0.72",
+            ], // Allow your Laravel app to access the Vite server
+            methods: ["GET", "POST", "PUT", "DELETE"],
+            allowedHeaders: ["Content-Type", "Authorization"],
         },
     },
 });
