@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminCodeController;
 use App\Http\Controllers\FineController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\SetController;
 use App\Http\Resources\Attendance;
 use App\Models\User;
 use FontLib\Table\Type\name;
@@ -106,6 +107,9 @@ Route::middleware('auth')->group(function () {
     // EXPORT RELATED ROUTES
     Route::post("/fines/export-file", [FineController::class, "exportFile"])->name("fines.export");
     Route::post('/logs/export-file', [LogController::class, 'exportFile'])->name('logs.export');
+
+    // NEWLY ADDED: SET ROUTES
+    Route::get("/sets", [SetController::class, 'view'])->name("sets.view");
 });
 
 
