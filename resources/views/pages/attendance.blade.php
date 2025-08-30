@@ -24,12 +24,12 @@
         });
     </script>
 
-    <x-slot name="header">
-        <h2 class="font-semibold text-4xl text-gray-900 leading-tight mb-3">
-            {{ __('Student Attendance') }}
-        </h2>
+    <x-slot name="header">   
         <div class="flex justify-between">
             <div class="">
+                <h2 class="font-semibold text-4xl text-gray-900 leading-tight mb-3">
+                    {{ __('Student Attendance') }}
+                </h2>
                 <h2 class="text-2xl font-bold text-gray-800">
 
                     @if ($event)
@@ -55,7 +55,8 @@
 
                 </h2>
             </div>
-            <div class="">
+            <div class="flex flex-col gap-2">
+                <x-clock></x-clock>
                 <kbd
                     class="px-2 py-1.5 text-xs font-semibold text-green-500 bg-gray-900 border border-gray-900 rounded-lg">
                     Created at:
@@ -215,10 +216,140 @@
                             </div>
                         </div>
 
+                        {{-- Add Student --}}
+                        <div class="z-50">
+                            <x-new-modal>
+                                <x-slot name="button">
+                                    <div class="flex py-2 px-4 items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="size-7">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+                                        </svg>
+                                        <span class="text-sm">
+                                            Student
+                                        </span>
+                                </x-slot>
+
+
+                                <x-slot name="heading">
+                                    Add Student Information
+                                </x-slot>
+                                <x-slot name="content">
+                                    <form id="studentForm" action="{{ route('addStudent') }}" x-ref="studentForm"
+                                        method="POST" enctype="multipart/form-data"
+                                        class="flex items-center overflow-y-scroll max-h-[500px]">
+                                        @csrf
+                                        <div class="basis-3/4 justify-start">
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
+
+                                                <div class="grid grid-cols-1">
+                                                    <label for="">
+                                                        RFID
+                                                    </label>
+                                                    <input type="text" placeholder="Scan RFID" name="s_rfid"
+                                                        id="s_rfid"
+                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                                </div>
+                                                <div class="grid grid-cols-1">
+                                                    <label for="">Student ID:</label>
+                                                    <input type="text" placeholder="Enter Student ID (Ex. 2023-00069)"
+                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                                        name="s_studentID" id="s_studentID">
+                                                </div>
+                                            </div>
+                                            <div class="grid grid-cols-1 mt-5 mx-7">
+                                                <label for="">First Name:</label>
+                                                <input type="text" placeholder="Enter Firstname" name="s_fname"
+                                                    id="s_fname"
+                                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                            </div>
+                                            <div class="grid grid-cols-1 mt-5 mx-7">
+                                                <label for="">Last Name:</label>
+                                                <input type="text" placeholder="Enter Lastname" name="s_lname"
+                                                    id="s_lname"
+                                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                            </div>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
+
+                                                <div class="grid grid-cols-1">
+                                                    <label for="">Middle Name</label>
+                                                    <input type="text" placeholder="Enter Middlename" name="s_mname"
+                                                        id="s_mname"
+                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                                </div>
+                                                <div class="grid grid-cols-1">
+                                                    <label for="">Suffix</label>
+                                                    <input type="text" placeholder="Enter Suffix" name="s_suffix"
+                                                        id="s_suffix"
+                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                                </div>
+                                            </div>
+                                            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8 mt-5 mx-7">
+
+                                                <div class="grid grid-cols-1">
+                                                    <label for="">Program</label>
+                                                    <select name="s_program" id="s_program"
+                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                                        <option selected value="">Select Program</option>
+                                                        <option value="BSIT">BSIT</option>
+                                                        <option value="BSIS">BSIS</option>
+                                                    </select>
+                                                </div>
+                                                <div class="grid grid-cols-1">
+                                                    <label for="">Year Level</label>
+                                                    <select name="s_lvl" id="s_lvl"
+                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                                        <option selected value="">Select Year Level</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                    </select>
+                                                </div>
+                                                <div class="grid grid-cols-1">
+                                                    <label for="">Set</label>
+                                                    <select name="s_set" id="s_set"
+                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                                        <option selected value="">Select Set</option>
+                                                        <option value="A">A</option>
+                                                        <option value="B">B</option>
+                                                        <option value="C">C</option>
+                                                        <option value="D">D</option>
+                                                        <option value="E">E</option>
+                                                        <option value="F">F</option>
+                                                        <option value="G">G</option>
+                                                        <option value="H">H</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div x-data="{ image: '{{ asset('images/icons/default-image.svg') }}' }" class="basis-1/4 flex flex-col mt-5 items-center gap-5">
+                                            <img id="uploadImage" class="max-w-1/2 w-100" :src="image"
+                                                alt="">
+                                            <input id="uploadFile" type="file" name="s_image" x-ref="imageFile"
+                                                x-on:change="image = URL.createObjectURL($refs.imageFile.files[0])" hidden>
+                                            <button x-on:click="$refs.imageFile.click()" type="button"
+                                                class="bg-green-400 text-white px-3 py-2 text-xl">
+                                                Upload Image
+                                            </button>
+                                        </div>
+                                    </form>
+                                </x-slot>
+                                <x-slot name="footer">
+                                    <button onclick="testStudentForm()"
+                                        class="bg-green-400 text-white px-3 py-2 rounded-md mx-4">
+                                        Test Form </button>
+                                    <button x-on:click="$refs.studentForm.submit()"
+                                        class="bg-green-400 text-white px-3 py-2 rounded-md mx-4">
+                                        Save </button>
+                                </x-slot>
+                            </x-new-modal>
+                        </div>
                     </div>
 
-
                 </div>
+
             @endif
 
         </div>
@@ -232,27 +363,27 @@
         </div>
 
         {{-- Code by Panzerweb: added afternoon time-in/outs in table columns --}}
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div class="relative max-h-[400px] overflow-y-auto shadow-md sm:rounded-lg">
             <table
                 class="min-w-full w-full text-sm text-center rtl:text-right text-gray-900 font-semibold border-collapse">
-                <thead class="text-lg font-semibold text-gray-100 uppercase bg-green-700">
+                <thead class="sticky top-0 z-10 text-lg font-semibold text-gray-100 uppercase bg-green-700">
                     <tr>
-                        <td class="py-5 border border-green-800">Name</td>
-                        <td class="py-5 border border-green-800">Program</td>
-                        <td class="py-5 border border-green-800">Set</td>
-                        <td class="py-5 border border-green-800">Year Level</td>
+                        <td class="py-5">Name</td>
+                        <td class="py-5">Program</td>
+                        <td class="py-5">Set</td>
+                        <td class="py-5">Year Level</td>
 
                         @if ($event != null && $event->isWholeDay != 'false')
-                            <td class="py-5 border border-green-800">Morning Time In</td>
-                            <td class="py-5 border border-green-800">Morning Time Out</td>
-                            <td class="py-5 border border-green-800">Afternoon Time In</td>
-                            <td class="py-5 border border-green-800">Afternoon Time Out</td>
+                            <td class="py-5">Morning Time In</td>
+                            <td class="py-5">Morning Time Out</td>
+                            <td class="py-5">Afternoon Time In</td>
+                            <td class="py-5">Afternoon Time Out</td>
                         @else
-                            <td class="py-5 border border-green-800">Time In</td>
-                            <td class="py-5 border border-green-800">Time Out</td>
+                            <td class="py-5">Time In</td>
+                            <td class="py-5">Time Out</td>
                         @endif
 
-                        <td class="py-5 border border-green-800">Date</td>
+                        <td class="py-5">Date</td>
                     </tr>
                 </thead>
                 <tbody id="student_table_body">
