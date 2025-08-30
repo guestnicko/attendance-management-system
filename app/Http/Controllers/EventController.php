@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
@@ -71,7 +72,7 @@ class EventController extends Controller
                 "isWholeDay" => "true"
             ]);
 
-            return back()->with(["success" => "Event created successfully"]);
+            return redirect()->route('dashboard')->with(["success" => "Event created successfully"]);
         }
 
         // Create event with all required fields
@@ -86,7 +87,7 @@ class EventController extends Controller
             'admin_id' => Auth::id() // Get the current authenticated user's ID
         ]);
 
-        return back()->with(["success" => "Event created successfully"]);
+        return redirect()->route('dashboard')->with(["success" => "Event created successfully"]);
     }
 
     public function view()
@@ -94,6 +95,14 @@ class EventController extends Controller
         $pendingEvents = Event::where('event_status', "pending")->get();
         $completedEvents = Event::where('event_status', "completed")->get();
         $deletedEvents = Event::onlyTrashed()->get();
+
+        // Debug: Log the counts
+        Log::info('Events loaded:', [
+            'pending' => $pendingEvents->count(),
+            'completed' => $completedEvents->count(),
+            'deleted' => $deletedEvents->count()
+        ]);
+
         return view('pages.events', compact('pendingEvents', 'completedEvents', "deletedEvents"));
     }
 

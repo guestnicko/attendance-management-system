@@ -1,6 +1,9 @@
 //Added testing function
 console.log("HEllo WOrld");
 
+// Axios is already available globally through axios.js
+// No need to import it here
+
 const api = axios.create({
     headers: {
         "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
@@ -230,7 +233,6 @@ function renderTable(students) {
         ).innerHTML = `<h3 class="text-center tracking-wide text-gray-500 text-xl">No Student Found</h3>`;
     }
 }
-
 
 // TEST PURPOSES
 export function testStudentForm() {

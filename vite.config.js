@@ -15,19 +15,19 @@ export default defineConfig({
                 "resources/js/fines.js",
                 "resources/js/students.js",
                 "resources/js/events.js",
-                "resources/js/student_attendance.js",
             ],
             refresh: true,
         }),
     ],
     server: {
-        proxy: {
-            "/app": ["http://127.0.0.1:8000", "http://localhost/"], // Proxy Laravel requests to your Laravel app
+        host: '127.0.0.1',
+        port: 5173,
+        hmr: {
+            host: '127.0.0.1',
         },
         cors: {
-            origin: ["http://127.0.0.1:8000", "http://localhost"], // Allow your Laravel app to access the Vite server
-            methods: ["GET", "POST", "PUT", "DELETE"],
-            allowedHeaders: ["Content-Type", "Authorization"],
+            origin: ["http://127.0.0.1:8000", "http://localhost:8000"],
+            credentials: true,
         },
     },
 });

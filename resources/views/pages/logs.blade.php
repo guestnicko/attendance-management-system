@@ -20,128 +20,445 @@ $page = 'logs';
 
 
     @if (session('success'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: '{{ session('success') }}',
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '{{ session('
+                success ') }}',
+                showConfirmButton: false,
+                timer: 1500,
             });
-        </script>
+        });
+    </script>
     @endif
     @if ($errors->any())
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops!...",
-                    html: `
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                icon: "error",
+                title: "Oops!...",
+                html: `
                    <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside text-left">
                        @foreach ($errors->all() as $error)
                            <li>{{ $error }}</li>
                        @endforeach
                    </ul>
                `,
-                    showConfirmButton: true,
-                });
+                showConfirmButton: true,
             });
-        </script>
+        });
+    </script>
     @endif
 
 
     {{-- Content --}}
     <div class="bg-white p-3 rounded-md">
-        <div class="mt-4 overflow-x-auto shadow-md sm:rounded-lg">
-            <h3 class="text-3xl text-gray-900 font-extrabold">
-                Attendance Record
-            </h3>
-            <div class="flex justify-between my-5 mx-1">
-                <div class="w-full">
-                    {{-- Search Form --}}
-                    <x-search :page="$page" :route="route('fetchLogViaSearch')" />
-                </div>
-                <div class="w-full flex items-center justify-end gap-5">
-                    <x-event-filter :events="$events" :route="route('fetchLogViaEvent')" />
+        <!-- Add Filtering Controls -->
+        <div class="mb-4 flex flex-wrap items-center gap-4">
+            <div class="flex items-center gap-2">
+                <label for="entriesPerPage" class="text-sm font-medium text-gray-700">Show:</label>
+                <select id="entriesPerPage" onchange="changeEntriesPerPage(this.value)" class="border border-gray-300 rounded-md px-3 py-1 text-sm">
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="30">30</option>
+                    <option value="50">50</option>
+                </select>
+                <span class="text-sm text-gray-600">entries</span>
+            </div>
 
-                    <x-filter :route="route('fetchLogViaCategory')" />
+            <div class="flex items-center gap-2">
+                <label for="searchLogs" class="text-sm font-medium text-gray-700">Search:</label>
+                <input type="text" id="searchLogs" placeholder="Search logs..." onkeyup="filterLogs()" class="border border-gray-300 rounded-md px-3 py-1 text-sm w-48">
+            </div>
+        </div>
 
+        <div class="mt-6 bg-white shadow-xl rounded-lg overflow-hidden">
+            <div class="px-6 py-4 bg-gradient-to-r from-green-600 to-green-700 border-b border-green-800">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Fines Records
+                    </h2>
+                    <div class="flex items-center gap-3">
+                        <span class="text-red-100 text-sm font-medium">Total Fines: {{ count($logs) }}</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table class="min-w-full w-full text-lg text-center text-gray-900 font-semibold">
-                    <thead class="text-lg font-semibold text-gray-100 uppercase bg-green-700">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col" class="py-5">No.</th>
-                            <th scope="col" class="py-5 border border-green-800 text-center">Name</th>
-                            <th scope="col" class="py-5 border border-green-800 text-center">Program</th>
-                            <th scope="col" class="py-5 border border-green-800 text-center">Set</th>
-                            <th scope="col" class="py-5 border border-green-800 text-center">Level</th>
-                            <th scope="col" class="py-5 border border-green-800 text-center">Morning Time In</th>
-                            <th scope="col" class="py-5 border border-green-800 text-center">Morning Time Out</th>
-                            <th scope="col" class="py-5 border border-green-800 text-center">Afternoon Time In</th>
-                            <th scope="col" class="py-5 border border-green-800 text-center">Afternoon Time Out</th>
-                            <th scope="col" class="py-5 border border-green-800 text-center">Event</th>
-                            <th scope="col" class="py-5 border border-green-800 text-center">Date</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
+                                <div class="flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                    </svg>
+                                    Student Info
+                                </div>
+                            </th>
+                            <th class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
+                                <div class="flex items-center justify-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                                    </svg>
+                                    Missed Actions
+                                </div>
+                            </th>
+                            <th class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
+                                <div class="flex items-center justify-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Fine Details
+                                </div>
+                            </th>
+                            <th class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                <div class="flex items-center justify-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                                    </svg>
+                                    Event Details
+                                </div>
+                            </th>
                         </tr>
                     </thead>
-                    <tbody id="student_table_body">
+                    <tbody class="bg-white divide-y divide-gray-200" id="student_table_body">
                         @php
-                            $i = 1;
+                        $i = 1;
                         @endphp
-                        @foreach ($logs as $log)
-                            <tr class="table_row shadow-lg border-3">
-                                <td class="py-5">{{ $i++ }}</td>
-                                <td>{{ $log->s_fname . ' ' . $log->s_lname }} </td>
-                                <td>{{ $log->s_program }}</td>
-                                <td>{{ $log->s_set }}</td>
-                                <td>{{ $log->s_lvl }}</td>
+                        @foreach ($logs as $fine)
+                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <!-- Student Information Column -->
+                            <td class="px-6 py-4 border-r border-gray-200">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-semibold text-sm">
+                                                {{ strtoupper(substr($fine->s_fname, 0, 1) . substr($fine->s_lname, 0, 1)) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-semibold text-gray-900">
+                                            {{ $fine->s_fname . ' ' . $fine->s_lname }}
+                                        </p>
+                                        <div class="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">
+                                                {{ $fine->s_program }}
+                                            </span>
+                                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">
+                                                Set {{ $fine->s_set }}
+                                            </span>
+                                            <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">
+                                                Year {{ $fine->s_lvl }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
 
-                                {{-- Morning Attendances --}}
-                                <td>
-                                    @if ($log->attend_checkIn)
-                                        {{ date('h:i A', strtotime($log->attend_checkIn)) }}
+                            <!-- Missed Actions Column -->
+                            <td class="px-6 py-4 text-center border-r border-gray-200">
+                                <div class="space-y-2">
+                                    @if ($fine->morning_checkIn_missed || $fine->morning_checkOut_missed || $fine->afternoon_checkIn_missed || $fine->afternoon_checkOut_missed)
+                                    <div class="space-y-1">
+                                        @if ($fine->morning_checkIn_missed)
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                            Morning Check-in
+                                        </span>
+                                        @endif
+                                        @if ($fine->morning_checkOut_missed)
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                            Morning Check-out
+                                        </span>
+                                        @endif
+                                        @if ($fine->afternoon_checkIn_missed)
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                            Afternoon Check-in
+                                        </span>
+                                        @endif
+                                        @if ($fine->afternoon_checkOut_missed)
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                            Afternoon Check-out
+                                        </span>
+                                        @endif
+                                    </div>
                                     @else
-                                        <span class="text-red-500">Absent</span>
+                                    <span class="text-xs text-gray-500">No missed actions</span>
                                     @endif
-                                </td>
-                                <td>
-                                    @if ($log->attend_checkOut)
-                                        {{ date('h:i A', strtotime($log->attend_checkOut)) }}
-                                    @else
-                                        <span class="text-red-500">Absent</span>
-                                    @endif
-                                </td>
-                                {{-- Afternoon Attendances --}}
-                                <td>
-                                    @if ($log->attend_afternoon_checkIn)
-                                        {{ date('h:i A', strtotime($log->attend_afternoon_checkIn)) }}
-                                    @else
-                                        <span class="text-red-500">Absent</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($log->attend_afternoon_checkOut)
-                                        {{ date('h:i A', strtotime($log->attend_afternoon_checkOut)) }}
-                                    @else
-                                        <span class="text-red-500">Absent</span>
-                                    @endif
-                                </td>
-                                <td>{{ $log->event_name }}</td>
-                                <td>{{ $log->date ? date('M d, Y', strtotime($log->date)) : '---' }}</td>
-                            </tr>
+                                </div>
+                            </td>
+
+                            <!-- Fine Details Column -->
+                            <td class="px-6 py-4 text-center border-r border-gray-200">
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-center">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                                            ₱{{ $fine->fines_amount ? number_format($fine->fines_amount, 2) : '-' }}
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center justify-center">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 font-bold">
+                                            ₱{{ $fine->total_fines ? number_format($fine->total_fines, 2) : '-' }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Event Details Column -->
+                            <td class="px-6 py-4 text-center">
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-center">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                                            </svg>
+                                            {{ $fine->event_name ? $fine->event_name : '-' }}
+                                        </span>
+                                    </div>
+                                    <div class="text-xs text-gray-500">
+                                        {{ $fine->created_at ? date('M d, Y', strtotime($fine->created_at)) : '-' }}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>
-                <span id="std_info_table"></span>
             </div>
-
         </div>
 
-        <x-pagination :count="$pageCount" :lastpage="$logs->lastPage()" />
+        <!-- Enhanced Pagination -->
+        <div class="mt-6 flex items-center justify-between">
+            <div class="text-sm text-gray-700">
+                Showing <span id="startEntry">1</span> to <span id="endEntry">10</span> of <span id="totalEntries">{{ count($logs) }}</span> entries
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="previousPage()" id="prevBtn" class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Previous
+                </button>
+                <div id="pageNumbers" class="flex items-center gap-1">
+                    <!-- Page numbers will be generated here -->
+                </div>
+                <button onclick="nextPage()" id="nextBtn" class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Next
+                </button>
+            </div>
+        </div>
+
+        <!-- Add JavaScript for Enhanced Pagination and Filtering -->
+        <script>
+            let currentPage = 1;
+            let entriesPerPage = 10;
+            let filteredLogs = @json($logs);
+            let allLogs = @json($logs);
+
+            // Initialize
+            document.addEventListener('DOMContentLoaded', function() {
+                updatePagination();
+                displayLogs();
+            });
+
+            function changeEntriesPerPage(value) {
+                entriesPerPage = parseInt(value);
+                currentPage = 1;
+                updatePagination();
+                displayLogs();
+            }
+
+            function filterLogs() {
+                const searchTerm = document.getElementById('searchLogs').value.toLowerCase();
+
+                filteredLogs = allLogs.filter(log =>
+                    log.s_fname.toLowerCase().includes(searchTerm) ||
+                    log.s_lname.toLowerCase().includes(searchTerm) ||
+                    log.event_name.toLowerCase().includes(searchTerm) ||
+                    log.s_program.toLowerCase().includes(searchTerm)
+                );
+
+                currentPage = 1;
+                updatePagination();
+                displayLogs();
+            }
+
+            function displayLogs() {
+                const startIndex = (currentPage - 1) * entriesPerPage;
+                const endIndex = startIndex + entriesPerPage;
+                const logsToShow = filteredLogs.slice(startIndex, endIndex);
+
+                // Update table body
+                updateTableBody(logsToShow);
+
+                // Update entry counts
+                document.getElementById('startEntry').textContent = startIndex + 1;
+                document.getElementById('endEntry').textContent = Math.min(endIndex, filteredLogs.length);
+                document.getElementById('totalEntries').textContent = filteredLogs.length;
+            }
+
+            function updateTableBody(logs) {
+                const tbody = document.getElementById('student_table_body');
+                tbody.innerHTML = '';
+
+                logs.forEach(log => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-50 transition-colors duration-200';
+
+                    row.innerHTML = `
+                        <td class="px-6 py-4 border-r border-gray-200">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                                        <span class="text-white font-semibold text-sm">
+                                            ${log.s_fname.charAt(0).toUpperCase() + log.s_lname.charAt(0).toUpperCase()}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold text-gray-900">
+                                        ${log.s_fname} ${log.s_lname}
+                                    </p>
+                                    <div class="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">
+                                            ${log.s_program}
+                                        </span>
+                                        <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">
+                                            Set ${log.s_set}
+                                        </span>
+                                        <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">
+                                            Year ${log.s_lvl}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-center border-r border-gray-200">
+                            <div class="space-y-2">
+                                ${getMissedActionsHTML(log)}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-center border-r border-gray-200">
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-center">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                                        ₱${log.fines_amount ? Number(log.fines_amount).toFixed(2) : '-'}
+                                    </span>
+                                </div>
+                                <div class="flex items-center justify-center">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 font-bold">
+                                        ₱${log.total_fines ? Number(log.total_fines).toFixed(2) : '-'}
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-center">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                                        </svg>
+                                        ${log.event_name ? log.event_name : '-'}
+                                    </span>
+                                </div>
+                                <div class="text-xs text-gray-500">
+                                    ${log.created_at ? new Date(log.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-'}
+                                </div>
+                            </div>
+                        </td>
+                    `;
+
+                    tbody.appendChild(row);
+                });
+            }
+
+            function getMissedActionsHTML(log) {
+                const missedActions = [];
+                if (log.morning_checkIn_missed) missedActions.push('Morning Check-in');
+                if (log.morning_checkOut_missed) missedActions.push('Morning Check-out');
+                if (log.afternoon_checkIn_missed) missedActions.push('Afternoon Check-in');
+                if (log.afternoon_checkOut_missed) missedActions.push('Afternoon Check-out');
+
+                if (missedActions.length === 0) {
+                    return '<span class="text-xs text-gray-500">No missed actions</span>';
+                }
+
+                return missedActions.map(action => `
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        ${action}
+                    </span>
+                `).join('');
+            }
+
+            function updatePagination() {
+                const totalPages = Math.ceil(filteredLogs.length / entriesPerPage);
+                const pageNumbers = document.getElementById('pageNumbers');
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+
+                // Clear existing page numbers
+                pageNumbers.innerHTML = '';
+
+                // Generate page numbers
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageBtn = document.createElement('button');
+                    pageBtn.textContent = i;
+                    pageBtn.className = `px-3 py-2 text-sm font-medium border rounded-md ${
+                        i === currentPage 
+                            ? 'bg-blue-600 text-white border-blue-600' 
+                            : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-50'
+                    }`;
+                    pageBtn.onclick = () => goToPage(i);
+                    pageNumbers.appendChild(pageBtn);
+                }
+
+                // Update button states
+                prevBtn.disabled = currentPage === 1;
+                nextBtn.disabled = currentPage === totalPages;
+            }
+
+            function goToPage(page) {
+                currentPage = page;
+                displayLogs();
+                updatePagination();
+            }
+
+            function previousPage() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayLogs();
+                    updatePagination();
+                }
+            }
+
+            function nextPage() {
+                const totalPages = Math.ceil(filteredLogs.length / entriesPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayLogs();
+                    updatePagination();
+                }
+            }
+        </script>
     </div>
 
 </x-app-layout>

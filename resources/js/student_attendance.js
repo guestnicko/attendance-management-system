@@ -6,16 +6,20 @@ let attendanceStart = false;
 const form = document.getElementById("attendanceForm");
 const form_auto = document.getElementById("auto_attendanceForm");
 
-window.startInterval = startInterval;
-window.stopInterval = stopInterval;
+// Only set global functions if elements exist
+if (typeof window !== 'undefined') {
+    window.startInterval = startInterval;
+    window.stopInterval = stopInterval;
+}
+
 const inputField1 = document.getElementById("inputField1");
 
 let intervalId;
 
-// Time Interval to foucs on field for attendance
+// Time Interval to focus on field for attendance
 if (inputField1) {
     intervalId = setInterval(() => {
-        console.log("Hello World");
+        // console.log("Hello World");
         inputField1.focus();
     }, 500);
 }
@@ -27,16 +31,20 @@ const formatter = new Intl.DateTimeFormat("ja-JP", {
 });
 
 function stopInterval() {
-    clearInterval(intervalId);
-    console.log("Interval stopped!");
+    if (intervalId) {
+        clearInterval(intervalId);
+        console.log("Interval stopped!");
+    }
 }
 
 function startInterval() {
     stopInterval();
-    intervalId = setInterval(() => {
-        console.log("Hello World");
-        document.getElementById("inputField1").focus();
-    }, 500);
+    if (inputField1) {
+        intervalId = setInterval(() => {
+            // console.log("Hello World");
+            inputField1.focus();
+        }, 500);
+    }
 }
 
 // Formats time to user-friendly format
@@ -63,79 +71,101 @@ async function post(form) {
 }
 
 // PREVENT THE FORM FROM SUBMITTING AND REDIRECTING TO A PAGE
-form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const response = await post(new FormData(event.target));
-    // 3 VARIABLES ARE USED TO FETCH JSON DATA
-    let objProperty = response.data;
-    let attendCheckIn = response.attend_checkIn;
-    let attendCheckOut = response.attend_checkOut;
-    let attendAfternoonCheckIn = response.attend_afternoon_checkIn; //Fetch the afternoon time-in/out
-    let attendAfternoonCheckOut = response.attend_afternoon_checkOut;
-    if (response.isRecorded) {
-        AttendanceRecorded(
-            objProperty,
-            attendCheckIn,
-            attendCheckOut,
-            attendAfternoonCheckIn,
-            attendAfternoonCheckOut
-        ); //Added 3 arguments to retrieve the data
-    } else if (response.AlreadyRecorded) {
-        //if student is already recorded, call function
-        console.log("Already recorded | Data: ", response.event_data);
-        AttendanceAlreadyRecorded(objProperty, response.event_data);
-    } else {
-        //If invalid, then call this function
+if (form) {
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const response = await post(new FormData(event.target));
+        // 3 VARIABLES ARE USED TO FETCH JSON DATA
+        let objProperty = response.data;
+        let attendCheckIn = response.attend_checkIn;
+        let attendCheckOut = response.attend_checkOut;
+        let attendAfternoonCheckIn = response.attend_afternoon_checkIn; //Fetch the afternoon time-in/out
+        let attendAfternoonCheckOut = response.attend_afternoon_checkOut;
+        if (response.isRecorded) {
+            AttendanceRecorded(
+                objProperty,
+                attendCheckIn,
+                attendCheckOut,
+                attendAfternoonCheckIn,
+                attendAfternoonCheckOut
+            ); //Added 3 arguments to retrieve the data
+        } else if (response.AlreadyRecorded) {
+            //if student is already recorded, call function
+            console.log("Already recorded | Data: ", response.event_data);
+            AttendanceAlreadyRecorded(objProperty, response.event_data);
+        } else {
+            //If invalid, then call this function
 
-        console.log(response.data);
-        AttendanceNotRecorded();
-    }
-    let data = await get();
-    loadTable(data);
-    document.querySelector("#inputField").value = "";
-    // notify(isRecorded, "")
+            console.log(response.data);
+            AttendanceNotRecorded();
+        }
+        let data = await get();
+        loadTable(data);
+        const inputField = document.querySelector("#inputField");
+        if (inputField) {
+            inputField.value = "";
+        }
+        // notify(isRecorded, "")
 
-    // notify(isFetch, "")
-});
+        // notify(isFetch, "")
+    });
+}
+
 // PREVENT THE FORM FROM SUBMITTING AND REDIRECTING TO A PAGE
-form_auto.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    let response = await post(new FormData(event.target));
-    // 3 VARIABLES ARE USED TO FETCH JSON DATA
-    let objProperty = response.data;
-    let attendCheckIn = response.attend_checkIn;
-    let attendCheckOut = response.attend_checkOut;
-    let attendAfternoonCheckIn = response.attend_afternoon_checkIn; //Fetch the afternoon time-in/out
-    let attendAfternoonCheckOut = response.attend_afternoon_checkOut;
-    if (response.isRecorded) {
-        AttendanceRecorded(
-            objProperty,
-            attendCheckIn,
-            attendCheckOut,
-            attendAfternoonCheckIn,
-            attendAfternoonCheckOut
-        ); //Added 3 arguments to retrieve the data
-    } else if (response.AlreadyRecorded) {
-        //if student is already recorded, call function
-        console.log("You are already recorded");
-        AttendanceAlreadyRecorded(objProperty, response.data);
-    } else {
-        console.log(response.data);
-        AttendanceNotRecorded();
-    }
-    let data = await get();
-    loadTable(data);
-    document.querySelector("#inputField1").value = "";
-    // notify(isRecorded, "")
+if (form_auto) {
+    form_auto.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        let response = await post(new FormData(event.target));
+        // 3 VARIABLES ARE USED TO FETCH JSON DATA
+        let objProperty = response.data;
+        let attendCheckIn = response.attend_checkIn;
+        let attendCheckOut = response.attend_checkOut;
+        let attendAfternoonCheckIn = response.attend_afternoon_checkIn; //Fetch the afternoon time-in/out
+        let attendAfternoonCheckOut = response.attend_afternoon_checkOut;
+        if (response.isRecorded) {
+            AttendanceRecorded(
+                objProperty,
+                attendCheckIn,
+                attendCheckOut,
+                attendAfternoonCheckIn,
+                attendAfternoonCheckOut
+            ); //Added 3 arguments to retrieve the data
+        } else if (response.AlreadyRecorded) {
+            //if student is already recorded, call function
+            console.log("You are already recorded");
+            AttendanceAlreadyRecorded(objProperty, response.data);
+        } else {
+            console.log(response.data);
+            AttendanceNotRecorded();
+        }
+        let data = await get();
+        loadTable(data);
+        if (inputField1) {
+            inputField1.value = "";
+        }
+        // notify(isRecorded, "")
 
-    // notify(isFetch, "")
-});
+        // notify(isFetch, "")
+    });
+}
+
 // LOAD THE TABLE => GET
 async function get() {
-    let uri = document.getElementById("getURI").value;
+    const getURIElement = document.getElementById("getURI");
+    if (!getURIElement) {
+        console.warn("getURI element not found");
+        return { students: [] };
+    }
+    
+    let uri = getURIElement.value;
     let isFetch = false;
-    const data = await axios.get(uri);
-    return data.data;
+    try {
+        const data = await axios.get(uri);
+        return data.data;
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return { students: [] };
+    }
 }
 
 // FOR NOTIFICATIONS ETC
@@ -193,81 +223,100 @@ function AttendanceRecorded(
         `;
     }
 
-    Swal.fire({
-        icon: "success",
-        title: "Attendance Recorded!",
-        html: `
-            <div class="text-center">
-                <h2 class="text-2xl font-semibold text-gray-800">Welcome,</h2>
-                <h3 class="text-3xl font-bold text-red-600 my-2">
-                    ${objProperty.s_fname} ${objProperty.s_lname}
-                </h3>
-                <p class="text-lg font-medium text-gray-700">
-                    ${objProperty.s_program} - Year Level: ${objProperty.s_lvl}
-                </p>
-                <p class="text-md text-gray-500 mt-1">Set: ${objProperty.s_set}</p>
-                ${timeInfo}
-            </div>
-        `,
-        showConfirmButton: false,
-        timer: 1000,
-        customClass: {
-            popup: "bg-white shadow-lg rounded-xl p-6",
-            title: "text-xl font-bold text-gray-900",
-        },
-    });
+    // Check if Swal is available before using it
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            icon: "success",
+            title: "Attendance Recorded!",
+            html: `
+                <div class="text-center">
+                    <h2 class="text-2xl font-semibold text-gray-800">Welcome,</h2>
+                    <h3 class="text-3xl font-bold text-red-600 my-2">
+                        ${objProperty.s_fname} ${objProperty.s_lname}
+                    </h3>
+                    <p class="text-lg font-medium text-gray-700">
+                        ${objProperty.s_program} - Year Level: ${objProperty.s_lvl}
+                    </p>
+                    <p class="text-md text-gray-500 mt-1">Set: ${objProperty.s_set}</p>
+                    ${timeInfo}
+                </div>
+            `,
+            showConfirmButton: false,
+            timer: 1000,
+            customClass: {
+                popup: "bg-white shadow-lg rounded-xl p-6",
+                title: "text-xl font-bold text-gray-900",
+            },
+        });
+    } else {
+        console.log("Swal not available");
+    }
 }
 
 function AttendanceNotRecorded() {
     console.log("Student Attendance Not Recorded");
-    Swal.fire({
-        icon: "warning",
-        title: "Student Attendance Not Recorded!",
-        showConfirmButton: false,
-        timer: 1500,
-    });
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            icon: "warning",
+            title: "Student Attendance Not Recorded!",
+            showConfirmButton: false,
+            timer: 1500,
+        });
+    } else {
+        console.log("Swal not available");
+    }
 }
 
 // Function to show a pop-up about a student is already recorded
 function AttendanceAlreadyRecorded(objProperty, eventData) {
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            icon: "warning",
+            title: "Student is already recorded!",
+            html: `
+                <div class="text-center">
+                    <h2 class="text-2xl font-semibold text-gray-800">Details:</h2>
+                    <h3 class="text-3xl font-bold text-red-600 my-2">
+                        ${objProperty.s_fname} ${objProperty.s_lname}
+                    </h3>
+                    <p class="text-lg font-medium text-gray-700">
+                        ${objProperty.s_program} - Year Level: ${objProperty.s_lvl}
+                    </p>
+                    <p class="text-md text-gray-500 mt-1">Set: ${
+                        objProperty.s_set
+                    }</p>
 
-    Swal.fire({
-        icon: "warning",
-        title: "Student is already recorded!",
-        html: `
-            <div class="text-center">
-                <h2 class="text-2xl font-semibold text-gray-800">Details:</h2>
-                <h3 class="text-3xl font-bold text-red-600 my-2">
-                    ${objProperty.s_fname} ${objProperty.s_lname}
-                </h3>
-                <p class="text-lg font-medium text-gray-700">
-                    ${objProperty.s_program} - Year Level: ${objProperty.s_lvl}
-                </p>
-                <p class="text-md text-gray-500 mt-1">Set: ${
-                    objProperty.s_set
-                }</p>
-
-                <p class="text-md text-gray-500 mt-1">Time In (Morning): ${
-                    formatTime(eventData.attend_checkIn) ?? "---"
-                }</p>
-                <p class="text-md text-gray-500 mt-1">Time Out (Morning): ${
-                    formatTime(eventData.attend_checkOut) ?? "---"
-                }</p>
-                <p class="text-md text-gray-500 mt-1">Time In (Afternoon): ${
-                    formatTime(eventData.attend_afternoon_checkIn) ?? "---"
-                }</p>
-                <p class="text-md text-gray-500 mt-1">Time Out (Afternoon): ${
-                    formatTime(eventData.attend_afternoon_checkOut) ?? "---"
-                }</p>
-            </div>
-        `,
-        showConfirmButton: false,
-        timer: 1500,
-    });
+                    <p class="text-md text-gray-500 mt-1">Time In (Morning): ${
+                        formatTime(eventData.attend_checkIn) ?? "---"
+                    }</p>
+                    <p class="text-md text-gray-500 mt-1">Time Out (Morning): ${
+                        formatTime(eventData.attend_checkOut) ?? "---"
+                    }</p>
+                    <p class="text-md text-gray-500 mt-1">Time In (Afternoon): ${
+                        formatTime(eventData.attend_afternoon_checkIn) ?? "---"
+                    }</p>
+                    <p class="text-md text-gray-500 mt-1">Time Out (Afternoon): ${
+                        formatTime(eventData.attend_afternoon_checkOut) ?? "---"
+                    }</p>
+                </div>
+            `,
+            showConfirmButton: false,
+            timer: 1500,
+        });
+    } else {
+        console.log("Swal not available");
+    }
 }
 
 function loadTable(data) {
     console.log(data);
+    
+    // Check if data and students exist
+    if (!data || !data.students) {
+        console.warn("No data or students found");
+        return;
+    }
+    
     const checkType = (type, element) => {
         // Returns afternoon column
         if (type == "true") {
@@ -286,6 +335,11 @@ function loadTable(data) {
     };
 
     const table = document.querySelector("#student_table_body");
+    if (!table) {
+        console.warn("student_table_body not found");
+        return;
+    }
+    
     table.innerHTML = "";
     data.students.forEach((element) => {
         console.log(element);
@@ -297,7 +351,7 @@ function loadTable(data) {
         <td>${element.s_lvl}</td>
         <td>${element.attend_checkIn ? formatTime(element.attend_checkIn) : '<span class="text-red-500">Absent</span>'}</td>
         <td>${element.attend_checkOut ? formatTime(element.attend_checkOut) : '<span class="text-red-500">Absent</span>'}</td>
-        ${checkType(data.event.isWholeDay, element)}
+        ${checkType(data.event?.isWholeDay, element)}
 
 
         <td>${formatter.format(new Date(element.created_at))}</td>
@@ -305,3 +359,8 @@ function loadTable(data) {
     `;
     });
 }
+
+// Clean up interval when page unloads
+window.addEventListener('beforeunload', () => {
+    stopInterval();
+});

@@ -25,15 +25,15 @@ class ImportController extends Controller
             // Process the Excel file
             Excel::import(new StudentImport, $file->store('files'));
 
-            return redirect()->back()->with('success', "Data Imported Successfully");
+            return redirect()->route('dashboard')->with('success', "Data Imported Successfully");
         } catch (Throwable $error) {
             dd($error);
 
             // much better if there is a duplicate entry then the system will just skip that entry: => should be done in import controlle
             if ($error->getCode() == 23000) { //23000 is Integrity Constraint error
-                return redirect()->back()->with('error', $error->getMessage()); //For Duplicate Entries
+                return redirect()->route('dashboard')->with('error', $error->getMessage()); //For Duplicate Entries
             } else {
-                return redirect()->back()->with('error', $error->getMessage());
+                return redirect()->route('dashboard')->with('error', $error->getMessage());
             }
         }
     }
