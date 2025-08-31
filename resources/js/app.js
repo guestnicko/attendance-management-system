@@ -2,6 +2,7 @@ import Alpine from "alpinejs";
 import "flowbite"; //I restored Flowbite kay wala nigana ang Dropdowns na gikan Flowbite
 import Swal from "sweetalert2"; //Added Sweet Alert module
 import "./bootstrap";
+import { startTime } from "./clockdate";
 import { toggleDropdown, triggerDropdownOnLoad } from "./component";
 import { testStudentForm } from "./students";
 
@@ -11,14 +12,14 @@ console.log("Testing App------- Developer");
 window.Alpine = Alpine;
 
 // Add global Alpine.js initialization to prevent modal issues
-Alpine.data('globalModal', () => ({
+Alpine.data("globalModal", () => ({
     init() {
         // Ensure all modals start in closed state
         this.$nextTick(() => {
             // Add alpine-ready class to prevent flashing
-            this.$el.classList.add('alpine-ready');
+            this.$el.classList.add("alpine-ready");
         });
-    }
+    },
 }));
 
 Alpine.start();
@@ -26,8 +27,17 @@ Alpine.start();
 // ComponentJS functions
 window.toggleDropdown = toggleDropdown;
 window.triggerDropdownOnLoad = triggerDropdownOnLoad;
-//Clockdate function
+
+// Clockdate function - only call when elements exist
+window.startTime = function () {
+    const clockElement = document.getElementById("clock");
+    const dateElement = document.getElementById("date");
+
+    if (clockElement && dateElement) {
+        startTime();
+    }
+};
 
 //Sweet AlertJS
 window.Swal = Swal;
-window.testStudentForm =  testStudentForm;
+window.testStudentForm = testStudentForm;

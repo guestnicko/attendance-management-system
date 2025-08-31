@@ -12,7 +12,7 @@
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.6",
-        "maatwebsite/excel": "*",
+        "maatwebsite/excel": "^3.1",
         "tecnickcom/tcpdf": "^6.8"
     },
     "require-dev": {

@@ -4,56 +4,56 @@ $page = 'students';
 <x-app-layout>
     @vite(['resources/js/students.js'])
     @if ($errors->any())
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops!...",
-                    html: `
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                icon: "error",
+                title: "Oops!...",
+                html: `
                     <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside text-left">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 `,
-                    showConfirmButton: true,
-                });
+                showConfirmButton: true,
             });
-        </script>
+        });
+    </script>
     @endif
 
     {{-- Session Error Handling from Import Controller --}}
     {{-- UPDATE: This error handling pop ups is not exclusive to the Import Controller anymore --}}
     @if (session('success'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: '{{ session('
-                                                        success ') }}',
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '{{ session('
+                success ') }}',
+                showConfirmButton: false,
+                timer: 1500,
             });
-        </script>
+        });
+    </script>
     @endif
     {{-- Error popup modified by Panzerweb --}}
     @if (session('error'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                const errors = @json(session('error'));
-                console.log(errors);
-                let errorList = '<ul class="pl-5 text-sm text-red-700">';
-                for (const [key, value] of Object.entries(errors.details)) {
-                    errorList += `<li><strong>${key}:</strong> ${value}</li>`;
-                }
-                errorList += '</ul>';
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const errors = @json(session('error'));
+            console.log(errors);
+            let errorList = '<ul class="pl-5 text-sm text-red-700">';
+            for (const [key, value] of Object.entries(errors.details)) {
+                errorList += `<li><strong>${key}:</strong> ${value}</li>`;
+            }
+            errorList += '</ul>';
 
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops!',
-                    html: `   <h2 class="text-lg font-semibold text-red-600">Something is wrong!</h2><br>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                html: `   <h2 class="text-lg font-semibold text-red-600">Something is wrong!</h2><br>
                         <div class="w-full max-w-md mx-auto">
                             <div class="">
                                 <button onclick="toggleAccordion()" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
@@ -87,10 +87,10 @@ $page = 'students';
                                 </div>
                             </div>
                         </div>`,
-                    showConfirmButton: true,
-                });
+                showConfirmButton: true,
             });
-        </script>
+        });
+    </script>
     @endif
 
     <x-slot name="header">
@@ -304,9 +304,19 @@ $page = 'students';
                     <x-search :page="$page" :route="route('fetchStudentViaSearch')" />
                     {{-- FILTER --}}
                     <x-filter :page="$page" :route="route('fetchStudentsViaCategory')" />
-                </div>
-                {{-- SEARCH FORM --}}
 
+                    <!-- Add Entries Per Page Filter -->
+                    <div class="flex items-center gap-2">
+                        <label for="entriesPerPage" class="text-sm font-medium text-gray-700">Show:</label>
+                        <select id="entriesPerPage" onchange="changeEntriesPerPage(this.value)" class="border border-gray-300 rounded-md px-3 py-1 text-sm">
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                        </select>
+                        <span class="text-sm text-gray-600">entries</span>
+                    </div>
+                </div>
 
                 {{-- Add Student --}}
                 <div class="z-50">
@@ -440,62 +450,362 @@ $page = 'students';
                 </div>
             </div>
 
-            <div class="relative overflow-x-auto shadow-md sm:rounded-lg z-0">
-                <table class="min-w-full w-full text-sm text-center rtl:text-right text-gray-900 font-semibold">
+            <div class="mt-6 bg-white shadow-xl rounded-lg overflow-hidden">
+                <div class="px-6 py-4 bg-gradient-to-r from-green-600 to-green-700 border-b border-green-800">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                            </svg>
+                            Student Records
+                        </h2>
+                        <div class="flex items-center gap-3">
+                            <span class="text-blue-100 text-sm font-medium">Total Students: {{ count($students) }}</span>
+                        </div>
+                    </div>
+                </div>
 
-                    <thead class="text-lg font-semibold text-gray-100 uppercase bg-green-700">
-                        <tr>
-                            <th scope="col" class="py-5">No.</th>
-                            <th scope="col">Last Name</th>
-                            <th scope="col">First Name</th>
-
-                            <th scope="col">Middle Name</th>
-                            <th scope="col">Suffix</th>
-                            <th scope="col">Year Level</th>
-
-                            <th scope="col">Set</th>
-                            <th scope="col">Program</th>
-
-                            <th scope="col">Status</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="student_table_body">
-                        @isset($students)
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                    <div class="flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                        </svg>
+                                        Student ID
+                                    </div>
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                    <div class="flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                        </svg>
+                                        Personal Information
+                                    </div>
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                    <div class="flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
+                                        </svg>
+                                        Academic Details
+                                    </div>
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                    <div class="flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Status
+                                    </div>
+                                </th>
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                        </svg>
+                                        Actions
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="student_table_body">
+                            @isset($students)
                             @foreach ($students as $student)
-                                {{-- Added tr elements for rows to fix UI --}}
-                                <tr class="table_row" id="{{ $student->id }}">
-                                    <td>{{ $student->s_studentID }}</td>
-                                    <td>{{ $student->s_lname }}</td>
-                                    <td>{{ $student->s_fname }}</td>
+                            <tr class="hover:bg-gray-50 transition-colors duration-200" id="{{ $student->id }}">
+                                <!-- Student ID Column -->
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                                        {{ $student->s_studentID }}
+                                    </span>
+                                </td>
 
-                                    <td>{{ $student->s_mname }}</td>
-                                    <td>{{ $student->s_suffix }}</td>
-                                    <td>{{ $student->s_lvl }}</td>
-                                    <td>{{ $student->s_set }}</td>
-                                    <td>{{ $student->s_program }}</td>
-                                    <td>{{ $student->s_status }}</td>
-                                    <td class="flex gap-3 py-3">
+                                <!-- Personal Information Column -->
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="flex-shrink-0">
+                                            <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                                                <span class="text-white font-semibold text-sm">
+                                                    {{ strtoupper(substr($student->s_fname, 0, 1) . substr($student->s_lname, 0, 1)) }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-semibold text-gray-900">
+                                                {{ $student->s_fname . ' ' . $student->s_lname }}
+                                            </p>
+                                            <div class="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                                                @if($student->s_mname)
+                                                <span class="text-gray-600">{{ $student->s_mname }}</span>
+                                                @endif
+                                                @if($student->s_suffix)
+                                                <span class="text-gray-600">{{ $student->s_suffix }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <!-- Academic Details Column -->
+                                <td class="px-6 py-4">
+                                    <div class="space-y-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                                                {{ $student->s_program }}
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">
+                                                Set {{ $student->s_set }}
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">
+                                                Year {{ $student->s_lvl }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <!-- Status Column -->
+                                <td class="px-6 py-4">
+                                    @php
+                                    $statusColors = [
+                                    'ENROLLED' => 'bg-green-100 text-green-800',
+                                    'GRADUATED' => 'bg-blue-100 text-blue-800',
+                                    'DROPPED' => 'bg-red-100 text-red-800',
+                                    'TO BE UPDATED' => 'bg-yellow-100 text-yellow-800'
+                                    ];
+                                    $statusColor = $statusColors[$student->s_status] ?? 'bg-gray-100 text-gray-800';
+                                    @endphp
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ $statusColor }}">
+                                        {{ $student->s_status }}
+                                    </span>
+                                </td>
+
+                                <!-- Actions Column -->
+                                <td class="px-6 py-4 text-center">
+                                    <div class="flex items-center justify-center gap-3">
                                         <x-edit-button x-on:click="open = true"
                                             onclick="updateStudent({{ $student }}, '{{ asset('storage/' . $student['s_image']) }}')">
-                                            {{-- Edit Button --}}
                                         </x-edit-button>
                                         <x-delete-button onclick="deleteStudent({{ $student }})">
-                                            {{-- Delete button --}}
                                         </x-delete-button>
-
-                                    </td>
-                                </tr>
+                                    </div>
+                                </td>
+                            </tr>
                             @endforeach
-                        @endisset
-                    </tbody>
-                </table>
-                <span id="std_info_table" class="py-5">
-
-                </span>
+                            @endisset
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            {{-- Pagination view added by Panzerweb --}}
-            <x-pagination :count="$pageCount" :lastpage="$students->lastPage()" />
+
+            <!-- Enhanced Pagination -->
+            <div class="mt-6 flex items-center justify-between">
+                <div class="text-sm text-gray-700">
+                    Showing <span id="startEntry">1</span> to <span id="endEntry">10</span> of <span id="totalEntries">{{ count($students) }}</span> entries
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="previousPage()" id="prevBtn" class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Previous
+                    </button>
+                    <div id="pageNumbers" class="flex items-center gap-1">
+                        <!-- Page numbers will be generated here -->
+                    </div>
+                    <button onclick="nextPage()" id="nextBtn" class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Next
+                    </button>
+                </div>
+            </div>
+
+            <!-- Add JavaScript for Enhanced Pagination and Filtering -->
+            <script>
+                let currentPage = 1;
+                let entriesPerPage = 10;
+                let filteredStudents = @json($students);
+                let allStudents = @json($students);
+
+                // Initialize
+                document.addEventListener('DOMContentLoaded', function() {
+                    updatePagination();
+                    displayStudents();
+                });
+
+                function changeEntriesPerPage(value) {
+                    entriesPerPage = parseInt(value);
+                    currentPage = 1;
+                    updatePagination();
+                    displayStudents();
+                }
+
+                function filterStudents() {
+                    const searchTerm = document.getElementById('searchStudents').value.toLowerCase();
+
+                    filteredStudents = allStudents.filter(student =>
+                        student.s_fname.toLowerCase().includes(searchTerm) ||
+                        student.s_lname.toLowerCase().includes(searchTerm) ||
+                        student.s_studentID.toLowerCase().includes(searchTerm) ||
+                        student.s_rfid.toLowerCase().includes(searchTerm) ||
+                        student.s_program.toLowerCase().includes(searchTerm)
+                    );
+
+                    currentPage = 1;
+                    updatePagination();
+                    displayStudents();
+                }
+
+                function displayStudents() {
+                    const startIndex = (currentPage - 1) * entriesPerPage;
+                    const endIndex = startIndex + entriesPerPage;
+                    const studentsToShow = filteredStudents.slice(startIndex, endIndex);
+
+                    // Update table body
+                    updateTableBody(studentsToShow);
+
+                    // Update entry counts
+                    document.getElementById('startEntry').textContent = startIndex + 1;
+                    document.getElementById('endEntry').textContent = Math.min(endIndex, filteredStudents.length);
+                    document.getElementById('totalEntries').textContent = filteredStudents.length;
+                }
+
+                function updateTableBody(students) {
+                    const tbody = document.getElementById('student_table_body');
+                    tbody.innerHTML = '';
+
+                    students.forEach(student => {
+                        const row = document.createElement('tr');
+                        row.className = 'hover:bg-gray-50 transition-colors duration-200';
+                        row.id = student.id;
+
+                        row.innerHTML = `
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                                    ${student.s_studentID}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-semibold text-sm">
+                                                ${student.s_fname.charAt(0).toUpperCase() + student.s_lname.charAt(0).toUpperCase()}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-semibold text-gray-900">
+                                            ${student.s_fname} ${student.s_lname}
+                                        </p>
+                                        <div class="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                                            ${student.s_mname ? `<span class="text-gray-600">${student.s_mname}</span>` : ''}
+                                            ${student.s_suffix ? `<span class="text-gray-600">${student.s_suffix}</span>` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="space-y-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                                            ${student.s_program}
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">
+                                            Set ${student.s_set}
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium">
+                                            Year ${student.s_lvl}
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(student.s_status)}">
+                                    ${student.s_status}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex items-center justify-center gap-3">
+                                    <button onclick="updateStudent(${JSON.stringify(student).replace(/"/g, '&quot;')}, '${student.s_image ? 'storage/' + student.s_image : 'images/icons/default-image.svg'}')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                                        Edit
+                                    </button>
+                                    <button onclick="deleteStudent(${JSON.stringify(student).replace(/"/g, '&quot;')})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+
+                        tbody.appendChild(row);
+                    });
+                }
+
+                function getStatusColor(status) {
+                    const statusColors = {
+                        'ENROLLED': 'bg-green-100 text-green-800',
+                        'GRADUATED': 'bg-blue-100 text-blue-800',
+                        'DROPPED': 'bg-red-100 text-red-800',
+                        'TO BE UPDATED': 'bg-yellow-100 text-yellow-800'
+                    };
+                    return statusColors[status] || 'bg-gray-100 text-gray-800';
+                }
+
+                function updatePagination() {
+                    const totalPages = Math.ceil(filteredStudents.length / entriesPerPage);
+                    const pageNumbers = document.getElementById('pageNumbers');
+                    const prevBtn = document.getElementById('prevBtn');
+                    const nextBtn = document.getElementById('nextBtn');
+
+                    // Clear existing page numbers
+                    pageNumbers.innerHTML = '';
+
+                    // Generate page numbers
+                    for (let i = 1; i <= totalPages; i++) {
+                        const pageBtn = document.createElement('button');
+                        pageBtn.textContent = i;
+                        pageBtn.className = `px-3 py-2 text-sm font-medium border rounded-md ${
+                            i === currentPage 
+                                ? 'bg-blue-600 text-white border-blue-600' 
+                                : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-50'
+                        }`;
+                        pageBtn.onclick = () => goToPage(i);
+                        pageNumbers.appendChild(pageBtn);
+                    }
+
+                    // Update button states
+                    prevBtn.disabled = currentPage === 1;
+                    nextBtn.disabled = currentPage === totalPages;
+                }
+
+                function goToPage(page) {
+                    currentPage = page;
+                    displayStudents();
+                    updatePagination();
+                }
+
+                function previousPage() {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        displayStudents();
+                        updatePagination();
+                    }
+                }
+
+                function nextPage() {
+                    const totalPages = Math.ceil(filteredStudents.length / entriesPerPage);
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        displayStudents();
+                        updatePagination();
+                    }
+                }
+            </script>
         </div>
 
     </div>
@@ -525,7 +835,7 @@ $page = 'students';
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option value="">Keep Current</option>
                         @foreach (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] as $set)
-                            <option value="{{ $set }}">{{ $set }}</option>
+                        <option value="{{ $set }}">{{ $set }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -536,7 +846,7 @@ $page = 'students';
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option value="">Keep Current</option>
                         @foreach (['ENROLLED', 'GRADUATED', 'DROPPED', 'TO BE UPDATED'] as $status)
-                            <option value="{{ $status }}">{{ $status }}</option>
+                        <option value="{{ $status }}">{{ $status }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -555,7 +865,7 @@ $page = 'students';
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option value="">Keep Current</option>
                         @foreach (['1' => 'First Year', '2' => 'Second Year', '3' => 'Third Year', '4' => 'Fourth Year'] as $key => $value)
-                            <option value="{{ $key }}">{{ $value }}</option>
+                        <option value="{{ $key }}">{{ $value }}</option>
                         @endforeach
                     </select>
                 </div>

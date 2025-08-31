@@ -30,7 +30,6 @@ class AuthenticatedSessionController extends Controller
             'admin_email' => 'required|email',
             'password' => 'required',
         ]);
-
         $user = User::where('admin_email', $request->admin_email)->first();
 
         // Check if email exists

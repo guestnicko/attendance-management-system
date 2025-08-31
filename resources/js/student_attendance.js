@@ -6,8 +6,12 @@ let attendanceStart = false;
 const form = document.getElementById("attendanceForm");
 const form_auto = document.getElementById("auto_attendanceForm");
 
-window.startInterval = startInterval;
-window.stopInterval = stopInterval;
+// Only set global functions if elements exist
+if (typeof window !== "undefined") {
+    window.startInterval = startInterval;
+    window.stopInterval = stopInterval;
+}
+
 const inputField1 = document.getElementById("inputField1");
 
 let intervalId;
@@ -20,6 +24,7 @@ let intervalId;
 //     }, 1000);
 // }
 
+
 const formatter = new Intl.DateTimeFormat("ja-JP", {
     day: "2-digit",
     month: "2-digit",
@@ -27,8 +32,10 @@ const formatter = new Intl.DateTimeFormat("ja-JP", {
 });
 
 function stopInterval() {
-    clearInterval(intervalId);
-    console.log("Interval stopped!");
+    if (intervalId) {
+        clearInterval(intervalId);
+        console.log("Interval stopped!");
+    }
 }
 
 function startInterval() {
@@ -37,6 +44,7 @@ function startInterval() {
         console.log("Hello World");
         document.getElementById("inputField1").focus();
     }, 1000);
+
 }
 
 // Formats time to user-friendly format
@@ -125,8 +133,7 @@ form.addEventListener("submit", async (event) => {
     }
     // notify(isRecorded, "")
 
-    // notify(isFetch, "")
-});
+
 // PREVENT THE FORM FROM SUBMITTING AND REDIRECTING TO A PAGE
 // form_auto.addEventListener("submit", async (event) => {
 //     event.preventDefault();
@@ -160,12 +167,24 @@ form.addEventListener("submit", async (event) => {
 
 //     // notify(isFetch, "")
 // });
+
 // LOAD THE TABLE => GET
 async function get() {
-    let uri = document.getElementById("getURI").value;
+    const getURIElement = document.getElementById("getURI");
+    if (!getURIElement) {
+        console.warn("getURI element not found");
+        return { students: [] };
+    }
+
+    let uri = getURIElement.value;
     let isFetch = false;
-    const data = await axios.get(uri);
-    return data.data;
+    try {
+        const data = await axios.get(uri);
+        return data.data;
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return { students: [] };
+    }
 }
 
 // FOR NOTIFICATIONS ETC
@@ -326,6 +345,11 @@ function loadTable(data) {
     };
 
     const table = document.querySelector("#student_table_body");
+    if (!table) {
+        console.warn("student_table_body not found");
+        return;
+    }
+
     table.innerHTML = "";
     data.students.forEach((element) => {
         // console.log(element);
@@ -335,8 +359,16 @@ function loadTable(data) {
         <td>${element.s_program}</td>
         <td>${element.s_set}</td>
         <td>${element.s_lvl}</td>
-        <td>${element.attend_checkIn ? formatTime(element.attend_checkIn) : '<span class="text-red-500">Absent</span>'}</td>
-        <td>${element.attend_checkOut ? formatTime(element.attend_checkOut) : '<span class="text-red-500">Absent</span>'}</td>
+        <td>${
+            element.attend_checkIn
+                ? formatTime(element.attend_checkIn)
+                : '<span class="text-red-500">Absent</span>'
+        }</td>
+        <td>${
+            element.attend_checkOut
+                ? formatTime(element.attend_checkOut)
+                : '<span class="text-red-500">Absent</span>'
+        }</td>
         ${checkType(data.event.isWholeDay, element)}
 
 
@@ -345,3 +377,8 @@ function loadTable(data) {
     `;
     });
 }
+
+// Clean up interval when page unloads
+window.addEventListener("beforeunload", () => {
+    stopInterval();
+});
