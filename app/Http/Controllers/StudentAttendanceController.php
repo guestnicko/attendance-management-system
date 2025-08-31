@@ -183,22 +183,17 @@ class StudentAttendanceController extends Controller
 
         $myStudent = Student::whereAny(['s_rfid', 's_studentID'], $request->s_rfid)->get()->first();
 
-        // This get the latest student attendance
-        $studentsEvent = StudentAttendance::where('id_student', $myStudent->id)->get()->last();
-
-
-
-
         // CHECK IF STUDENT EXIST IN THE MASTERLIST
-        if (empty($myStudent)) {
+        if (!$myStudent) {
             return response()->json([
-                "message" => "I am sorry but the student does not exist in the masterlist",
+                "message" => "The Student does not exist in the database",
                 "isRecorded" => false,
                 "doesntExist" => true,
             ]);
         }
 
-        //Get the details of the student
+        // This get the latest student attendance
+        $studentsEvent = StudentAttendance::where('id_student', $myStudent->id)->get()->last();
 
 
         // INITIALIZE VARIABLES, ETC
@@ -246,7 +241,8 @@ class StudentAttendanceController extends Controller
                 "message" => "Student's attendance is already recorded",
                 "data" => $myStudent,
                 "isRecorded" => false,
-                "AlreadyRecorded" => true
+                "AlreadyRecorded" => true,
+                "event_data" => $studentsEvent,
             ]);
         }
 
@@ -255,7 +251,8 @@ class StudentAttendanceController extends Controller
                 "message" => "Student's attendance is already recorded",
                 "isRecorded" => false,
                 "data" => $myStudent,
-                "AlreadyRecorded" => true
+                "AlreadyRecorded" => true,
+                "event_data" => $studentsEvent,
             ]);
         }
 
