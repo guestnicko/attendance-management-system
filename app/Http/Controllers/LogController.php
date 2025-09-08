@@ -18,11 +18,13 @@ use function Pest\Laravel\json;
 
 class LogController extends Controller
 {
+    private $pagination = 20;
+
     public function viewLogs()
     {
         $logs = StudentAttendance::leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
             ->join('events', 'events.id', '=', 'student_attendances.event_id')
-            ->paginate(15);
+            ->paginate($this->pagination);
 
 
         // Get fines with related student and event data
@@ -208,7 +210,7 @@ class LogController extends Controller
             $students = $students->where('event_id', $request->query('event_id'));
         }
 
-        $students = $students->paginate(15)->withQueryString();
+        $students = $students->paginate($this->pagination)->withQueryString();
 
         if (empty($students->first())) {
             return response()->json([
@@ -230,7 +232,7 @@ class LogController extends Controller
             ->leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
             ->join('events', 'events.id', '=', 'student_attendances.event_id')
             ->whereAny(['s_fname', 's_studentID', 's_mname', 's_lname'], 'like', $request->query('search') . '%')
-            ->paginate(15)
+            ->paginate($this->pagination)
             ->withQueryString();
 
         if (empty($students->first())) {
@@ -252,7 +254,7 @@ class LogController extends Controller
             $students = StudentAttendance::select('*', 'student_attendances.created_at')
                 ->leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
                 ->join('events', 'events.id', '=', 'student_attendances.event_id')
-                ->paginate(15)
+                ->paginate($this->pagination)
                 ->withQueryString();
 
             return response()->json([

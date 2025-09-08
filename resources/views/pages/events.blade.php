@@ -3,37 +3,37 @@
     @vite(['resources/js/events.js'])
     {{-- Implemented Sweet Alert Pop Ups on Conditionals --}}
     @if ($errors->any())
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                icon: "error",
-                title: "Oops!...",
-                html: `
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops!...",
+                    html: `
                    <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside text-left">
                        @foreach ($errors->all() as $error)
                            <li>{{ $error }}</li>
                        @endforeach
                    </ul>
                `,
-                showConfirmButton: true,
+                    showConfirmButton: true,
+                });
             });
-        });
-    </script>
+        </script>
     @endif
 
     @if (session('success'))
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: '{{ session('
-                success ') }}',
-                showConfirmButton: false,
-                timer: 1500,
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('
+                                                                                                                                                            success ') }}',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
             });
-        });
-    </script>
+        </script>
     @endif
 
 
@@ -46,7 +46,8 @@
     </x-slot>
     <div class="mt-4" x-data="{ open: false }">
         {{-- EDIT EVENT MODAL --}}
-        <div x-show="open" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div x-show="open" x-cloak id="udpateEventModal"
+            class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div x-on:click.outside="open = false" class="max-w-[1000px] bg-white p-6 rounded-lg shadow-lg">
                 <div class="border-b-2 border-gray-300 mb-5">
                     <h1 class="text-2xl font-bold">
@@ -124,8 +125,7 @@
                                     <div
                                         class="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
                                         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                            viewBox="0 0 24 24">
+                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                             <path fill-rule="evenodd"
                                                 d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
                                                 clip-rule="evenodd" />
@@ -158,7 +158,8 @@
                             </div>
                         </div>
                         <div class="flex gap-4 items-center mb-3">
-                            <input type="checkbox" id="isWholeDay" name="wholeDay" onchange="handleWholeDayChange(this)">
+                            <input type="checkbox" id="isWholeDay" name="wholeDay"
+                                onchange="handleWholeDayChange(this)">
                             <label for="">Whole Day?</label>
                         </div>
                         <div id="afternoon_attendance" class="hidden transition-all">
@@ -260,7 +261,7 @@
                         class="bg-green-400 text-white px-3 py-2 rounded-md mx-4">
                         Save </button>
                     <button x-on:click="open = false"
-                        class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">Close</button>
+                        class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 z-10">Close</button>
                 </div>
             </div>
         </div>
@@ -394,7 +395,8 @@
 
                         </div>
                         <div class="flex gap-4 items-center mb-3">
-                            <input type="checkbox" id="wholeDay" name="wholeDay" onchange="handleCreateWholeDayChange(this)">
+                            <input type="checkbox" id="wholeDay" name="wholeDay"
+                                onchange="handleCreateWholeDayChange(this)">
                             <label for="">Whole Day?</label>
                         </div>
                         <div id="create_afternoon_attendance" class="hidden transition-all">
@@ -493,6 +495,7 @@
                     <button x-on:click="$refs.eventForm.submit()" type="submit"
                         class="bg-green-400 text-white px-3 py-2 mx-4 hover:bg-green-600 rounded-md">
                         Save </button>
+
                 </x-slot>
             </x-new-modal>
         </div>
@@ -527,7 +530,8 @@
             <div class="mt-4 flex flex-wrap items-center gap-4">
                 <div class="flex items-center gap-2">
                     <label for="entriesPerPage" class="text-sm font-medium text-gray-700">Show:</label>
-                    <select id="entriesPerPage" onchange="changeEntriesPerPage(this.value)" class="border border-gray-300 rounded-md px-3 py-1 text-sm">
+                    <select id="entriesPerPage" onchange="changeEntriesPerPage(this.value)"
+                        class="border border-gray-300 rounded-md px-3 py-1 text-sm">
                         <option value="10">10</option>
                         <option value="15">15</option>
                         <option value="30">30</option>
@@ -538,7 +542,8 @@
 
                 <div class="flex items-center gap-2">
                     <label for="searchEvents" class="text-sm font-medium text-gray-700">Search:</label>
-                    <input type="text" id="searchEvents" placeholder="Search events..." onkeyup="filterEvents()" class="border border-gray-300 rounded-md px-3 py-1 text-sm w-48">
+                    <input type="text" id="searchEvents" placeholder="Search events..." onkeyup="filterEvents()"
+                        class="border border-gray-300 rounded-md px-3 py-1 text-sm w-48">
                 </div>
             </div>
         </div>
@@ -547,14 +552,18 @@
             <div class="px-6 py-4 bg-gradient-to-r from-green-600 to-green-700 border-b border-green-800">
                 <div class="flex items-center justify-between">
                     <h2 class="text-2xl font-bold text-white flex items-center gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                         </svg>
                         Events Management
                     </h2>
                     <div class="flex items-center gap-3">
-                        <span class="text-green-100 text-sm font-medium">Total Events: {{ count($pendingEvents) + count($completedEvents) + count($deletedEvents) }}</span>
-                        <span id="currentTabStatus" class="text-green-100 text-sm font-medium">Pending: {{ count($pendingEvents) }}</span>
+                        <span class="text-green-100 text-sm font-medium">Total Events:
+                            {{ count($pendingEvents) + count($completedEvents) + count($deletedEvents) }}</span>
+                        <span id="currentTabStatus" class="text-green-100 text-sm font-medium">Pending:
+                            {{ count($pendingEvents) }}</span>
                     </div>
                 </div>
             </div>
@@ -563,34 +572,46 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
+                            <th
+                                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
                                 <div class="flex items-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                                     </svg>
                                     Event Details
                                 </div>
                             </th>
-                            <th class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
+                            <th
+                                class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
                                 <div class="flex items-center justify-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                     </svg>
                                     Time Schedule
                                 </div>
                             </th>
-                            <th class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
+                            <th
+                                class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
                                 <div class="flex items-center justify-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                     </svg>
                                     Afternoon Schedule
                                 </div>
                             </th>
-                            <th class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th
+                                class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                 <div class="flex items-center justify-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                                     </svg>
                                     Actions
                                 </div>
@@ -607,16 +628,20 @@
         <!-- Add Pagination -->
         <div class="mt-6 flex items-center justify-between">
             <div class="text-sm text-gray-700">
-                Showing <span id="startEntry">1</span> to <span id="endEntry">10</span> of <span id="totalEntries">{{ count($pendingEvents) + count($completedEvents) + count($deletedEvents) }}</span> entries
+                Showing <span id="startEntry">1</span> to <span id="endEntry">10</span> of <span
+                    id="totalEntries">{{ count($pendingEvents) + count($completedEvents) + count($deletedEvents) }}</span>
+                entries
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="previousPage()" id="prevBtn" class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                <button onclick="previousPage()" id="prevBtn"
+                    class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
                     Previous
                 </button>
                 <div id="pageNumbers" class="flex items-center gap-1">
                     <!-- Page numbers will be generated here -->
                 </div>
-                <button onclick="nextPage()" id="nextBtn" class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                <button onclick="nextPage()" id="nextBtn"
+                    class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
                     Next
                 </button>
             </div>
@@ -789,14 +814,14 @@
                                                 ${event.date}
                                             </span>
                                             ${event.fines_amount ? `<span class="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
-                                                ₱${event.fines_amount}
-                                            </span>` : ''}
+                                                                                                        ₱${event.fines_amount}
+                                                                                                    </span>` : ''}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </td>
-                        
+
                         <td class="px-6 py-4 text-center border-r border-gray-200">
                             <div class="space-y-2">
                                 <div class="flex items-center justify-center gap-2">
@@ -813,35 +838,35 @@
                                 </div>
                             </div>
                         </td>
-                        
+
                         <td class="px-6 py-4 text-center border-r border-gray-200">
                             <div class="space-y-2">
                                 ${event.isWholeDay === 'true' ? `
-                                    <div class="flex items-center justify-center gap-2">
-                                        <span class="text-xs text-gray-500 font-medium">Check In:</span>
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                            ${event.afternoon_checkIn_start || '00:00'} - ${event.afternoon_checkIn_end || '00:00'}
-                                        </span>
-                                    </div>
-                                    <div class="flex items-center justify-center gap-2">
-                                        <span class="text-xs text-gray-500 font-medium">Check Out:</span>
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                            ${event.afternoon_checkOut_start || '00:00'} - ${event.afternoon_checkOut_end || '00:00'}
-                                        </span>
-                                    </div>
-                                ` : `
-                                    <span class="text-xs text-gray-500">Half-day event</span>
-                                `}
+                                                                                            <div class="flex items-center justify-center gap-2">
+                                                                                                <span class="text-xs text-gray-500 font-medium">Check In:</span>
+                                                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                                                                    ${event.afternoon_checkIn_start || '00:00'} - ${event.afternoon_checkIn_end || '00:00'}
+                                                                                                </span>
+                                                                                            </div>
+                                                                                            <div class="flex items-center justify-center gap-2">
+                                                                                                <span class="text-xs text-gray-500 font-medium">Check Out:</span>
+                                                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                                                    ${event.afternoon_checkOut_start || '00:00'} - ${event.afternoon_checkOut_end || '00:00'}
+                                                                                                </span>
+                                                                                            </div>
+                                                                                        ` : `
+                                                                                            <span class="text-xs text-gray-500">Half-day event</span>
+                                                                                        `}
                             </div>
                         </td>
-                        
+
                         <td class="px-6 py-4 text-center">
                             <div class="flex items-center justify-center gap-2">
-                                <button onclick="editEvent(${JSON.stringify(event).replace(/"/g, '&quot;')})" 
+                                <button onclick="editEvent(${JSON.stringify(event).replace(/"/g, '&quot;')})"
                                     class="px-3 py-1 text-xs font-medium text-blue-600 bg-blue-100 rounded-md hover:bg-blue-200">
                                     Edit
                                 </button>
-                                <button onclick="deleteEvent(${JSON.stringify(event).replace(/"/g, '&quot;')})" 
+                                <button onclick="deleteEvent(${JSON.stringify(event).replace(/"/g, '&quot;')})"
                                     class="px-3 py-1 text-xs font-medium text-red-600 bg-red-100 rounded-md hover:bg-red-200">
                                     Delete
                                 </button>
@@ -869,8 +894,8 @@
                     const pageBtn = document.createElement('button');
                     pageBtn.textContent = i;
                     pageBtn.className = `px-3 py-2 text-sm font-medium border rounded-md ${
-                        i === currentPage 
-                            ? 'bg-blue-600 text-white border-blue-600' 
+                        i === currentPage
+                            ? 'bg-blue-600 text-white border-blue-600'
                             : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-50'
                     }`;
                     pageBtn.onclick = () => goToPage(i);

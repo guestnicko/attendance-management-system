@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
 {
+
+    private $pagination = 20;
+
     public function create(Request $request)
     {
         // Create method modified by Panzerweb: includes a try-catch
@@ -71,9 +74,9 @@ class StudentController extends Controller
             $students = $query->whereIn('s_status', $status);
         }
 
-        $students = $query->paginate(15)->withQueryString(); //Changed by Panzerweb to paginate
+        $students = $query->paginate($this->pagination)->withQueryString(); //Changed by Panzerweb to paginate
 
-        $pageCount = Student::all()->count() / 15; // if remainder exist round off to next number
+        $pageCount = Student::all()->count() / $this->pagination; // if remainder exist round off to next number
 
         return view('pages.students', compact('students', 'pageCount'));
     }
@@ -114,7 +117,7 @@ class StudentController extends Controller
 
     public function filter(Request $request)
     {
-        $students = Student::whereAny(['s_fname', 's_studentID', 's_mname', 's_lname'], 'like', $request->query('search') . '%')->paginate(15)->withQueryString();
+        $students = Student::whereAny(['s_fname', 's_studentID', 's_mname', 's_lname'], 'like', $request->query('search') . '%')->paginate($this->pagination)->withQueryString();
 
         if (empty($students->first())) {
             return response()->json([
@@ -150,9 +153,7 @@ class StudentController extends Controller
             $students = $students->whereIn('s_status', $status);
         }
 
-        $students = $students->paginate(15)->withQueryString();
-
-
+        $students = $students->paginate($this->pagination)->withQueryString();
 
         if (empty($students->first())) {
             return response()->json([

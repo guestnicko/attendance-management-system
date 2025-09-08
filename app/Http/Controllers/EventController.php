@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
+    private $pagination = 20;
+
     public function create(Request $request)
     {
         date_default_timezone_set('Asia/Manila');
@@ -92,9 +94,9 @@ class EventController extends Controller
 
     public function view()
     {
-        $pendingEvents = Event::where('event_status', "pending")->get();
-        $completedEvents = Event::where('event_status', "completed")->get();
-        $deletedEvents = Event::onlyTrashed()->get();
+        $pendingEvents = Event::where('event_status', "pending")->orderBy("created_at", "desc")->get();
+        $completedEvents = Event::where('event_status', "completed")->orderBy("created_at", "desc")->get();
+        $deletedEvents = Event::onlyTrashed()->orderBy("created_at", "desc")->get();
 
         // Debug: Log the counts
         Log::info('Events loaded:', [

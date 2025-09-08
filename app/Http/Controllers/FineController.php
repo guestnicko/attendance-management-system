@@ -18,6 +18,7 @@ use stdClass;
 class FineController extends Controller
 {
     private const FINE_AMOUNT = 25.00;
+    private $pagination = 20;
 
     public function view()
     {

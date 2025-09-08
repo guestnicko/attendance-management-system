@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Log;
 
 class StudentAttendanceController extends Controller
 {
+    private $pagination = 10;
+
     public function view()
     {
         date_default_timezone_set('Asia/Manila');
@@ -40,7 +42,9 @@ class StudentAttendanceController extends Controller
         //
         if (empty($event)) {
             $event = null;
-            return view('pages.attendance', compact('event'));
+            $students = null;
+
+            return view('pages.attendance', compact('event', "students"));
         }
 
         if (!empty($wholeDay)) {
@@ -181,10 +185,10 @@ class StudentAttendanceController extends Controller
         ]);
 
 
-        $myStudent = Student::whereAny(['s_rfid', 's_studentID'], $request->s_rfid)->get()->first();
+        $studentInformation = Student::whereAny(['s_rfid', 's_studentID'], $request->s_rfid)->get()->first();
 
         // CHECK IF STUDENT EXIST IN THE MASTERLIST
-        if (!$myStudent) {
+        if (!$studentInformation) {
             return response()->json([
                 "message" => "The Student does not exist in the database",
                 "isRecorded" => false,
@@ -193,27 +197,19 @@ class StudentAttendanceController extends Controller
         }
 
         // This get the latest student attendance
-        $studentsEvent = StudentAttendance::where('id_student', $myStudent->id)->get()->last();
-
+        $attendanceInformation = StudentAttendance::where('id_student', $studentInformation->id)->where("event_id", $request->event_id)->get()->last();
 
         // INITIALIZE VARIABLES, ETC
         date_default_timezone_set('Asia/Manila');
-        $time = date("H:i");
-        $currentTimestamp = now();
-        $currentTime = date('H:i:s');
+        $time = date("H:i"); // For checking if the current time if the check in/out should start
         $event = Event::find($request->event_id)
             ->orderBy('created_at', 'desc')
             ->get()
             ->first();
 
-
-
         if ($event->isWholeDay == 'true') {
-
-            return $this->recordWholeDayEvent($request, $event, $myStudent, $studentsEvent); //Updated method to 4 parameters
+            return $this->recordWholeDayEvent($request, $event, $studentInformation, $attendanceInformation); //Updated method to 4 parameters
         }
-
-
 
         // DETERMINE IF IT IS ALREADY PAST THE SET CHECK IN AND CHECK OUT TIME
         if ($time < $event->checkIn_start || ($time > $event->checkIn_end && $time < $event->checkOut_start) || $time > $event->checkOut_end) {
@@ -223,7 +219,6 @@ class StudentAttendanceController extends Controller
             ]);
         }
 
-        $currentTime = date('H:i');
 
         // NOTE: Code changed by Panzerweb ---
         // All JSON `data` added are implemented to ensure integrity that data is sent with full disclosure
@@ -235,77 +230,80 @@ class StudentAttendanceController extends Controller
         */
 
         if (
-            $time > $event->checkIn_start && $time < $event->checkIn_end && !empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $myStudent->id)->get()->first())
+            $time >= $event->checkIn_start && $time <= $event->checkIn_end && !empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $studentInformation->id)->get()->first())
         ) {
             return response()->json([
                 "message" => "Student's attendance is already recorded",
-                "data" => $myStudent,
+                "studentInformation" => $studentInformation,
                 "isRecorded" => false,
                 "AlreadyRecorded" => true,
-                "event_data" => $studentsEvent,
+                "attendanceInformation" => $attendanceInformation,
             ]);
         }
 
-        if ($time > $event->checkOut_start && $time < $event->checkOut_end && !empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $myStudent->id)->whereNotNull('attend_checkOut')->get()->first())) {
+        if ($time >= $event->checkOut_start && $time <= $event->checkOut_end && !empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $studentInformation->id)->whereNotNull('attend_checkOut')->get()->first())) {
             return response()->json([
                 "message" => "Student's attendance is already recorded",
                 "isRecorded" => false,
-                "data" => $myStudent,
+                "studentInformation" => $studentInformation,
                 "AlreadyRecorded" => true,
-                "event_data" => $studentsEvent,
+                "attendanceInformation" => $attendanceInformation,
             ]);
         }
 
         //
 
-        if ($time > $event->checkIn_start && $time < $event->checkIn_end) {
+        if ($time >= $event->checkIn_start && $time <= $event->checkIn_end) {
             StudentAttendance::create([
                 'student_rfid' => $request->s_rfid,
                 'event_id' => $request->event_id,
-                "attend_checkIn" => $currentTime,
-                "id_student" => $myStudent->id
+                "attend_checkIn" => $time,
+                "id_student" => $studentInformation->id
             ]);
 
             // RETURNS A JSON THAT ALSO RECORDS THE CHECK IN
             return response()->json([
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
-                "data" => $myStudent,
-                "attend_checkIn" => $currentTime,
+                "studentInformation" => $studentInformation,
+                "attendanceInformation" => ["attend_checkIn" => $time, "created_at" => date("M d, Y")],
+                "eventInformation" => $event,
             ]);
         }
 
 
-        if ($time > $event->checkOut_start && $time < $event->checkOut_end && empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $myStudent->id)->get()->first())) {
+        if ($time >= $event->checkOut_start && $time <= $event->checkOut_end && empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $studentInformation->id)->get()->first())) {
 
             StudentAttendance::create([
                 'student_rfid' => $request->s_rfid,
                 'event_id' => $request->event_id,
-                "attend_checkOut" => $currentTime,
-                "id_student" => $myStudent->id
+                "attend_checkOut" => $time,
+                "id_student" => $studentInformation->id
             ]);
             // RECORDS THE CHECKOUT AS JSON
             return response()->json([
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
-                "data" => $myStudent,
-                "attend_checkOut" => $currentTime,
+                "studentInformation" => $studentInformation,
+                "attendanceInformation" => ["attend_checkOut" => $time, "created_at" => date("M d, Y")],
+                "eventInformation" => $event,
             ]);
         }
 
 
-        if ($time > $event->checkOut_start && $time < $event->checkOut_end && !empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $myStudent->id)->get()->first())) {
+        if ($time >= $event->checkOut_start && $time <= $event->checkOut_end && !empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $studentInformation->id)->get()->first())) {
             StudentAttendance::where('event_id', $event->id)
-                ->where("id_student", $myStudent->id)
+                ->where("id_student", $studentInformation->id)
                 ->update([
-                    "attend_checkOut" => $currentTime
+                    "attend_checkOut" => $time
                 ]);
             //RECORDS THE CHECKOUT AS JSON
             return response()->json([
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
-                "data" => $myStudent,
-                "attend_checkOut" => $currentTime,
+                "studentInformation" => $studentInformation,
+                "attendanceInformation" => ($attendanceInformation ?? ["attend_checkOut" => $time, "created_at" => date("M d, Y")]),
+                "eventInformation" => $event,
             ]);
         }
 
@@ -313,11 +311,11 @@ class StudentAttendanceController extends Controller
         return response()->json([
             "message" => "Attendance recorded successfully! test!",
             "isRecorded" => true,
-            "data" => $myStudent, //RECORDS THE DATA OF THE STUDENT DETAILS
+            "studentInformation" => $studentInformation, //RECORDS THE DATA OF THE STUDENT DETAILS
         ]);
     }
 
-    protected function recordWholeDayEvent(Request $request, Event $event, Student $myStudent, ?StudentAttendance $studentEvent)
+    protected function recordWholeDayEvent(Request $request, Event $event, Student $studentInformation, ?StudentAttendance $attendanceInformation)
     {
 
         $time = date("H:i:s");
@@ -335,124 +333,132 @@ class StudentAttendanceController extends Controller
             ]);
         }
 
-
+        // MORNING CHECK IN => CHECKS IF STUDENT HAVE ALREADY ATTENDED
         if (
-            $time > $event->checkIn_start && $time < $event->checkIn_end && !empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $myStudent->id)->get()->first())
+            $time > $event->checkIn_start && $time < $event->checkIn_end && !empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $studentInformation->id)->get()->first())
         ) {
             return response()->json([
                 "message" => "Student's attendance is already recorded",
                 "isRecorded" => false,
-                "data" => $myStudent,
-                "event_data" => $studentEvent,
+                "studentInformation" => $studentInformation,
+                "attedanceInformation" => $attendanceInformation,
+                "eventInformation" => $event,
                 "AlreadyRecorded" => true
             ]);
         }
-
-        if ($time > $event->checkOut_start && $time < $event->checkOut_end && !empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $myStudent->id)->whereNotNull('attend_checkOut')->get()->first())) {
+        // MORNING CHECK OUT => CHECKS IF STUDENT HAVE ALREADY ATTENDED
+        if ($time > $event->checkOut_start && $time < $event->checkOut_end && !empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $studentInformation->id)->whereNotNull('attend_checkOut')->get()->first())) {
             return response()->json([
                 "message" => "Student's attendance is already recorded",
                 "isRecorded" => false,
-                "data" => $myStudent,
-                "event_data" => $studentEvent,
+                "studentInformation" => $studentInformation,
+                "attendanceInformation" => $attendanceInformation,
                 "AlreadyRecorded" => true
             ]);
         }
-        if ($time > $event->afternoon_checkIn_start && $time < $event->afternoon_checkIn_end && !empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $myStudent->id)->whereNotNull('attend_afternoon_checkIn')->get()->first())) {
+        // AFTERNOON CHECK IN => CHECKS IF STUDENT HAVE ALREADY ATTENDED
+        if ($time > $event->afternoon_checkIn_start && $time < $event->afternoon_checkIn_end && !empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $studentInformation->id)->whereNotNull('attend_afternoon_checkIn')->get()->first())) {
             return response()->json([
                 "message" => "Student's attendance is already recorded",
                 "isRecorded" => false,
-                "data" => $myStudent,
-                "event_data" => $studentEvent,
-                "AlreadyRecorded" => true
+                "AlreadyRecorded" => true,
+                "studentInformation" => $studentInformation,
+                "attedanceInformation" => $attendanceInformation,
+                "eventInformation" => $event,
             ]);
         }
-        if ($time > $event->afternoon_checkOut_start && $time < $event->afternoon_checkOut_end && !empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $myStudent->id)->whereNotNull('attend_afternoon_checkOut')->get()->first())) {
+        // AFTERNOON CHECK OUT => CHECKS IF STUDENT HAVE ALREADY ATTENDED
+        if ($time > $event->afternoon_checkOut_start && $time < $event->afternoon_checkOut_end && !empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $studentInformation->id)->whereNotNull('attend_afternoon_checkOut')->get()->first())) {
             return response()->json([
                 "message" => "Student's attendance is already recorded",
                 "isRecorded" => false,
-                "data" => $myStudent,
-                "event_data" => $studentEvent,
+                "studentInformation" => $studentInformation,
+                "attedanceInformation" => $attendanceInformation,
+                "eventInformation" => $event,
                 "AlreadyRecorded" => true
             ]);
         }
-
+        // CREATE RECORD IF STUDENT RECORD DOESN"T EXIST
+        // FOR MORNING CHECK IN
         if ($time > $event->checkIn_start && $time < $event->checkIn_end) {
             StudentAttendance::create([
                 'student_rfid' => $request->s_rfid,
                 'event_id' => $request->event_id,
                 "attend_checkIn" => $time,
-                "id_student" => $myStudent->id
+                "id_student" => $studentInformation->id
             ]);
 
             // RETURNS A JSON THAT ALSO RECORDS THE CHECK IN
             return response()->json([
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
-                "data" => $myStudent,
-                "event_data" => $studentEvent,
-                "attend_checkIn" => $time,
+                "studentInformation" => $studentInformation,
+                "attedanceInformation" => ["attend_checkIn" => $time, "created_at" => date("M d, Y")],
+                "eventInformation" => $event,
             ]);
         }
-
-        // CREATE RECORD IF STUDENT RECORD ALREADY EXIST
-
-        if ($time > $event->checkOut_start && $time < $event->checkOut_end && empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $myStudent->id)->get()->first())) {
+        // MORNING CHECKOUT
+        if ($time > $event->checkOut_start && $time < $event->checkOut_end && empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $studentInformation->id)->get()->first())) {
 
             StudentAttendance::create([
                 'student_rfid' => $request->s_rfid,
                 'event_id' => $request->event_id,
                 "attend_checkOut" => $time,
-                "id_student" => $myStudent->id
+                "id_student" => $studentInformation->id
             ]);
             // RECORDS THE CHECKOUT AS JSON
             return response()->json([
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
-                "data" => $myStudent,
-                "event_data" => $studentEvent,
-                "attend_checkOut" => $time,
+                "studentInformation" => $studentInformation,
+                "attendanceInformation" => ["attend_checkOut" => $time, "created_at" => date("M d, Y")],
+                "eventInformation" => $event,
             ]);
         }
-        if ($time > $event->afternoon_checkOut_start && $time < $event->afternoon_checkOut_end && empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $myStudent->id)->get()->first())) {
+        // AFTERNOON CHECK OUT
+        if ($time > $event->afternoon_checkOut_start && $time < $event->afternoon_checkOut_end && empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $studentInformation->id)->get()->first())) {
 
             StudentAttendance::create([
                 'student_rfid' => $request->s_rfid,
                 'event_id' => $request->event_id,
                 "attend_afternoon_checkOut" => $time,
-                "id_student" => $myStudent->id
+                "id_student" => $studentInformation->id
             ]);
             // RECORDS THE CHECKOUT AS JSON
             return response()->json([
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
-                "data" => $myStudent,
-                "event_data" => $studentEvent,
+                "studentInformation" => $studentInformation,
+                "attendanceInformation" => ["attend_afternoon_checkOut" => $time, "created_at" => date("M d, Y")],
+                "eventInformation" => $event,
                 "attend_afternoon_checkOut" => $time,
             ]);
         }
-        if ($time > $event->afternoon_checkIn_start && $time < $event->afternoon_checkIn_end && empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $myStudent->id)->get()->first())) {
+        // AFTERNOON CHECK IN
+        if ($time > $event->afternoon_checkIn_start && $time < $event->afternoon_checkIn_end && empty(StudentAttendance::where('event_id', $event->id)->where("id_student", $studentInformation->id)->get()->first())) {
 
             StudentAttendance::create([
                 'student_rfid' => $request->s_rfid,
                 'event_id' => $request->event_id,
                 "attend_afternoon_checkIn" => $time,
-                "id_student" => $myStudent->id
+                "id_student" => $studentInformation->id
             ]);
             // RECORDS THE CHECKOUT AS JSON
             return response()->json([
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
-                "data" => $myStudent,
-                "event_data" => $studentEvent,
-                "attend_afternoon_checkIn" => $time,
+                "studentInformation" => $studentInformation,
+                "attendanceInformation" => ["attend_afternoon_checkIn" => $time, "created_at" => date("M d, Y")],
+                "eventInformation" => $event,
             ]);
         }
 
 
         // UPDATE STUDENT RECORD IF ALREADy EXIST
+        // MORNING CHECK OUT
         if ($time > $event->checkOut_start && $time < $event->checkOut_end && !empty(StudentAttendance::where('event_id', $event->id)->where("student_rfid", $request->s_rfid)->get()->first())) {
             StudentAttendance::where('event_id', $event->id)
-                ->where("id_student", $myStudent->id)
+                ->where("id_student", $studentInformation->id)
                 ->update([
                     "attend_checkOut" => $time
                 ]);
@@ -460,17 +466,17 @@ class StudentAttendanceController extends Controller
             return response()->json([
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
-                "data" => $myStudent,
-                "event_data" => $studentEvent,
-                "attend_checkOut" => $time,
+                "studentInformation" => $studentInformation,
+                "attendanceInformation" => $attendanceInformation,
+                "eventInformation" => $event
             ]);
         }
 
-
         // FIXED THE CORRECT REQUEST OF DATA in the afternoon
+        // AFTERNOON CHECK IN
         if ($time > $event->afternoon_checkIn_start && $time < $event->afternoon_checkIn_end && !empty(StudentAttendance::where('event_id', $event->id)->where("student_rfid", $request->s_rfid)->get()->first())) {
             StudentAttendance::where('event_id', $event->id)
-                ->where("id_student", $myStudent->id)
+                ->where("id_student", $studentInformation->id)
                 ->update([
                     "attend_afternoon_checkIn" => $time
                 ]);
@@ -478,15 +484,16 @@ class StudentAttendanceController extends Controller
             return response()->json([
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
-                "data" => $myStudent,
-                "event_data" => $studentEvent,
-                "attend_afternoon_checkIn" => $time,
+                "data" => $studentInformation,
+                "attendanceInformation" => $attendanceInformation,
+                "eventInformation" => $event
             ]);
         }
         // FIXED THE CORRECT REQUEST OF DATA in the afternoon
+        // AFTERNOON CHECKOUT
         if ($time > $event->afternoon_checkOut_start && $time < $event->afternoon_checkOut_end && !empty(StudentAttendance::where('event_id', $event->id)->where("student_rfid", $request->s_rfid)->get()->first())) {
             StudentAttendance::where('event_id', $event->id)
-                ->where("id_student", $myStudent->id)
+                ->where("id_student", $studentInformation->id)
                 ->update([
                     "attend_afternoon_checkOut" => $time
                 ]);
@@ -494,9 +501,9 @@ class StudentAttendanceController extends Controller
             return response()->json([
                 "message" => "Attendance recorded successfully!",
                 "isRecorded" => true,
-                "data" => $myStudent,
-                "event_data" => $studentEvent,
-                "attend_afternoon_checkOut" => $time,
+                "studentInformation" => $studentInformation,
+                "attendanceInformation" => $attendanceInformation,
+                "eventInformation" => $event
             ]);
         }
 
@@ -504,7 +511,7 @@ class StudentAttendanceController extends Controller
             "message" => "Attendance recorded successfully! StudentAttendanceController line:468", //Default JSON request when doing attendance
             "isRecorded" => true,
             "Bug" => "Student Recorded but not added to records due to (Had already logged in)",
-            "data" => $myStudent, //RECORDS THE DATA OF THE STUDENT DETAILS
+            "studentInformation" => $studentInformation, //RECORDS THE DATA OF THE STUDENT DETAILS
         ]);
     }
 
@@ -517,7 +524,7 @@ class StudentAttendanceController extends Controller
             ->get()
             ->first();
 
-        $students = StudentAttendance::join('students', 'students.id', '=', 'student_attendances.id_student')->select('*', 'student_attendances.created_at')->limit(10);
+        $students = StudentAttendance::join('students', 'students.id', '=', 'student_attendances.id_student')->select('*', 'student_attendances.created_at')->limit($this->pagination)->orderBy("student_attendances.created_at", "desc");
 
         if (($time < $event->checkIn_end && $time > $event->checkIn_start)) {
             $students = $students
@@ -526,7 +533,6 @@ class StudentAttendanceController extends Controller
         }
 
         if ($time < $event->checkOut_end && $time > $event->checkOut_start) {
-
             $students = $students->whereNotNull('attend_checkOut')
                 ->where('event_id', $event->id)
                 ->get();
