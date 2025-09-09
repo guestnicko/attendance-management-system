@@ -16,13 +16,10 @@ class DashboardController extends Controller
     {
         $studentCount = Student::all()->count();
         $graduateCount = Student::where('s_status', 'GRADUATED')->get()->count(); //Fetch all graduate counts
-
+        $pageCount = 0;
         // Get attendance records with proper joins and error handling
         try {
-            $attendances = StudentAttendance::join('students', function ($join) {
-                $join->on('student_attendances.student_rfid', '=', 'students.s_rfid')
-                    ->orOn('student_attendances.student_rfid', '=', 'students.s_studentID');
-            })
+            $attendances = StudentAttendance::join('students', "students.id", '=', "student_attendances.id_student")
                 ->join('events', 'events.id', '=', 'student_attendances.event_id')
                 ->select([
                     'students.id',
@@ -42,15 +39,15 @@ class DashboardController extends Controller
                     'events.date'
                 ])
                 ->orderBy('events.date', 'desc')
-                ->orderBy('students.s_lname', 'asc')
-                ->get();
+                ->orderBy('student_attendances.created_at', 'desc')
+                ->paginate($this->pagination);
+            $pageCount = $attendances->total() / $this->pagination;
         } catch (\Exception $e) {
             // Log error and provide fallback
             Log::error('Error fetching attendance data: ' . $e->getMessage());
             $attendances = collect(); // Empty collection as fallback
         }
-
-        return view('dashboard', compact('studentCount', 'attendances', 'graduateCount'));
+        return view('dashboard', compact('studentCount', 'attendances', 'graduateCount', "pageCount"));
     }
 
     public function test(Request $request) {}

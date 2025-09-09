@@ -27,7 +27,7 @@ class FineController extends Controller
             ->leftJoin('fines', 'students.id', '=', 'fines.student_id')
             ->join('events', 'events.id', '=', 'fines.event_id')
             ->select('students.*', 'fines.*', 'events.event_name')
-            ->paginate(15);
+            ->paginate($this->pagination);
         // $logs = Fine::with("student", "event")->get();
 
 
@@ -153,7 +153,7 @@ class FineController extends Controller
                     ->orWhere('s_studentID', 'like', $search)
                     ->orWhere('s_lname', 'like', $search);
             })
-            ->paginate(15)
+            ->paginate($this->pagination)
             ->withQueryString();
 
 
@@ -196,7 +196,7 @@ class FineController extends Controller
             $students = $students->where('event_id', $request->query('event_id'));
         }
 
-        $students = $students->paginate(15)->withQueryString();
+        $students = $students->paginate($this->pagination)->withQueryString();
 
         if (empty($students->first())) {
             return response()->json([
@@ -219,7 +219,7 @@ class FineController extends Controller
             $students = Student::leftJoin('fines', 'students.id', '=', 'fines.student_id')
                 ->leftJoin('events', 'events.id', '=', 'fines.event_id')
                 ->select('students.*', 'fines.*', 'events.event_name')
-                ->paginate(15)
+                ->paginate($this->pagination)
                 ->withQueryString();
 
             return response()->json([
@@ -233,7 +233,7 @@ class FineController extends Controller
             ->leftJoin('events', 'events.id', '=', 'fines.event_id')
             ->select('students.*', 'fines.*', 'events.event_name')
             ->where("event_id", $request->query('event_id'))
-            ->paginate(15)
+            ->paginate($this->pagination)
             ->withQueryString();
 
 

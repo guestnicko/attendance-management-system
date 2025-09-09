@@ -13,8 +13,9 @@
                     <a href="?page={{ $i }}"
                         class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ $i }}</a>
                 </li>
-
                 {{-- Fetch the last page of the available page --}}
+
+
                 @if ($i == 10)
                     <li>
                         <a
@@ -26,7 +27,12 @@
                     </li>
                 @endif
             @endfor
-
+            @if (($count * 10) % 10 > 0 && $lastpage <= 9)
+                <li>
+                    <a href="?page={{ $lastpage }}"
+                        class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ $lastpage }}</a>
+                </li>
+            @endif
 
             <button onclick="nextPage('{{ url()->current() }}')"
                 class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">

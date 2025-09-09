@@ -104,54 +104,54 @@
 
     {{-- Implemented Sweet Alert Pop Ups on Conditionals --}}
     @if ($errors->any())
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                icon: "error",
-                title: "Oops!...",
-                html: `
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops!...",
+                    html: `
                     <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside text-left">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 `,
-                showConfirmButton: true,
+                    showConfirmButton: true,
+                });
             });
-        });
-    </script>
+        </script>
     @endif
 
     @if (session('success'))
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: '{{ session('success') }}',
-                showConfirmButton: false,
-                timer: 1500,
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('success') }}',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
             });
-        });
-    </script>
+        </script>
     @endif
     {{-- Code by Panzerweb: Added second error handling for sweet alert --}}
     {{-- Error popup modified by Panzerweb --}}
     @if (session('error'))
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const errors = @json(session('error'));
-            console.log(errors);
-            let errorList = '<ul class="pl-5 text-sm text-red-700">';
-            for (const [key, value] of Object.entries(errors.details)) {
-                errorList += `<li><strong>${key}:</strong> ${value}</li>`;
-            }
-            errorList += '</ul>';
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const errors = @json(session('error'));
+                console.log(errors);
+                let errorList = '<ul class="pl-5 text-sm text-red-700">';
+                for (const [key, value] of Object.entries(errors.details)) {
+                    errorList += `<li><strong>${key}:</strong> ${value}</li>`;
+                }
+                errorList += '</ul>';
 
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops!',
-                html: `   <h2 class="text-lg font-semibold text-red-600">Something is wrong!</h2><br>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops!',
+                    html: `   <h2 class="text-lg font-semibold text-red-600">Something is wrong!</h2><br>
                     <div class="w-full max-w-md mx-auto">
                         <div class="">
                             <button onclick="toggleAccordion()" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
@@ -185,10 +185,10 @@
                             </div>
                         </div>
                     </div>`,
-                showConfirmButton: true,
+                    showConfirmButton: true,
+                });
             });
-        });
-    </script>
+        </script>
     @endif
 
 
@@ -273,7 +273,7 @@
     <div class="flex items-center justify-between bg-white p-3 rounded-lg">
         {{-- Clockdate --}}
         <x-clock>
-            
+
         </x-clock>
 
         {{-- Update the modals wrapper to include higher z-index --}}
@@ -623,16 +623,22 @@
         <div class="px-6 py-4 bg-gradient-to-r from-green-600 to-green-700 border-b border-green-800">
             <div class="flex items-center justify-between">
                 <h2 class="text-2xl font-bold text-white flex items-center gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-8 h-8">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
                     </svg>
                     Attendance Records
                 </h2>
                 <div class="flex items-center gap-3">
                     <span class="text-green-100 text-sm font-medium">Total Students: {{ $studentCount }}</span>
-                    <button id="fullscreenToggle" class="bg-green-500 hover:bg-green-400 text-white p-2 rounded-lg transition-colors duration-200" title="Toggle Fullscreen">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                    <button id="fullscreenToggle"
+                        class="bg-green-500 hover:bg-green-400 text-white p-2 rounded-lg transition-colors duration-200"
+                        title="Toggle Fullscreen">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
                         </svg>
                     </button>
                 </div>
@@ -644,7 +650,8 @@
             <div class="flex flex-wrap items-center gap-4">
                 <div class="flex items-center gap-2">
                     <label for="entriesPerPage" class="text-sm font-medium text-gray-700">Show:</label>
-                    <select id="entriesPerPage" onchange="changeEntriesPerPage(this.value)" class="border border-gray-300 rounded-md px-3 py-1 text-sm">
+                    <select id="entriesPerPage" onchange="changeEntriesPerPage(this.value)"
+                        class="border border-gray-300 rounded-md px-3 py-1 text-sm">
                         <option value="10">10</option>
                         <option value="15">15</option>
                         <option value="30">30</option>
@@ -655,7 +662,8 @@
 
                 <div class="flex items-center gap-2">
                     <label for="searchAttendance" class="text-sm font-medium text-gray-700">Search:</label>
-                    <input type="text" id="searchAttendance" placeholder="Search students..." onkeyup="filterAttendance()" class="border border-gray-300 rounded-md px-3 py-1 text-sm w-48">
+                    <input type="text" id="searchAttendance" placeholder="Search students..."
+                        onkeyup="filterAttendance()" class="border border-gray-300 rounded-md px-3 py-1 text-sm w-48">
                 </div>
             </div>
         </div>
@@ -664,34 +672,45 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
+                        <th
+                            class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
                             <div class="flex items-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                                 </svg>
                                 Student Info
                             </div>
                         </th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
+                        <th
+                            class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
                             <div class="flex items-center justify-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                 </svg>
                                 Morning Session
                             </div>
                         </th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
+                        <th
+                            class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
                             <div class="flex items-center justify-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                 </svg>
                                 Afternoon Session
                             </div>
                         </th>
                         <th class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
                             <div class="flex items-center justify-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                                 </svg>
                                 Event Details
                             </div>
@@ -700,206 +719,175 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse ($attendances as $attendance)
-                    <tr class="hover:bg-gray-50 transition-colors duration-200">
-                        <!-- Student Information Column -->
-                        <td class="px-6 py-4 border-r border-gray-200">
-                            <div class="flex items-center space-x-3">
-                                <div class="flex-shrink-0">
-                                    <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
-                                        <span class="text-white font-semibold text-sm">
-                                            {{ strtoupper(substr($attendance->s_fname, 0, 1) . substr($attendance->s_lname, 0, 1)) }}
-                                        </span>
+                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <!-- Student Information Column -->
+                            <td class="px-6 py-4 border-r border-gray-200">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <div
+                                            class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-semibold text-sm">
+                                                {{ strtoupper(substr($attendance->s_fname, 0, 1) . substr($attendance->s_lname, 0, 1)) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-semibold text-gray-900 truncate">
+                                            {{ $attendance->s_fname . ' ' . $attendance->s_lname }}
+                                        </p>
+                                        <div class="flex items-center gap-2 text-xs text-gray-500">
+                                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">
+                                                {{ $attendance->s_program }}
+                                            </span>
+                                            <span
+                                                class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full font-medium">
+                                                Set {{ $attendance->s_set }}
+                                            </span>
+                                            <span
+                                                class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full font-medium">
+                                                Year {{ $attendance->s_lvl }}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-semibold text-gray-900 truncate">
-                                        {{ $attendance->s_fname . ' ' . $attendance->s_lname }}
-                                    </p>
-                                    <div class="flex items-center gap-2 text-xs text-gray-500">
-                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">
-                                            {{ $attendance->s_program }}
-                                        </span>
-                                        <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full font-medium">
-                                            Set {{ $attendance->s_set }}
-                                        </span>
-                                        <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full font-medium">
-                                            Year {{ $attendance->s_lvl }}
-                                        </span>
+                            </td>
+
+                            <!-- Morning Session Column -->
+                            <td class="px-6 py-4 text-center border-r border-gray-200">
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <span class="text-xs text-gray-500 font-medium">Check In:</span>
+                                        @if ($attendance->attend_checkIn)
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                {{ date('h:i A', strtotime($attendance->attend_checkIn)) }}
+                                            </span>
+                                        @else
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="w-3 h-3 mr-1">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                                Absent
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <div class="flex items-center justify-center gap-2">
+                                        <span class="text-xs text-gray-500 font-medium">Check Out:</span>
+                                        @if ($attendance->attend_checkOut)
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                {{ date('h:i A', strtotime($attendance->attend_checkOut)) }}
+                                            </span>
+                                        @else
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="w-3 h-3 mr-1">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                                Absent
+                                            </span>
+                                        @endif
                                     </div>
                                 </div>
-                            </div>
-                        </td>
+                            </td>
 
-                        <!-- Morning Session Column -->
-                        <td class="px-6 py-4 text-center border-r border-gray-200">
-                            <div class="space-y-2">
-                                <div class="flex items-center justify-center gap-2">
-                                    <span class="text-xs text-gray-500 font-medium">Check In:</span>
-                                    @if ($attendance->attend_checkIn)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        {{ date('h:i A', strtotime($attendance->attend_checkIn)) }}
-                                    </span>
-                                    @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                        Absent
-                                    </span>
-                                    @endif
+                            <!-- Afternoon Session Column -->
+                            <td class="px-6 py-4 text-center border-r border-gray-200">
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <span class="text-xs text-gray-500 font-medium">Check In:</span>
+                                        @if ($attendance->attend_afternoon_checkIn)
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                {{ date('h:i A', strtotime($attendance->attend_afternoon_checkIn)) }}
+                                            </span>
+                                        @else
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="w-3 h-3 mr-1">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                                Absent
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <div class="flex items-center justify-center gap-2">
+                                        <span class="text-xs text-gray-500 font-medium">Check Out:</span>
+                                        @if ($attendance->attend_afternoon_checkOut)
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                {{ date('h:i A', strtotime($attendance->attend_afternoon_checkOut)) }}
+                                            </span>
+                                        @else
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="w-3 h-3 mr-1">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                                Absent
+                                            </span>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="flex items-center justify-center gap-2">
-                                    <span class="text-xs text-gray-500 font-medium">Check Out:</span>
-                                    @if ($attendance->attend_checkOut)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        {{ date('h:i A', strtotime($attendance->attend_checkOut)) }}
-                                    </span>
-                                    @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                        Absent
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-                        </td>
+                            </td>
 
-                        <!-- Afternoon Session Column -->
-                        <td class="px-6 py-4 text-center border-r border-gray-200">
-                            <div class="space-y-2">
-                                <div class="flex items-center justify-center gap-2">
-                                    <span class="text-xs text-gray-500 font-medium">Check In:</span>
-                                    @if ($attendance->attend_afternoon_checkIn)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        {{ date('h:i A', strtotime($attendance->attend_afternoon_checkIn)) }}
-                                    </span>
-                                    @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                        Absent
-                                    </span>
-                                    @endif
+                            <!-- Event Details Column -->
+                            <td class="px-6 py-4 text-center">
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-center">
+                                        <span
+                                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="w-4 h-4 mr-2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                                            </svg>
+                                            {{ $attendance->event_name }}
+                                        </span>
+                                    </div>
+                                    <div class="text-xs text-gray-500">
+                                        {{ date('M d, Y', strtotime($attendance->date)) }}
+                                    </div>
                                 </div>
-                                <div class="flex items-center justify-center gap-2">
-                                    <span class="text-xs text-gray-500 font-medium">Check Out:</span>
-                                    @if ($attendance->attend_afternoon_checkOut)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        {{ date('h:i A', strtotime($attendance->attend_afternoon_checkOut)) }}
-                                    </span>
-                                    @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                        Absent
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-                        </td>
-
-                        <!-- Event Details Column -->
-                        <td class="px-6 py-4 text-center">
-                            <div class="space-y-2">
-                                <div class="flex items-center justify-center">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                                        </svg>
-                                        {{ $attendance->event_name }}
-                                    </span>
-                                </div>
-                                <div class="text-xs text-gray-500">
-                                    {{ date('M d, Y', strtotime($attendance->date)) }}
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
                     @empty
-                    <tr>
-                        <td colspan="4" class="px-6 py-12 text-center">
-                            <div class="flex flex-col items-center justify-center space-y-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 text-gray-300">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
-                                </svg>
-                                <h3 class="text-lg font-medium text-gray-900">No attendance records found</h3>
-                                <p class="text-sm text-gray-500">Start tracking attendance by creating an event and recording student check-ins.</p>
-                            </div>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td colspan="4" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center justify-center space-y-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-16 h-16 text-gray-300">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
+                                    </svg>
+                                    <h3 class="text-lg font-medium text-gray-900">No attendance records found</h3>
+                                    <p class="text-sm text-gray-500">Start tracking attendance by creating an event and
+                                        recording student check-ins.</p>
+                                </div>
+                            </td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
 
-        <!-- Add Pagination -->
-        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
-            <div class="flex items-center justify-between">
-                <div class="text-sm text-gray-700">
-                    Showing <span id="startEntry">1</span> to <span id="endEntry">10</span> of <span id="totalEntries">{{ $studentCount }}</span> entries
-                </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="previousPage()" id="prevBtn" class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
-                        Previous
-                    </button>
-                    <div id="pageNumbers" class="flex items-center gap-1">
-                        <!-- Page numbers will be generated here -->
-                    </div>
-                    <button onclick="nextPage()" id="nextBtn" class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
-                        Next
-                    </button>
-                </div>
-            </div>
-        </div>
+        <x-pagination :count="$pageCount" :lastpage="$attendances->lastPage()" />
     </div>
 
-    <!-- Add JavaScript for Dashboard Pagination and Filtering -->
-    <script>
-        // Simple pagination and search functionality
-        let currentPage = 1;
-        let entriesPerPage = 10;
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Dashboard initialized');
-        });
-
-        function changeEntriesPerPage(value) {
-            entriesPerPage = parseInt(value);
-            // Reload the page with new entries per page
-            window.location.href = window.location.pathname + '?entries=' + value;
-        }
-
-        function filterAttendance() {
-            const searchTerm = document.getElementById('searchAttendance').value.toLowerCase();
-            // Simple client-side filtering for existing data
-            const rows = document.querySelectorAll('tbody tr');
-            
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-
-        // Simple pagination functions
-        function previousPage() {
-            // For now, just reload the page
-            window.location.reload();
-        }
-
-        function nextPage() {
-            // For now, just reload the page
-            window.location.reload();
-        }
-    </script>
 
     <script>
         // Code by Panzerweb: for error details accordion
