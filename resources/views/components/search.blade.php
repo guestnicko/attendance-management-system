@@ -35,7 +35,6 @@
 <script>
     document.getElementById('searchForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        console.log("form submitted")
     })
 
 

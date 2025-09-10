@@ -55,7 +55,6 @@
             if (key != "page") {
                 url += `${key}=${value}&&`;
             }
-            console.log(key);
         });
         pageQuery++;
         url += "page=" + pageQuery;
@@ -131,7 +130,6 @@
                 </nav>`;
     }
     async function navigate(uri) {
-        console.log(uri)
         const response = await axios.get(uri, {
             headers: {
                 "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
@@ -140,7 +138,6 @@
         });
         // UPDATE TABLE
         const students = response.data.students;
-        console.log(students.links)
         renderTable(students.data);
         renderPagination(students);
     }

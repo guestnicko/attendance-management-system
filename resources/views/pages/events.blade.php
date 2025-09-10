@@ -28,7 +28,7 @@
                     icon: 'success',
                     title: 'Success!',
                     text: '{{ session('
-                                                                                                                                                            success ') }}',
+                                                                                                                                                                                success ') }}',
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -659,11 +659,7 @@
             const completedEvents = @json($completedEvents ?? []);
             const deletedEvents = @json($deletedEvents ?? []);
 
-            // Debug: Log the events data
-            console.log('Events data loaded:');
-            console.log('Pending events:', pendingEvents);
-            console.log('Completed events:', completedEvents);
-            console.log('Deleted events:', deletedEvents);
+
 
             // Initialize
             document.addEventListener('DOMContentLoaded', function() {
@@ -814,8 +810,8 @@
                                                 ${event.date}
                                             </span>
                                             ${event.fines_amount ? `<span class="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
-                                                                                                        ₱${event.fines_amount}
-                                                                                                    </span>` : ''}
+                                                                                                                ₱${event.fines_amount}
+                                                                                                            </span>` : ''}
                                         </div>
                                     </div>
                                 </div>
@@ -842,21 +838,21 @@
                         <td class="px-6 py-4 text-center border-r border-gray-200">
                             <div class="space-y-2">
                                 ${event.isWholeDay === 'true' ? `
-                                                                                            <div class="flex items-center justify-center gap-2">
-                                                                                                <span class="text-xs text-gray-500 font-medium">Check In:</span>
-                                                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                                                                    ${event.afternoon_checkIn_start || '00:00'} - ${event.afternoon_checkIn_end || '00:00'}
-                                                                                                </span>
-                                                                                            </div>
-                                                                                            <div class="flex items-center justify-center gap-2">
-                                                                                                <span class="text-xs text-gray-500 font-medium">Check Out:</span>
-                                                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                                                                    ${event.afternoon_checkOut_start || '00:00'} - ${event.afternoon_checkOut_end || '00:00'}
-                                                                                                </span>
-                                                                                            </div>
-                                                                                        ` : `
-                                                                                            <span class="text-xs text-gray-500">Half-day event</span>
-                                                                                        `}
+                                                                                                    <div class="flex items-center justify-center gap-2">
+                                                                                                        <span class="text-xs text-gray-500 font-medium">Check In:</span>
+                                                                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                                                                            ${event.afternoon_checkIn_start || '00:00'} - ${event.afternoon_checkIn_end || '00:00'}
+                                                                                                        </span>
+                                                                                                    </div>
+                                                                                                    <div class="flex items-center justify-center gap-2">
+                                                                                                        <span class="text-xs text-gray-500 font-medium">Check Out:</span>
+                                                                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                                                            ${event.afternoon_checkOut_start || '00:00'} - ${event.afternoon_checkOut_end || '00:00'}
+                                                                                                        </span>
+                                                                                                    </div>
+                                                                                                ` : `
+                                                                                                    <span class="text-xs text-gray-500">Half-day event</span>
+                                                                                                `}
                             </div>
                         </td>
 

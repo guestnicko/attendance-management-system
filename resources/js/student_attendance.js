@@ -19,7 +19,6 @@ let intervalId;
 const attendanceLogs = [];
 
 function addLogs(response) {
-    console.log(attendanceLogs);
     if (attendanceLogs.length >= 5) {
         attendanceLogs.shift();
     }
@@ -295,7 +294,6 @@ form.addEventListener("submit", async (event) => {
             addLogs(response);
         } else if (response.AlreadyRecorded) {
             //if student is already recorded, call function
-            console.log("Already recorded | Data: ", response);
             AttendanceAlreadyRecorded(response);
         } else {
             //If invalid, then call this function
@@ -417,7 +415,6 @@ function AttendanceRecorded(
 }
 
 function AttendanceNotRecorded(data) {
-    console.log(data.message);
     Swal.fire({
         icon: "warning",
         title: "Fetching Error!",
@@ -499,7 +496,6 @@ function loadTable(data) {
 
     table.innerHTML = "";
     data.students.forEach((student) => {
-        // console.log(element);
         table.innerHTML += `
     <tr class="hover:bg-gray-50 transition-colors duration-200">
       <!-- Student ID -->

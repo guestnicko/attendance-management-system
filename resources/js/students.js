@@ -1,15 +1,5 @@
-//Added testing function
-console.log("HEllo WOrld");
-
 // Axios is already available globally through axios.js
 // No need to import it here
-
-const api = axios.create({
-    headers: {
-        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
-            .content,
-    },
-});
 
 function updateStudent(data, img) {
     document.getElementById("s_RFID").value = data.s_rfid;
@@ -28,7 +18,6 @@ function updateStudent(data, img) {
 document.updateStudent = updateStudent;
 
 function deleteStudent(data) {
-    console.log(data);
     Swal.fire({
         title: "Do you really want to delete this student?",
         html: `
@@ -41,7 +30,6 @@ function deleteStudent(data) {
         confirmButtonText: "Yes, delete it!",
     }).then((result) => {
         if (result.isConfirmed) {
-            console.log(data);
             document.getElementById("s_id").value = data.id;
             document.getElementById("deleteStudent").submit();
             Swal.fire({
