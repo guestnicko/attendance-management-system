@@ -1,21 +1,6 @@
-import axios from "axios";
-
-const api = axios.create({
-    headers: {
-        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
-            .content,
-    },
-});
-
 window.GenerateExcelReport = GenerateExcelReport;
 window.GeneratePDFReport = GeneratePDFReport;
 
-function formatCurrency(amount) {
-    if (!amount) return "-";
-    return `₱${Number(amount).toLocaleString("en-PH", {
-        minimumFractionDigits: 2,
-    })}`;
-}
 function parseDateString(dateString) {
     if (!dateString) return null;
 
@@ -61,7 +46,6 @@ window.renderTable = renderTable;
 function renderTable(students) {
     const table = document.getElementById("student_table_body");
     table.innerHTML = "";
-    console.log(students);
     if (students) {
         students.forEach((student, index) => {
             table.innerHTML += createLogRow(student);

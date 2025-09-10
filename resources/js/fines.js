@@ -2,7 +2,6 @@ window.renderTable = renderTable;
 function renderTable(students) {
     const table = document.getElementById("student_table_body");
     table.innerHTML = "";
-    console.log(students);
     if (students) {
         students.forEach((student, index) => {
             table.innerHTML += createFineRow(student);

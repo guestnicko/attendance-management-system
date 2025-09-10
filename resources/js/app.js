@@ -6,8 +6,6 @@ import { startTime } from "./clockdate";
 import { toggleDropdown, triggerDropdownOnLoad } from "./component";
 import { testStudentForm } from "./students";
 
-console.log("Testing App------- Developer");
-
 // AlpineJS
 window.Alpine = Alpine;
 

@@ -2,8 +2,6 @@
 // Source code: https://codepen.io/paarmita/pen/YroXwv
 // Improvise by ChatGPT
 export function startTime() {
-    console.log("Starting clock functionality...");
-
     const updateClock = () => {
         try {
             const today = new Date();
