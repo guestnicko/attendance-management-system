@@ -22,19 +22,31 @@ class LogController extends Controller
 
     public function viewLogs()
     {
-        $logs = StudentAttendance::leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
+        $logs = StudentAttendance::select([
+            "s_fname",
+            "s_lname",
+            "s_program",
+            "s_set",
+            "s_lvl",
+            "attend_checkIn",
+            "attend_checkOut",
+            "attend_afternoon_checkIn",
+            "attend_afternoon_checkOut",
+            "fines_amount",
+            "events.event_name",
+            "events.isWholeDay",
+            "student_attendances.created_at",
+
+        ])->leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
             ->join('events', 'events.id', '=', 'student_attendances.event_id')
+            ->orderBy("student_attendances.created_at", "desc")
             ->paginate($this->pagination);
 
 
-        // Get fines with related student and event data
-        $fines = Fine::with(['student', 'event'])
-            ->orderBy('created_at', 'desc')
-            ->get();
 
         $pageCount = $logs->lastPage();
         $events = Event::select('*')->orderBy('created_at')->get();
-        return view('pages.logs', compact('logs', 'fines', 'events', 'pageCount'));
+        return view('pages.logs', compact('logs', 'events', 'pageCount'));
     }
 
     public function exportFile(Request $request)
@@ -186,9 +198,24 @@ class LogController extends Controller
     public function filterByCategory(Request $request)
     {
 
-        $students = StudentAttendance::select('*', 'student_attendances.created_at')
+        $students = StudentAttendance::select([
+            "s_fname",
+            "s_lname",
+            "s_program",
+            "s_set",
+            "s_lvl",
+            "attend_checkIn",
+            "attend_checkOut",
+            "attend_afternoon_checkIn",
+            "attend_afternoon_checkOut",
+            "fines_amount",
+            "events.event_name",
+            "events.isWholeDay",
+            "student_attendances.created_at",
+        ])
             ->leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
-            ->join('events', 'events.id', '=', 'student_attendances.event_id');
+            ->join('events', 'events.id', '=', 'student_attendances.event_id')
+            ->orderBy("student_attendances.created_at", "desc");
 
         if ($request->query('set')) {
             $set = explode(',', $request->query('set'));
@@ -228,10 +255,26 @@ class LogController extends Controller
     }
     public function filter(Request $request)
     {
-        $students = StudentAttendance::select('*', 'student_attendances.created_at')
+        $students = StudentAttendance::select([
+            "s_fname",
+            "s_lname",
+            "s_program",
+            "s_set",
+            "s_lvl",
+            "attend_checkIn",
+            "attend_checkOut",
+            "attend_afternoon_checkIn",
+            "attend_afternoon_checkOut",
+            "fines_amount",
+            "events.event_name",
+            "events.isWholeDay",
+            "student_attendances.created_at",
+
+        ])
             ->leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
             ->join('events', 'events.id', '=', 'student_attendances.event_id')
             ->whereAny(['s_fname', 's_studentID', 's_mname', 's_lname'], 'like', $request->query('search') . '%')
+            ->orderBy("student_attendances.created_at", "desc")
             ->paginate($this->pagination)
             ->withQueryString();
 
@@ -251,7 +294,22 @@ class LogController extends Controller
     public function filterByEvent(Request $request)
     {
         if ($request->query("event_id") == null) {
-            $students = StudentAttendance::select('*', 'student_attendances.created_at')
+            $students = StudentAttendance::select([
+                "s_fname",
+                "s_lname",
+                "s_program",
+                "s_set",
+                "s_lvl",
+                "attend_checkIn",
+                "attend_checkOut",
+                "attend_afternoon_checkIn",
+                "attend_afternoon_checkOut",
+                "fines_amount",
+                "events.event_name",
+                "events.isWholeDay",
+                "student_attendances.created_at",
+
+            ])
                 ->leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
                 ->join('events', 'events.id', '=', 'student_attendances.event_id')
                 ->paginate($this->pagination)
@@ -266,6 +324,7 @@ class LogController extends Controller
             ->leftJoin('students', 'students.id', '=', 'student_attendances.id_student')
             ->join('events', 'events.id', '=', 'student_attendances.event_id')
             ->where("event_id", $request->query('event_id'))
+            ->orderBy("student_attendances.created_at", "desc")
             ->paginate(15)
             ->withQueryString();
 
