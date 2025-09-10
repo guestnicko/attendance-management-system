@@ -26,7 +26,7 @@ $page = 'logs';
                     icon: 'success',
                     title: 'Success!',
                     text: '{{ session('
-                                                                            success ') }}',
+                                                                                                                                                            success ') }}',
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -52,11 +52,10 @@ $page = 'logs';
         </script>
     @endif
 
-
-    {{-- Content --}}
-    <div class="bg-white p-3 rounded-md">
-        <!-- Add Filtering Controls -->
-        <div class="mb-4 flex flex-wrap items-center gap-4">
+    <div class=" flex flex-wrap items-center justify-between  gap-4">
+        <div class="flex justify-between mx-1 gap-3">
+            <x-search :page="$page" :route="route('fetchFinesViaSearch')" />
+            <x-filter :page="$page" :route="route('fetchFinesViaCategory')" />
             <div class="flex items-center gap-2">
                 <label for="entriesPerPage" class="text-sm font-medium text-gray-700">Show:</label>
                 <select id="entriesPerPage" onchange="changeEntriesPerPage(this.value)"
@@ -68,13 +67,15 @@ $page = 'logs';
                 </select>
                 <span class="text-sm text-gray-600">entries</span>
             </div>
-
-            <div class="flex items-center gap-2">
-                <label for="searchLogs" class="text-sm font-medium text-gray-700">Search:</label>
-                <input type="text" id="searchLogs" placeholder="Search logs..." onkeyup="filterLogs()"
-                    class="border border-gray-300 rounded-md px-3 py-1 text-sm w-48">
-            </div>
         </div>
+
+        <div>
+            <x-event-filter :events="$events" :route="route('fetchFinesViaEvent')" />
+        </div>
+    </div>
+    {{-- Content --}}
+    <div class="bg-white rounded-md">
+
 
         <div class="mt-6 bg-white shadow-xl rounded-lg overflow-hidden">
             <div class="px-6 py-4 bg-gradient-to-r from-green-600 to-green-700 border-b border-green-800">
@@ -195,8 +196,8 @@ $page = 'logs';
                                                     <span
                                                         class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                            viewBox="0 0 24 24" stroke-width="1.5"
-                                                            stroke="currentColor" class="w-3 h-3 mr-1">
+                                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                            class="w-3 h-3 mr-1">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                                 d="M6 18L18 6M6 6l12 12" />
                                                         </svg>
@@ -288,7 +289,11 @@ $page = 'logs';
                         @endforeach
                     </tbody>
                 </table>
+                <span id="std_info_table" class="py-5">
+
+                </span>
             </div>
+
         </div>
 
         <x-pagination :count="$pageCount" :lastpage="$logs->lastPage()" />
