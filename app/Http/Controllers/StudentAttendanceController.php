@@ -190,6 +190,8 @@ class StudentAttendanceController extends Controller
         // CHECK IF STUDENT EXIST IN THE MASTERLIST
         if (!$studentInformation) {
             return response()->json([
+                "studentInformation" => [],
+                "attendanceInformation" => [],
                 "message" => "The Student does not exist in the database",
                 "isRecorded" => false,
                 "doesntExist" => true,

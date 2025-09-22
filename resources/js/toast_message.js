@@ -3,7 +3,7 @@ const container = document.getElementById("toast-container");
 window.displayToast = displayToast;
 window.exitToast = exitToast;
 function displayToast(responses) {
-    const student = responses.studentInfromation;
+    const student = responses.studentInformation;
     toastHistory.push(`toast-${toastHistory.length}`);
     const template = `
         <div id="toast-${

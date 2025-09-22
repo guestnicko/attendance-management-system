@@ -202,9 +202,9 @@ function stopInterval() {
 }
 
 function startInterval() {
+    document.getElementById("inputField1").focus();
     stopInterval();
     intervalId = setInterval(() => {
-        console.log("Hello World");
         document.getElementById("inputField1").focus();
     }, 1000);
 }
@@ -277,6 +277,8 @@ form.addEventListener("submit", async (event) => {
         const response = await post(new FormData(event.target));
         // Properly fetching data for all responses, and some specific response
         const attendanceInformation = response.attendanceInformation;
+        console.log(attendanceInformation);
+
         let attendCheckIn = attendanceInformation.attend_checkIn;
         let attendCheckOut = attendanceInformation.attend_checkOut;
         let attendAfternoonCheckIn =
@@ -306,7 +308,47 @@ form.addEventListener("submit", async (event) => {
         throw new Error(error);
     }
 });
+// PREVENT THE FORM FROM SUBMITTING AND REDIRECTING TO A PAGE
+form_auto.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+        let inputField = document.querySelector("#inputField"); //Input field HTML element
 
+        // default if input field isn't empty
+        const response = await post(new FormData(event.target));
+        // Properly fetching data for all responses, and some specific response
+        const attendanceInformation = response.attendanceInformation;
+        console.log(attendanceInformation);
+
+        let attendCheckIn = attendanceInformation.attend_checkIn;
+        let attendCheckOut = attendanceInformation.attend_checkOut;
+        let attendAfternoonCheckIn =
+            attendanceInformation.attend_afternoon_checkIn; //Fetch the afternoon time-in/out
+        let attendAfternoonCheckOut =
+            attendanceInformation.attend_afternoon_checkOut;
+        if (response.isRecorded) {
+            AttendanceRecorded(
+                response,
+                attendCheckIn,
+                attendCheckOut,
+                attendAfternoonCheckIn,
+                attendAfternoonCheckOut
+            ); //Added 3 arguments to retrieve the data
+            addLogs(response);
+        } else if (response.AlreadyRecorded) {
+            //if student is already recorded, call function
+            AttendanceAlreadyRecorded(response);
+        } else {
+            //If invalid, then call this function
+            AttendanceNotRecorded(response);
+        }
+        // let data = await get();
+        // loadTable(data);
+        inputField.value = "";
+    } catch (error) {
+        throw new Error(error);
+    }
+});
 // LOAD THE TABLE => GET
 async function get() {
     const getURIElement = document.getElementById("getURI");
