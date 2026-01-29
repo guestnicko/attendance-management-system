@@ -35,7 +35,7 @@ class StudentController extends Controller
             $fields['s_image'] = $path;
             $fields['s_status'] = 'ENROLLED';
             Student::create($fields);
-            return redirect()->route('dashboard')->with('success', 'Student Added Successfully');
+            return redirect()->route('students')->with('success', 'Student Added Successfully');
         } catch (\Throwable $error) {
             //Identifies unique fields
             $fields = [
@@ -49,7 +49,7 @@ class StudentController extends Controller
             ];
             // implode(" ", $fields);
             // dd($error);
-            return redirect()->route('dashboard')->with('error', $errorDetails);
+            return redirect()->route('students')->with('error', $errorDetails);
         }
     }
 

@@ -73,7 +73,7 @@ window.selectAll = selectAll;
 function selectAll() {
     const rows = Array.from(document.querySelectorAll(".table_row"));
     const selected_count = Array.from(
-        document.querySelectorAll(".selected")
+        document.querySelectorAll(".selected"),
     ).length;
 
     if (selected_count != rows.length) {
@@ -136,7 +136,7 @@ async function deleteSelectedRows() {
         if (result.isConfirmed) {
             const field = document.querySelector("#_selected_students_delete");
             const selected = Array.from(
-                document.querySelectorAll(".selected")
+                document.querySelectorAll(".selected"),
             ).map((e) => e.id);
 
             field.value = selected;
@@ -190,8 +190,8 @@ function renderTable(students) {
                                 ${student.s_fname
                                     .charAt(0)
                                     .toUpperCase()}${student.s_lname
-                .charAt(0)
-                .toUpperCase()}
+                                    .charAt(0)
+                                    .toUpperCase()}
                                 </span>
                             </div>
                         </div>
@@ -251,12 +251,14 @@ function renderTable(students) {
                     <div class="flex items-center justify-center gap-3">
                         <x-edit-button x-on:click="open = true"
                             onclick="updateStudent(${JSON.stringify(
-                                student
+                                student,
                             )}, '${student.s_image}')">
+                             Edit Student
                         </x-edit-button>
                         <x-delete-button onclick="deleteStudent(${JSON.stringify(
-                            student
+                            student,
                         )})">
+
                         </x-delete-button>
                     </div>
                 </td>
@@ -273,9 +275,8 @@ function renderTable(students) {
     } else {
         //Code by Panzerweb: If search does not match, display text 'No Student Found'
         document.getElementById("std_info_table").style.display = "block";
-        document.getElementById(
-            "std_info_table"
-        ).innerHTML = `<h3 class="text-center tracking-wide text-gray-500 text-xl">No Student Found</h3>`;
+        document.getElementById("std_info_table").innerHTML =
+            `<h3 class="text-center tracking-wide text-gray-500 text-xl">No Student Found</h3>`;
     }
 }
 

@@ -13,16 +13,19 @@ return new class extends Migration
     {
         Schema::create('student_attendances', function (Blueprint $table) {
             $table->id();
-            // Morning attendance
-            $table->time('attend_checkIn')->nullable();
-            $table->time('attend_checkOut')->nullable();
-            // Afternoon attendance
-            $table->time('attend_afternoon_checkIn')->nullable();
-            $table->time('attend_afternoon_checkOut')->nullable();
+            $table->foreignId('student_id')->constrained('students');
             $table->string('event_id');
-            $table->string('student_rfid');
-            $table->string('id_student');
+            $table->foreignId("fee_id")->constrained('fees');
+            // Morning attendance
+            $table->dateTime('morning_check_in')->nullable();
+            $table->dateTime('morning_check_out')->nullable();
+            // Afternoon attendance
+            $table->dateTime('afternoon_check_in')->nullable();
+            $table->dateTime('afternoon_check_out')->nullable();
+            $table->decimal("total_fines", 8, 2)->default(0);
+            $table->date("attendance_date");
             $table->timestamps();
+            $table->foreignId("updated_by")->constrained('users');
         });
     }
 
