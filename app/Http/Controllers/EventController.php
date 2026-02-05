@@ -19,6 +19,7 @@ class EventController extends Controller
 
     public function create(Request $request)
     {
+
         date_default_timezone_set('Asia/Manila');
 
         $fields = $request->validate([
@@ -28,7 +29,7 @@ class EventController extends Controller
             "checkIn_end" => ['required', "date_format:H:i", "after:checkIn_start"],
             "checkOut_start" => ['required', "date_format:H:i", "after:checkIn_end"],
             "checkOut_end" => ['required', "date_format:H:i", "after:checkOut_start"],
-            "fines_amount" => ["required", "integer"]
+            "fines_amount" => ["required", "integer"],
         ]);
 
         if (strtotime($fields['date']) < strtotime(date("M d, Y"))) {
@@ -48,7 +49,6 @@ class EventController extends Controller
             }
 
             $request->validate([
-                "wholeDay" => ['required'],
                 "afternoon_checkIn_start" => ['required', "date_format:H:i", "after:checkOut_end"],
                 "afternoon_checkIn_end" => ['required', "date_format:H:i", "after:afternoon_checkIn_start"],
                 "afternoon_checkOut_start" => ['required', "date_format:H:i", "after:afternoon_checkIn_end"],
@@ -69,12 +69,11 @@ class EventController extends Controller
                 "afternoon_checkOut_end" => $request->afternoon_checkOut_end,
                 'date' => $fields['date'],
                 "fines_amount" => $request->fines_amount,
-
                 'admin_id' => Auth::id(), // Get the current authenticated user's ID
                 "isWholeDay" => "true"
             ]);
 
-            return redirect()->route('dashboard')->with(["success" => "Event created successfully"]);
+            return redirect()->route('events')->with(["success" => "Event created successfully"]);
         }
 
         // Create event with all required fields
@@ -86,10 +85,11 @@ class EventController extends Controller
             'checkOut_start' => $fields['checkOut_start'],
             'checkOut_end' => $fields['checkOut_end'],
             'date' => $fields['date'],
-            'admin_id' => Auth::id() // Get the current authenticated user's ID
+            'admin_id' => Auth::id(), // Get the current authenticated user's ID
+            "isWholeDay" => "false"
         ]);
 
-        return redirect()->route('dashboard')->with(["success" => "Event created successfully"]);
+        return redirect()->route('events')->with(["success" => "Event created successfully"]);
     }
 
     public function view()

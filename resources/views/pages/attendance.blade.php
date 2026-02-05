@@ -210,142 +210,6 @@
                                         class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">Close</button>
                                 </div>
                             </div>
-
-                            {{-- Add Student --}}
-                            <div class="z-50">
-                                <x-new-modal>
-                                    <x-slot name="button">
-                                        <div class="flex py-2 px-4 items-center">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="size-7">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
-                                            </svg>
-                                            <span class="text-sm">
-                                                Student
-                                            </span>
-                                    </x-slot>
-
-
-                                    <x-slot name="heading">
-                                        Add Student Information
-                                    </x-slot>
-                                    <x-slot name="content">
-                                        <form id="studentForm" action="{{ route('addStudent') }}"
-                                            x-ref="studentForm" method="POST" enctype="multipart/form-data"
-                                            class="flex items-center overflow-y-scroll max-h-[500px]">
-                                            @csrf
-                                            <div class="basis-3/4 justify-start">
-                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
-
-                                                    <div class="grid grid-cols-1">
-                                                        <label for="">
-                                                            RFID
-                                                        </label>
-                                                        <input type="text" placeholder="Scan RFID" name="s_rfid"
-                                                            id="s_rfid"
-                                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                                    </div>
-                                                    <div class="grid grid-cols-1">
-                                                        <label for="">Student ID:</label>
-                                                        <input type="text"
-                                                            placeholder="Enter Student ID (Ex. 2023-00069)"
-                                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                                            name="s_studentID" id="s_studentID">
-                                                    </div>
-                                                </div>
-                                                <div class="grid grid-cols-1 mt-5 mx-7">
-                                                    <label for="">First Name:</label>
-                                                    <input type="text" placeholder="Enter Firstname"
-                                                        name="s_fname" id="s_fname"
-                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                                </div>
-                                                <div class="grid grid-cols-1 mt-5 mx-7">
-                                                    <label for="">Last Name:</label>
-                                                    <input type="text" placeholder="Enter Lastname" name="s_lname"
-                                                        id="s_lname"
-                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                                </div>
-                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
-
-                                                    <div class="grid grid-cols-1">
-                                                        <label for="">Middle Name</label>
-                                                        <input type="text" placeholder="Enter Middlename"
-                                                            name="s_mname" id="s_mname"
-                                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                                    </div>
-                                                    <div class="grid grid-cols-1">
-                                                        <label for="">Suffix</label>
-                                                        <input type="text" placeholder="Enter Suffix"
-                                                            name="s_suffix" id="s_suffix"
-                                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                                    </div>
-                                                </div>
-                                                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8 mt-5 mx-7">
-
-                                                    <div class="grid grid-cols-1">
-                                                        <label for="">Program</label>
-                                                        <select name="s_program" id="s_program"
-                                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                                            <option selected value="">Select Program</option>
-                                                            <option value="BSIT">BSIT</option>
-                                                            <option value="BSIS">BSIS</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="grid grid-cols-1">
-                                                        <label for="">Year Level</label>
-                                                        <select name="s_lvl" id="s_lvl"
-                                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                                            <option selected value="">Select Year Level</option>
-                                                            <option value="1">1</option>
-                                                            <option value="2">2</option>
-                                                            <option value="3">3</option>
-                                                            <option value="4">4</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="grid grid-cols-1">
-                                                        <label for="">Set</label>
-                                                        <select name="s_set" id="s_set"
-                                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                                            <option selected value="">Select Set</option>
-                                                            <option value="A">A</option>
-                                                            <option value="B">B</option>
-                                                            <option value="C">C</option>
-                                                            <option value="D">D</option>
-                                                            <option value="E">E</option>
-                                                            <option value="F">F</option>
-                                                            <option value="G">G</option>
-                                                            <option value="H">H</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div x-data="{ image: '{{ asset('images/icons/default-image.svg') }}' }"
-                                                class="basis-1/4 flex flex-col mt-5 items-center gap-5">
-                                                <img id="uploadImage" class="max-w-1/2 w-100" :src="image"
-                                                    alt="">
-                                                <input id="uploadFile" type="file" name="s_image"
-                                                    x-ref="imageFile"
-                                                    x-on:change="image = URL.createObjectURL($refs.imageFile.files[0])"
-                                                    hidden>
-                                                <button x-on:click="$refs.imageFile.click()" type="button"
-                                                    class="bg-green-400 text-white px-3 py-2 text-xl">
-                                                    Upload Image
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </x-slot>
-                                    <x-slot name="footer">
-                                        <button onclick="testStudentForm()"
-                                            class="bg-green-400 text-white px-3 py-2 rounded-md mx-4">
-                                            Test Form </button>
-                                        <button x-on:click="$refs.studentForm.submit()"
-                                            class="bg-green-400 text-white px-3 py-2 rounded-md mx-4">
-                                            Save </button>
-                                    </x-slot>
-                                </x-new-modal>
-                            </div>
-
                         </div>
 
                     </div>
@@ -708,68 +572,68 @@
                                     <span class="text-xs text-gray-500 font-medium">Check In:</span>
                             ${student.attend_checkIn ?
                                         `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                                                                                                                                                                                                            ${new Date(student.attend_checkIn).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
-                                                                                                                                                                                                                                        </span>` :
+                                                                                                                                                                                                                                                                ${new Date(student.attend_checkIn).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
+                                                                                                                                                                                                                                                            </span>` :
                                         `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                                                                                                                                                                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
-                                                                                                                                                                                                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                                                                                                                                                                                                            </svg>
-                                                                                                                                                                                                                                            Absent
-                                                                                                                                                                                                                                        </span>`
+                                                                                                                                                                                                                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
+                                                                                                                                                                                                                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                                                                                                                                                                                                                                </svg>
+                                                                                                                                                                                                                                                                Absent
+                                                                                                                                                                                                                                                            </span>`
                                     }
                                 </div>
                                 <div class="flex items-center justify-center gap-2">
                                     <span class="text-xs text-gray-500 font-medium">Check Out:</span>
                             ${student.attend_checkOut ?
                                         `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                                                                                                                                                                                                            ${new Date(student.attend_checkOut).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
-                                                                                                                                                                                                                                        </span>` :
+                                                                                                                                                                                                                                                                ${new Date(student.attend_checkOut).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
+                                                                                                                                                                                                                                                            </span>` :
                                         `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                                                                                                                                                                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
-                                                                                                                                                                                                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                                                                                                                                                                                                            </svg>
-                                                                                                                                                                                                                                            Absent
-                                                                                                                                                                                                                                        </span>`
+                                                                                                                                                                                                                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
+                                                                                                                                                                                                                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                                                                                                                                                                                                                                </svg>
+                                                                                                                                                                                                                                                                Absent
+                                                                                                                                                                                                                                                            </span>`
                                     }
                                 </div>
                             </div>
                         </td>
 
                         ${isWholeDay ? `
-                                                                                                                                                                                                                            <!-- Afternoon Attendance -->
-                                                                                                                                                                                                                            <td class="px-6 py-4 text-center border-r border-gray-200">
-                                                                                                                                                                                                                                <div class="space-y-2">
-                                                                                                                                                                                                                                    <div class="flex items-center justify-center gap-2">
-                                                                                                                                                                                                                                        <span class="text-xs text-gray-500 font-medium">Check In:</span>
-                                                                                                                                                                                                                                ${student.attend_afternoon_checkIn ?
-                                                                                                                                                                                                                                            `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                                                                                                                                                                                                                <!-- Afternoon Attendance -->
+                                                                                                                                                                                                                                                <td class="px-6 py-4 text-center border-r border-gray-200">
+                                                                                                                                                                                                                                                    <div class="space-y-2">
+                                                                                                                                                                                                                                                        <div class="flex items-center justify-center gap-2">
+                                                                                                                                                                                                                                                            <span class="text-xs text-gray-500 font-medium">Check In:</span>
+                                                                                                                                                                                                                                                    ${student.attend_afternoon_checkIn ?
+                                                                                                                                                                                                                                                                `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                 ${new Date(student.attend_afternoon_checkIn).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
                                             </span>` :
-                                                                                                                                                                                                                                            `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                                                                                                                                                                                                                                `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                 </svg>
                                                 Absent
                                             </span>`
-                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                    <div class="flex items-center justify-center gap-2">
-                                                                                                                                                                                                                                        <span class="text-xs text-gray-500 font-medium">Check Out:</span>
-                                                                                                                                                                                                                                ${student.attend_afternoon_checkOut ?
-                                                                                                                                                                                                                                            `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                        <div class="flex items-center justify-center gap-2">
+                                                                                                                                                                                                                                                            <span class="text-xs text-gray-500 font-medium">Check Out:</span>
+                                                                                                                                                                                                                                                    ${student.attend_afternoon_checkOut ?
+                                                                                                                                                                                                                                                                `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                 ${new Date(student.attend_afternoon_checkOut).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
                                             </span>` :
-                                                                                                                                                                                                                                            `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                                                                                                                                                                                                                                `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                 </svg>
                                                 Absent
                                             </span>`
-                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                            </td>
-                                                                                                                                                                                                                        ` : ''}
+                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                </td>
+                                                                                                                                                                                                                                            ` : ''}
 
                         <td class="px-6 py-4 text-center">
                             <div class="text-sm text-gray-900">
@@ -839,13 +703,17 @@
     </form>
 
     @if ($event)
-        {{-- FOR AUTO ATTENDANCE --}}
-        <form id="auto_attendanceForm" method="POST" class="fixed -z-10">
+        <form id="auto_attendanceForm" method="POST" action="{{ route('attendanceStudent') }}">
             @csrf
             <input type="hidden" name="event_id" value="{{ $event->id }}">
             <input type="hidden" name="uri" value="{{ route('attendanceStudent') }}">
-            <input type="text" name="s_rfid" id="inputField1" class="bg-transparent border-none"
-                autocomplete="off">
+            <div class="flex flex-col">
+                <label class="text-lg font-semibold" for="">
+                    Enter ID:
+                    <span class="text-md text-gray-500 mt-1">(Student ID/RFID)</span>
+                </label>
+                <input type="text" name="s_rfid" id="inputField1" autocomplete="off">
+            </div>
         </form>
     @endif
 

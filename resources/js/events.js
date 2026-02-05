@@ -28,6 +28,10 @@ function updateClassesSafely(element, action, ...classes) {
     }
 }
 
+function closeEventModal() {
+    document.querySelector("#EditEventModal").style.display = "none";
+}
+
 // Edit Event Function
 function editEvent(data) {
     console.log("=== Edit Event Function Called ===");
@@ -77,7 +81,7 @@ function editEvent(data) {
     // Approach 2: Direct DOM manipulation as fallback
     if (!modalOpened) {
         const modal = document.querySelector(
-            ".fixed.inset-0.bg-black.bg-opacity-50"
+            ".fixed.inset-0.bg-black.bg-opacity-50",
         );
         if (modal) {
             modal.style.display = "flex";
@@ -118,15 +122,15 @@ function editEvent(data) {
 
     // Set values safely
     if (elements.eventId) {
-    elements.eventId.value = data.id;
+        elements.eventId.value = data.id;
         console.log("Set event ID to:", data.id);
     }
     if (elements.eventName) {
-    elements.eventName.value = data.event_name;
+        elements.eventName.value = data.event_name;
         console.log("Set event name to:", data.event_name);
     }
     if (elements.eventDate) {
-    elements.eventDate.value = data.date;
+        elements.eventDate.value = data.date;
         console.log("Set event date to:", data.date);
     }
     if (elements.eventFines) {
@@ -134,19 +138,19 @@ function editEvent(data) {
         console.log("Set event fines to:", data.fines_amount || "");
     }
     if (elements.checkInStart) {
-    elements.checkInStart.value = data.checkIn_start;
+        elements.checkInStart.value = data.checkIn_start;
         console.log("Set check-in start to:", data.checkIn_start);
     }
     if (elements.checkInEnd) {
-    elements.checkInEnd.value = data.checkIn_end;
+        elements.checkInEnd.value = data.checkIn_end;
         console.log("Set check-in end to:", data.checkIn_end);
     }
     if (elements.checkOutStart) {
-    elements.checkOutStart.value = data.checkOut_start;
+        elements.checkOutStart.value = data.checkOut_start;
         console.log("Set check-out start to:", data.checkOut_start);
     }
     if (elements.checkOutEnd) {
-    elements.checkOutEnd.value = data.checkOut_end;
+        elements.checkOutEnd.value = data.checkOut_end;
         console.log("Set check-out end to:", data.checkOut_end);
     }
 
@@ -155,28 +159,28 @@ function editEvent(data) {
         elements.afternoonOutEnd.value = data.afternoon_checkOut_end || "";
         console.log(
             "Set afternoon check-out end to:",
-            data.afternoon_checkOut_end || ""
+            data.afternoon_checkOut_end || "",
         );
     }
     if (elements.afternoonOutStart) {
         elements.afternoonOutStart.value = data.afternoon_checkOut_start || "";
         console.log(
             "Set afternoon check-out start to:",
-            data.afternoon_checkOut_start || ""
+            data.afternoon_checkOut_start || "",
         );
     }
     if (elements.afternoonInStart) {
         elements.afternoonInStart.value = data.afternoon_checkIn_start || "";
         console.log(
             "Set afternoon check-in start to:",
-            data.afternoon_checkIn_start || ""
+            data.afternoon_checkIn_start || "",
         );
     }
     if (elements.afternoonInEnd) {
         elements.afternoonInEnd.value = data.afternoon_checkIn_end || "";
         console.log(
             "Set afternoon check-in end to:",
-            data.afternoon_checkIn_end || ""
+            data.afternoon_checkIn_end || "",
         );
     }
 
@@ -262,7 +266,7 @@ function deleteEvent(data) {
                 eventIdInput.value = data.id;
                 console.log(
                     "Form data before submit:",
-                    new FormData(deleteForm)
+                    new FormData(deleteForm),
                 );
 
                 // Verify the value was set
@@ -271,7 +275,7 @@ function deleteEvent(data) {
                         "Failed to set event ID. Expected:",
                         data.id,
                         "Got:",
-                        eventIdInput.value
+                        eventIdInput.value,
                     );
                     Swal.fire({
                         icon: "error",
@@ -283,7 +287,7 @@ function deleteEvent(data) {
 
                 console.log(
                     "Event ID successfully set to:",
-                    eventIdInput.value
+                    eventIdInput.value,
                 );
 
                 // Submit the form programmatically
@@ -308,7 +312,7 @@ function deleteEvent(data) {
                 } catch (e) {
                     console.log(
                         "requestSubmit not supported, using submit():",
-                        e
+                        e,
                     );
 
                     // Final check to ensure ID is set
@@ -325,7 +329,7 @@ function deleteEvent(data) {
                         return;
                     }
 
-        deleteForm.submit();
+                    deleteForm.submit();
                 }
 
                 // Show success message
@@ -336,14 +340,14 @@ function deleteEvent(data) {
                     showConfirmButton: false,
                     timer: 1500,
                 });
-    } else {
-        console.error("Delete form elements not found");
+            } else {
+                console.error("Delete form elements not found");
                 console.error("Delete form:", deleteForm);
                 console.error("Event ID input:", eventIdInput);
             }
         } else {
             console.log("User cancelled deletion");
-    }
+        }
     });
 }
 
@@ -353,7 +357,7 @@ function initializeEventHandlers() {
     const wholeDay = document.querySelector("#wholeDay");
     const isWholeDay = document.querySelector("#isWholeDay");
     const createAfternoonAttendance = document.querySelector(
-        "#create_afternoon_attendance"
+        "#create_afternoon_attendance",
     );
 
     // Add event listeners only if elements exist
@@ -408,7 +412,7 @@ function navigateTab(table, button) {
                 "remove",
                 "bg-gray-900",
                 "text-green-500",
-                "font-semibold"
+                "font-semibold",
             );
         }
     });
@@ -421,7 +425,7 @@ function navigateTab(table, button) {
             "add",
             "bg-gray-900",
             "text-green-500",
-            "font-semibold"
+            "font-semibold",
         );
     }
 }
@@ -448,7 +452,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "add",
             "bg-gray-900",
             "text-green-500",
-            "font-semibold"
+            "font-semibold",
         );
     } else {
         console.warn("Pending event button not found");
@@ -478,7 +482,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const idInput = document.getElementById("delete_event_id");
             console.log(
                 "ID input value:",
-                idInput ? idInput.value : "ID input not found"
+                idInput ? idInput.value : "ID input not found",
             );
 
             if (!idInput || !idInput.value) {
@@ -507,7 +511,7 @@ window.editEvent = editEvent;
 function handleWholeDayChange(checkbox) {
     const afternoonSection = document.querySelector("#afternoon_attendance");
     if (afternoonSection) {
-        if (checkbox.checked) {
+        if (!checkbox.checked) {
             afternoonSection.classList.remove("hidden");
             console.log("Showed afternoon attendance section");
         } else {
@@ -524,10 +528,12 @@ window.handleWholeDayChange = handleWholeDayChange;
 // Handle create event whole day checkbox change
 function handleCreateWholeDayChange(checkbox) {
     const afternoonSection = document.querySelector(
-        "#create_afternoon_attendance"
+        "#create_afternoon_attendance",
     );
+    console.log(checkbox.checked);
+
     if (afternoonSection) {
-        if (checkbox.checked) {
+        if (!checkbox.checked) {
             afternoonSection.classList.remove("hidden");
             console.log("Showed create afternoon attendance section");
         } else {
@@ -540,3 +546,4 @@ function handleCreateWholeDayChange(checkbox) {
 // Make handleCreateWholeDayChange available globally
 document.handleCreateWholeDayChange = handleCreateWholeDayChange;
 window.handleCreateWholeDayChange = handleCreateWholeDayChange;
+document.closeEventModal = closeEventModal;

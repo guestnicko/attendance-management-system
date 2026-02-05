@@ -31,7 +31,7 @@ $page = 'students';
                     icon: 'success',
                     title: 'Success!',
                     text: '{{ session('
-                                                                                                                    success ') }}',
+                                                                                                                                        success ') }}',
                     showConfirmButton: false,
                     timer: 1500,
                 });

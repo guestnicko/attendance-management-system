@@ -22,7 +22,6 @@ return new class extends Migration
             $table->boolean('afternoon_checkOut_missed')->default(false);
             $table->integer('total_fines');
             $table->timestamps();
-
         });
     }
 

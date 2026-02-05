@@ -35,7 +35,7 @@ class StudentController extends Controller
             $fields['s_image'] = $path;
             $fields['s_status'] = 'ENROLLED';
             Student::create($fields);
-            return redirect()->route('dashboard')->with('success', 'Student Added Successfully');
+            return redirect()->route('students')->with('success', 'Student Added Successfully');
         } catch (\Throwable $error) {
             //Identifies unique fields
             $fields = [
@@ -49,7 +49,7 @@ class StudentController extends Controller
             ];
             // implode(" ", $fields);
             // dd($error);
-            return redirect()->route('dashboard')->with('error', $errorDetails);
+            return redirect()->route('students')->with('error', $errorDetails);
         }
     }
 
@@ -117,7 +117,7 @@ class StudentController extends Controller
 
     public function filter(Request $request)
     {
-        $students = Student::whereAny(['s_fname', 's_studentID', 's_mname', 's_lname'], 'like', $request->query('search') . '%')->paginate($this->pagination)->withQueryString();
+        $students = Student::whereAny(['s_fname', 's_studentID', 's_mname', 's_lname', "s_rfid"], 'like', $request->query('search') . '%')->paginate($this->pagination)->withQueryString();
 
         if (empty($students->first())) {
             return response()->json([
