@@ -19,7 +19,7 @@
                 @isset($footer)
                     {{ $footer }}
                 @endisset
-                <button x-on:click="open = false"
+                <button x-on:click="open=false"
                     class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">Close</button>
             </div>
         </div>

@@ -117,7 +117,7 @@ class StudentController extends Controller
 
     public function filter(Request $request)
     {
-        $students = Student::whereAny(['s_fname', 's_studentID', 's_mname', 's_lname'], 'like', $request->query('search') . '%')->paginate($this->pagination)->withQueryString();
+        $students = Student::whereAny(['s_fname', 's_studentID', 's_mname', 's_lname', "s_rfid"], 'like', $request->query('search') . '%')->paginate($this->pagination)->withQueryString();
 
         if (empty($students->first())) {
             return response()->json([

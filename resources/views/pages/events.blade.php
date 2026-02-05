@@ -28,7 +28,7 @@
                     icon: 'success',
                     title: 'Success!',
                     text: '{{ session('
-                                                                                                                                                                                success ') }}',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        success ') }}',
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -44,9 +44,9 @@
             </h2>
         </div>
     </x-slot>
-    <div class="mt-4" x-data="{ open: false }">
+    <div class="mt-4">
         {{-- EDIT EVENT MODAL --}}
-        <div x-show="open" x-cloak id="udpateEventModal"
+        <div id="EditEventModal" x-data="{ open: false }" x-show="open" x-cloak
             class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div x-on:click.outside="open = false" class="max-w-[1000px] bg-white p-6 rounded-lg shadow-lg">
                 <div class="border-b-2 border-gray-300 mb-5">
@@ -260,16 +260,14 @@
                     <button x-on:click="$refs.updateForm.submit()" type="submit"
                         class="bg-green-400 text-white px-3 py-2 rounded-md mx-4">
                         Save </button>
-                    <button x-on:click="open = false"
+                    <button x-on:click="open=false" onclick="closeEventModal()"
                         class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 z-10">Close</button>
                 </div>
             </div>
         </div>
 
-
         {{-- CREATE EVENT MODAL --}}
-        <div class="flex justify-between items-center mb-3">
-
+        <div x-data="{ open: false }" aria-label="create-event-modal" class="flex justify-between items-center mb-3">
             <x-new-modal>
                 <x-slot name="button"
                     class="bg-green-600 hover:bg-green-950 ease-linear transition-all duration-75 text-white rounded-xl px-2 text-[10px] flex items-center p-2 gap-1 w-5">
@@ -647,130 +645,140 @@
             </div>
         </div>
 
-        <!-- Add JavaScript for Pagination and Filtering -->
-        <script>
-            let currentPage = 1;
-            let entriesPerPage = 10;
-            let filteredEvents = [];
-            let currentTab = 'pendingEventTable';
 
-            // Store events data from PHP
-            const pendingEvents = @json($pendingEvents ?? []);
-            const completedEvents = @json($completedEvents ?? []);
-            const deletedEvents = @json($deletedEvents ?? []);
+    </div>
+
+    {{-- MODAL FOR EXPORTING EVENTS  --}}
+
+    <form method="POST" id="deleteEvent" action="{{ route('deleteEvent') }}" hidden>
+        @csrf
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="text" name="id" id="delete_event_id" hidden>
+    </form>
+    <!-- Add JavaScript for Pagination and Filtering -->
+    <script>
+        let currentPage = 1;
+        let entriesPerPage = 10;
+        let filteredEvents = [];
+        let currentTab = 'pendingEventTable';
+
+        // Store events data from PHP
+        const pendingEvents = @json($pendingEvents ?? []);
+        const completedEvents = @json($completedEvents ?? []);
+        const deletedEvents = @json($deletedEvents ?? []);
 
 
 
-            // Initialize
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log('DOM Content Loaded - Initializing events page');
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded - Initializing events page');
 
-                // Check if Alpine.js is available
-                if (typeof Alpine !== 'undefined') {
-                    console.log('Alpine.js is available');
-                } else {
-                    console.log('Alpine.js is not available');
-                }
-
-                // Check modal container
-                const modalContainer = document.querySelector('[x-data]');
-                console.log('Modal container found:', modalContainer);
-                if (modalContainer && modalContainer.__x) {
-                    console.log('Alpine.js data available:', modalContainer.__x.$data);
-                }
-
-                initializeTable();
-                updatePagination();
-                updateTabStatus();
-
-                // Initialize event handlers for whole day checkboxes - Now handled by JavaScript functions
-                // Functions are available globally: handleWholeDayChange() and handleCreateWholeDayChange()
-            });
-
-            function initializeTable() {
-                console.log('Initializing table with pending events:', pendingEvents);
-                filteredEvents = pendingEvents;
-                displayEvents();
+            // Check if Alpine.js is available
+            if (typeof Alpine !== 'undefined') {
+                console.log('Alpine.js is available');
+            } else {
+                console.log('Alpine.js is not available');
             }
 
-            function changeEntriesPerPage(value) {
-                entriesPerPage = parseInt(value);
-                currentPage = 1;
-                updatePagination();
-                displayEvents();
+            // Check modal container
+            const modalContainer = document.querySelector('[x-data]');
+            console.log('Modal container found:', modalContainer);
+            if (modalContainer && modalContainer.__x) {
+                console.log('Alpine.js data available:', modalContainer.__x.$data);
             }
 
-            function filterEvents() {
-                const searchTerm = document.getElementById('searchEvents').value.toLowerCase();
+            initializeTable();
+            updatePagination();
+            updateTabStatus();
 
-                let allEvents = [];
+            // Initialize event handlers for whole day checkboxes - Now handled by JavaScript functions
+            // Functions are available globally: handleWholeDayChange() and handleCreateWholeDayChange()
+        });
+
+        function initializeTable() {
+            console.log('Initializing table with pending events:', pendingEvents);
+            filteredEvents = pendingEvents;
+            displayEvents();
+        }
+
+        function changeEntriesPerPage(value) {
+            entriesPerPage = parseInt(value);
+            currentPage = 1;
+            updatePagination();
+            displayEvents();
+        }
+
+        function filterEvents() {
+            const searchTerm = document.getElementById('searchEvents').value.toLowerCase();
+
+            let allEvents = [];
+            if (currentTab === 'pendingEventTable') {
+                allEvents = pendingEvents;
+                console.log('Filtering pending events:', pendingEvents);
+            } else if (currentTab === 'completedEventTable') {
+                allEvents = completedEvents;
+                console.log('Filtering completed events:', completedEvents);
+            } else if (currentTab === 'deletedEventTable') {
+                allEvents = deletedEvents;
+                console.log('Filtering deleted events:', deletedEvents);
+            }
+
+            // Apply search filter if there's a search term
+            if (searchTerm) {
+                filteredEvents = allEvents.filter(event =>
+                    event.event_name.toLowerCase().includes(searchTerm) ||
+                    event.date.includes(searchTerm)
+                );
+            } else {
+                filteredEvents = allEvents;
+            }
+
+            console.log('Current tab:', currentTab, 'Filtered events:', filteredEvents);
+
+            currentPage = 1;
+            updatePagination();
+            displayEvents();
+        }
+
+        function displayEvents() {
+            const startIndex = (currentPage - 1) * entriesPerPage;
+            const endIndex = startIndex + entriesPerPage;
+            const eventsToShow = filteredEvents.slice(startIndex, endIndex);
+
+            // Update table body based on current tab
+            updateTableBody(eventsToShow);
+
+            // Update entry counts
+            document.getElementById('startEntry').textContent = startIndex + 1;
+            document.getElementById('endEntry').textContent = Math.min(endIndex, filteredEvents.length);
+            document.getElementById('totalEntries').textContent = filteredEvents.length;
+        }
+
+        function updateTableBody(events) {
+            const tbody = document.getElementById('events_table_body');
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+
+            if (events.length === 0) {
+                let emptyMessage = '';
+                let emptyDescription = '';
+
                 if (currentTab === 'pendingEventTable') {
-                    allEvents = pendingEvents;
-                    console.log('Filtering pending events:', pendingEvents);
+                    emptyMessage = 'No pending events';
+                    emptyDescription = 'All events have been processed or there are no events created yet.';
                 } else if (currentTab === 'completedEventTable') {
-                    allEvents = completedEvents;
-                    console.log('Filtering completed events:', completedEvents);
+                    emptyMessage = 'No completed events';
+                    emptyDescription = 'No events have been marked as completed yet. Complete an event to see it here.';
                 } else if (currentTab === 'deletedEventTable') {
-                    allEvents = deletedEvents;
-                    console.log('Filtering deleted events:', deletedEvents);
-                }
-
-                // Apply search filter if there's a search term
-                if (searchTerm) {
-                    filteredEvents = allEvents.filter(event =>
-                        event.event_name.toLowerCase().includes(searchTerm) ||
-                        event.date.includes(searchTerm)
-                    );
+                    emptyMessage = 'No deleted events';
+                    emptyDescription = 'No events have been deleted yet.';
                 } else {
-                    filteredEvents = allEvents;
+                    emptyMessage = 'No events found';
+                    emptyDescription = 'No events match your search criteria.';
                 }
 
-                console.log('Current tab:', currentTab, 'Filtered events:', filteredEvents);
-
-                currentPage = 1;
-                updatePagination();
-                displayEvents();
-            }
-
-            function displayEvents() {
-                const startIndex = (currentPage - 1) * entriesPerPage;
-                const endIndex = startIndex + entriesPerPage;
-                const eventsToShow = filteredEvents.slice(startIndex, endIndex);
-
-                // Update table body based on current tab
-                updateTableBody(eventsToShow);
-
-                // Update entry counts
-                document.getElementById('startEntry').textContent = startIndex + 1;
-                document.getElementById('endEntry').textContent = Math.min(endIndex, filteredEvents.length);
-                document.getElementById('totalEntries').textContent = filteredEvents.length;
-            }
-
-            function updateTableBody(events) {
-                const tbody = document.getElementById('events_table_body');
-                if (!tbody) return;
-
-                tbody.innerHTML = '';
-
-                if (events.length === 0) {
-                    let emptyMessage = '';
-                    let emptyDescription = '';
-
-                    if (currentTab === 'pendingEventTable') {
-                        emptyMessage = 'No pending events';
-                        emptyDescription = 'All events have been processed or there are no events created yet.';
-                    } else if (currentTab === 'completedEventTable') {
-                        emptyMessage = 'No completed events';
-                        emptyDescription = 'No events have been marked as completed yet. Complete an event to see it here.';
-                    } else if (currentTab === 'deletedEventTable') {
-                        emptyMessage = 'No deleted events';
-                        emptyDescription = 'No events have been deleted yet.';
-                    } else {
-                        emptyMessage = 'No events found';
-                        emptyDescription = 'No events match your search criteria.';
-                    }
-
-                    tbody.innerHTML = `
+                tbody.innerHTML = `
                         <tr>
                             <td colspan="4" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center justify-center space-y-3">
@@ -783,14 +791,14 @@
                             </td>
                         </tr>
                     `;
-                    return;
-                }
+                return;
+            }
 
-                events.forEach(event => {
-                    const row = document.createElement('tr');
-                    row.className = 'hover:bg-gray-50 transition-colors duration-200';
+            events.forEach(event => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition-colors duration-200';
 
-                    row.innerHTML = `
+                row.innerHTML = `
                         <td class="px-6 py-4 border-r border-gray-200">
                             <div class="space-y-2">
                                 <div class="flex items-center space-x-3">
@@ -809,9 +817,10 @@
                                             <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">
                                                 ${event.date}
                                             </span>
-                                            ${event.fines_amount ? `<span class="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
-                                                                                                                ₱${event.fines_amount}
-                                                                                                            </span>` : ''}
+                                            ${event.fines_amount ? `
+                                                            <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full font-medium">
+                                                                ₱${event.fines_amount}
+                                                            </span>` : ''}
                                         </div>
                                     </div>
                                 </div>
@@ -838,21 +847,21 @@
                         <td class="px-6 py-4 text-center border-r border-gray-200">
                             <div class="space-y-2">
                                 ${event.isWholeDay === 'true' ? `
-                                                                                                    <div class="flex items-center justify-center gap-2">
-                                                                                                        <span class="text-xs text-gray-500 font-medium">Check In:</span>
-                                                                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                                                                            ${event.afternoon_checkIn_start || '00:00'} - ${event.afternoon_checkIn_end || '00:00'}
-                                                                                                        </span>
-                                                                                                    </div>
-                                                                                                    <div class="flex items-center justify-center gap-2">
-                                                                                                        <span class="text-xs text-gray-500 font-medium">Check Out:</span>
-                                                                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                                                                            ${event.afternoon_checkOut_start || '00:00'} - ${event.afternoon_checkOut_end || '00:00'}
-                                                                                                        </span>
-                                                                                                    </div>
-                                                                                                ` : `
-                                                                                                    <span class="text-xs text-gray-500">Half-day event</span>
-                                                                                                `}
+                                                        <div class="flex items-center justify-center gap-2">
+                                                            <span class="text-xs text-gray-500 font-medium">Check In:</span>
+                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                                ${event.afternoon_checkIn_start || '00:00'} - ${event.afternoon_checkIn_end || '00:00'}
+                                                            </span>
+                                                        </div>
+                                                        <div class="flex items-center justify-center gap-2">
+                                                            <span class="text-xs text-gray-500 font-medium">Check Out:</span>
+                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                ${event.afternoon_checkOut_start || '00:00'} - ${event.afternoon_checkOut_end || '00:00'}
+                                                            </span>
+                                                        </div>
+                                                    ` : `
+                                                        <span class="text-xs text-gray-500">Half-day event</span>
+                                                    `}
                             </div>
                         </td>
 
@@ -870,188 +879,179 @@
                         </td>
                     `;
 
-                    tbody.appendChild(row);
-                });
-            }
+                tbody.appendChild(row);
+            });
+        }
 
-            function updatePagination() {
-                const totalPages = Math.ceil(filteredEvents.length / entriesPerPage);
-                const pageNumbers = document.getElementById('pageNumbers');
-                const prevBtn = document.getElementById('prevBtn');
-                const nextBtn = document.getElementById('nextBtn');
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredEvents.length / entriesPerPage);
+            const pageNumbers = document.getElementById('pageNumbers');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
 
-                if (!pageNumbers || !prevBtn || !nextBtn) return;
+            if (!pageNumbers || !prevBtn || !nextBtn) return;
 
-                // Clear existing page numbers
-                pageNumbers.innerHTML = '';
+            // Clear existing page numbers
+            pageNumbers.innerHTML = '';
 
-                // Generate page numbers
-                for (let i = 1; i <= totalPages; i++) {
-                    const pageBtn = document.createElement('button');
-                    pageBtn.textContent = i;
-                    pageBtn.className = `px-3 py-2 text-sm font-medium border rounded-md ${
+            // Generate page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.textContent = i;
+                pageBtn.className = `px-3 py-2 text-sm font-medium border rounded-md ${
                         i === currentPage
                             ? 'bg-blue-600 text-white border-blue-600'
                             : 'text-gray-500 bg-white border-gray-300 hover:bg-gray-50'
                     }`;
-                    pageBtn.onclick = () => goToPage(i);
-                    pageNumbers.appendChild(pageBtn);
-                }
-
-                // Update button states
-                prevBtn.disabled = currentPage === 1;
-                nextBtn.disabled = currentPage === totalPages;
+                pageBtn.onclick = () => goToPage(i);
+                pageNumbers.appendChild(pageBtn);
             }
 
-            function goToPage(page) {
-                currentPage = page;
+            // Update button states
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            displayEvents();
+            updatePagination();
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
                 displayEvents();
                 updatePagination();
             }
+        }
 
-            function previousPage() {
-                if (currentPage > 1) {
-                    currentPage--;
-                    displayEvents();
-                    updatePagination();
-                }
+        function nextPage() {
+            const totalPages = Math.ceil(filteredEvents.length / entriesPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayEvents();
+                updatePagination();
+            }
+        }
+
+        function navigateTab(tableId, buttonId) {
+            console.log('Navigating to tab:', tableId, 'Button:', buttonId);
+
+            // Update current tab
+            currentTab = tableId;
+            console.log('Current tab set to:', currentTab);
+
+            // Update button styles
+            document.querySelectorAll('[id$="Button"]').forEach(btn => {
+                btn.className = 'px-4 py-2 bg-gray-800 hover:bg-gray-900 text-gray-300 transition';
+            });
+            document.getElementById(buttonId).className = 'px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white transition';
+
+            // Update filtered events based on tab
+            console.log('Calling filterEvents() for tab:', currentTab);
+            filterEvents();
+
+            // Update the status display
+            updateTabStatus();
+        }
+
+        function updateTabStatus() {
+            const statusElement = document.getElementById('currentTabStatus');
+            if (!statusElement) return;
+
+            let statusText = '';
+            let eventCount = 0;
+
+            if (currentTab === 'pendingEventTable') {
+                statusText = `Pending: ${pendingEvents.length}`;
+                eventCount = pendingEvents.length;
+            } else if (currentTab === 'completedEventTable') {
+                statusText = `Completed: ${completedEvents.length}`;
+                eventCount = completedEvents.length;
+            } else if (currentTab === 'deletedEventTable') {
+                statusText = `Deleted: ${deletedEvents.length}`;
+                eventCount = deletedEvents.length;
             }
 
-            function nextPage() {
-                const totalPages = Math.ceil(filteredEvents.length / entriesPerPage);
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    displayEvents();
-                    updatePagination();
-                }
+            statusElement.textContent = statusText;
+
+            // Update the total count display as well
+            const totalElement = document.querySelector('.text-green-100.text-sm.font-medium');
+            if (totalElement && totalElement.textContent.includes('Total Events:')) {
+                totalElement.textContent = `Total Events: ${eventCount}`;
             }
+        }
 
-            function navigateTab(tableId, buttonId) {
-                console.log('Navigating to tab:', tableId, 'Button:', buttonId);
+        // Edit Event Function - Moved to events.js file
+        // Function is now available globally as editEvent()
 
-                // Update current tab
-                currentTab = tableId;
-                console.log('Current tab set to:', currentTab);
+        // Initialize event handlers for whole day checkboxes - Now handled by JavaScript functions
+        // Functions are available globally: handleWholeDayChange() and handleCreateWholeDayChange()
 
-                // Update button styles
-                document.querySelectorAll('[id$="Button"]').forEach(btn => {
-                    btn.className = 'px-4 py-2 bg-gray-800 hover:bg-gray-900 text-gray-300 transition';
-                });
-                document.getElementById(buttonId).className = 'px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white transition';
+        // Test Modal Function for debugging
+        function testModal() {
+            console.log('=== Testing Modal ===');
+            console.log('Alpine.js available:', typeof Alpine !== 'undefined');
 
-                // Update filtered events based on tab
-                console.log('Calling filterEvents() for tab:', currentTab);
-                filterEvents();
+            // Check for modal elements
+            const modalContainer = document.querySelector('[x-data="globalModal"]');
+            console.log('Modal container with x-data="globalModal":', modalContainer);
 
-                // Update the status display
-                updateTabStatus();
-            }
+            const modalOverlay = document.querySelector('.fixed.inset-0.bg-black.bg-opacity-50');
+            console.log('Modal overlay:', modalOverlay);
 
-            function updateTabStatus() {
-                const statusElement = document.getElementById('currentTabStatus');
-                if (!statusElement) return;
+            // Try to open modal using the same approach as editEvent
+            let modalOpened = false;
 
-                let statusText = '';
-                let eventCount = 0;
-
-                if (currentTab === 'pendingEventTable') {
-                    statusText = `Pending: ${pendingEvents.length}`;
-                    eventCount = pendingEvents.length;
-                } else if (currentTab === 'completedEventTable') {
-                    statusText = `Completed: ${completedEvents.length}`;
-                    eventCount = completedEvents.length;
-                } else if (currentTab === 'deletedEventTable') {
-                    statusText = `Deleted: ${deletedEvents.length}`;
-                    eventCount = deletedEvents.length;
-                }
-
-                statusElement.textContent = statusText;
-
-                // Update the total count display as well
-                const totalElement = document.querySelector('.text-green-100.text-sm.font-medium');
-                if (totalElement && totalElement.textContent.includes('Total Events:')) {
-                    totalElement.textContent = `Total Events: ${eventCount}`;
-                }
-            }
-
-            // Edit Event Function - Moved to events.js file
-            // Function is now available globally as editEvent()
-
-            // Initialize event handlers for whole day checkboxes - Now handled by JavaScript functions
-            // Functions are available globally: handleWholeDayChange() and handleCreateWholeDayChange()
-
-            // Test Modal Function for debugging
-            function testModal() {
-                console.log('=== Testing Modal ===');
-                console.log('Alpine.js available:', typeof Alpine !== 'undefined');
-
-                // Check for modal elements
-                const modalContainer = document.querySelector('[x-data="globalModal"]');
-                console.log('Modal container with x-data="globalModal":', modalContainer);
-
-                const modalOverlay = document.querySelector('.fixed.inset-0.bg-black.bg-opacity-50');
-                console.log('Modal overlay:', modalOverlay);
-
-                // Try to open modal using the same approach as editEvent
-                let modalOpened = false;
-
-                // Approach 1: Access globalModal component via Alpine.js
-                if (typeof Alpine !== 'undefined') {
-                    try {
-                        const globalModal = Alpine.data('globalModal');
-                        console.log('globalModal component:', globalModal);
-                        if (globalModal) {
-                            if (typeof globalModal === 'function') {
-                                const modalInstance = globalModal();
-                                console.log('globalModal instance:', modalInstance);
-                                if (modalInstance && modalInstance.open !== undefined) {
-                                    modalInstance.open = true;
-                                    modalOpened = true;
-                                    console.log('Modal opened via globalModal component');
-                                }
+            // Approach 1: Access globalModal component via Alpine.js
+            if (typeof Alpine !== 'undefined') {
+                try {
+                    const globalModal = Alpine.data('globalModal');
+                    console.log('globalModal component:', globalModal);
+                    if (globalModal) {
+                        if (typeof globalModal === 'function') {
+                            const modalInstance = globalModal();
+                            console.log('globalModal instance:', modalInstance);
+                            if (modalInstance && modalInstance.open !== undefined) {
+                                modalInstance.open = true;
+                                modalOpened = true;
+                                console.log('Modal opened via globalModal component');
                             }
                         }
-                    } catch (e) {
-                        console.log('globalModal component access failed:', e);
                     }
-                }
-
-                // Approach 2: Try to find Alpine.js instance on the container
-                if (!modalOpened && modalContainer && modalContainer.__x) {
-                    try {
-                        console.log('Alpine.js data:', modalContainer.__x.$data);
-                        modalContainer.__x.$data.open = true;
-                        modalOpened = true;
-                        console.log('Modal opened via Alpine.js __x data');
-                    } catch (e) {
-                        console.log('Alpine.js __x access failed:', e);
-                    }
-                }
-
-                // Approach 3: Direct DOM manipulation as fallback
-                if (!modalOpened) {
-                    console.log('Alpine.js not accessible, trying direct DOM');
-                    if (modalOverlay) {
-                        modalOverlay.style.display = 'flex';
-                        modalOverlay.classList.remove('hidden');
-                        modalOpened = true;
-                        console.log('Modal opened via direct DOM');
-                    }
-                }
-
-                if (!modalOpened) {
-                    console.error('All modal opening approaches failed');
+                } catch (e) {
+                    console.log('globalModal component access failed:', e);
                 }
             }
-        </script>
 
-    </div>
+            // Approach 2: Try to find Alpine.js instance on the container
+            if (!modalOpened && modalContainer && modalContainer.__x) {
+                try {
+                    console.log('Alpine.js data:', modalContainer.__x.$data);
+                    modalContainer.__x.$data.open = true;
+                    modalOpened = true;
+                    console.log('Modal opened via Alpine.js __x data');
+                } catch (e) {
+                    console.log('Alpine.js __x access failed:', e);
+                }
+            }
 
-    {{-- MODAL FOR EXPORTING EVENTS  --}}
+            // Approach 3: Direct DOM manipulation as fallback
+            if (!modalOpened) {
+                console.log('Alpine.js not accessible, trying direct DOM');
+                if (modalOverlay) {
+                    modalOverlay.style.display = 'flex';
+                    modalOverlay.classList.remove('hidden');
+                    modalOpened = true;
+                    console.log('Modal opened via direct DOM');
+                }
+            }
 
-    <form method="POST" id="deleteEvent" action="{{ route('deleteEvent') }}" hidden>
-        @csrf
-        <input type="hidden" name="_method" value="DELETE">
-        <input type="text" name="id" id="delete_event_id" hidden>
-    </form>
+            if (!modalOpened) {
+                console.error('All modal opening approaches failed');
+            }
+        }
+    </script>
+
 </x-app-layout>

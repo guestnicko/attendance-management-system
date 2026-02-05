@@ -1,7 +1,7 @@
   @props(['events' => '', 'route' => ''])
   <div class="">
       <select name="event_id" id="eventField" onchange="fetchLogsByEvent('{{ $route }}')"
-          class="block w-full text-lg text-gray-500 bg-transparent border-0 border-b-2 border-violet-500 appearance-none ">
+          class="block w-full text-lg text-gray-500 bg-transparent border rounded-lg border-violet-300 appearance-none ">
           <option value="" selected>Select Event</option>
           @foreach ($events as $event)
               <option value="{{ $event->id }}">{{ $event->event_name }}</option>
