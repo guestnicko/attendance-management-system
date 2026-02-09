@@ -320,7 +320,7 @@
                                 <td class="px-6 py-4 text-center border-r border-gray-200">
                                     <div class="space-y-2">
                                         <div class="flex items-center justify-center gap-2">
-                                            <span class="text-xs text-gray-500 font-medium">Check In:</span>
+                                            <span class="text-xs text-gray-500 font-medium">Morning Check In:</span>
                                             @if ($student->attend_checkIn)
                                                 <span
                                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -340,7 +340,7 @@
                                             @endif
                                         </div>
                                         <div class="flex items-center justify-center gap-2">
-                                            <span class="text-xs text-gray-500 font-medium">Check Out:</span>
+                                            <span class="text-xs text-gray-500 font-medium">Morning Check Out:</span>
                                             @if ($student->attend_checkOut)
                                                 <span
                                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -371,6 +371,7 @@
                                                 @if ($student->attend_afternoon_checkIn)
                                                     <span
                                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                        1:27 PM
                                                         {{ date_format(date_create($student->attend_afternoon_checkIn), 'h:i A') }}
                                                     </span>
                                                 @else
@@ -526,6 +527,8 @@
             }
 
             students.forEach(student => {
+
+                console.log(student);
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-gray-50 transition-colors duration-200';
 
@@ -572,68 +575,68 @@
                                     <span class="text-xs text-gray-500 font-medium">Check In:</span>
                             ${student.attend_checkIn ?
                                         `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                                                                                                                                                                                                                                ${new Date(student.attend_checkIn).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
-                                                                                                                                                                                                                                                            </span>` :
+                                                                    ${new Date(student.attend_checkIn).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
+                                                                </span>` :
                                         `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                                                                                                                                                                                                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
-                                                                                                                                                                                                                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                                                                                                                                                                                                                                </svg>
-                                                                                                                                                                                                                                                                Absent
-                                                                                                                                                                                                                                                            </span>`
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                                        </svg>
+                                                                        Absent
+                                                                    </span>`
                                     }
                                 </div>
                                 <div class="flex items-center justify-center gap-2">
                                     <span class="text-xs text-gray-500 font-medium">Check Out:</span>
                             ${student.attend_checkOut ?
                                         `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                                                                                                                                                                                                                                ${new Date(student.attend_checkOut).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
-                                                                                                                                                                                                                                                            </span>` :
+                                                                    ${new Date(student.attend_checkOut).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
+                                                                </span>` :
                                         `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                                                                                                                                                                                                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
-                                                                                                                                                                                                                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                                                                                                                                                                                                                                </svg>
-                                                                                                                                                                                                                                                                Absent
-                                                                                                                                                                                                                                                            </span>`
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
+                                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                                            </svg>
+                                                                            Absent
+                                                                        </span>`
                                     }
                                 </div>
                             </div>
                         </td>
 
                         ${isWholeDay ? `
-                                                                                                                                                                                                                                                <!-- Afternoon Attendance -->
-                                                                                                                                                                                                                                                <td class="px-6 py-4 text-center border-r border-gray-200">
-                                                                                                                                                                                                                                                    <div class="space-y-2">
-                                                                                                                                                                                                                                                        <div class="flex items-center justify-center gap-2">
-                                                                                                                                                                                                                                                            <span class="text-xs text-gray-500 font-medium">Check In:</span>
-                                                                                                                                                                                                                                                    ${student.attend_afternoon_checkIn ?
-                                                                                                                                                                                                                                                                `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                            <!-- Afternoon Attendance -->
+                                                            <td class="px-6 py-4 text-center border-r border-gray-200">
+                                                                <div class="space-y-2">
+                                                                    <div class="flex items-center justify-center gap-2">
+                                                                        <span class="text-xs text-gray-500 font-medium">Check In:</span>
+                                                                ${student.attend_afternoon_checkIn ?
+                                                                            `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                 ${new Date(student.attend_afternoon_checkIn).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
                                             </span>` :
-                                                                                                                                                                                                                                                                `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                                                                                                                                                                                                                                                                                                    `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                 </svg>
                                                 Absent
                                             </span>`
-                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                        <div class="flex items-center justify-center gap-2">
-                                                                                                                                                                                                                                                            <span class="text-xs text-gray-500 font-medium">Check Out:</span>
-                                                                                                                                                                                                                                                    ${student.attend_afternoon_checkOut ?
-                                                                                                                                                                                                                                                                `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                                                            }
+                                                                                        </div>
+                                                                                        <div class="flex items-center justify-center gap-2">
+                                                                                            <span class="text-xs text-gray-500 font-medium">Check Out:</span>
+                                                                                    ${student.attend_afternoon_checkOut ?
+                                                                                                `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                 ${new Date(student.attend_afternoon_checkOut).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
                                             </span>` :
-                                                                                                                                                                                                                                                                `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                                                                                                                                                                                                                                                                                                    `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                 </svg>
                                                 Absent
                                             </span>`
-                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                </td>
-                                                                                                                                                                                                                                            ` : ''}
+                                                                                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                    </td>
+                                                                                                                                                                                                                                                                                                                ` : ''}
 
                         <td class="px-6 py-4 text-center">
                             <div class="text-sm text-gray-900">
@@ -703,7 +706,8 @@
     </form>
 
     @if ($event)
-        <form id="auto_attendanceForm" method="POST" action="{{ route('attendanceStudent') }}">
+        <form id="auto_attendanceForm" class="opacity-30 max-w-[400px]" method="POST"
+            action="{{ route('attendanceStudent') }}">
             @csrf
             <input type="hidden" name="event_id" value="{{ $event->id }}">
             <input type="hidden" name="uri" value="{{ route('attendanceStudent') }}">

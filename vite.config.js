@@ -25,6 +25,7 @@ export default defineConfig({
                 "http://127.0.0.1:8000",
                 "http://localhost/",
                 "http://192.168.0.72",
+                "http://192.168.110.31",
             ], // Proxy Laravel requests to your Laravel app
         },
         cors: {
@@ -32,6 +33,7 @@ export default defineConfig({
                 "http://127.0.0.1:8000",
                 "http://localhost",
                 "http://192.168.0.72",
+                "http://192.168.110.31",
             ], // Allow your Laravel app to access the Vite server
             methods: ["GET", "POST", "PUT", "DELETE"],
             allowedHeaders: ["Content-Type", "Authorization"],
