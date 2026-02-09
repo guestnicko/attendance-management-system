@@ -328,9 +328,9 @@ class LogController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        if (empty($students->first())) {
+        if (empty($students)) {
             return response()->json([
-                'message' => 'Student not found',
+                'message' => 'Student not founds',
                 'students' => null,
             ]);
         }

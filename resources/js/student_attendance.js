@@ -12,9 +12,6 @@ if (typeof window !== "undefined") {
     window.startInterval = startInterval;
     window.stopInterval = stopInterval;
 }
-
-const inputField1 = document.getElementById("inputField1");
-
 let intervalId;
 const attendanceLogs = [];
 
@@ -278,8 +275,17 @@ form.addEventListener("submit", async (event) => {
         const response = await post(new FormData(event.target));
         // Properly fetching data for all responses, and some specific response
         const attendanceInformation = response.attendanceInformation;
-        console.log(attendanceInformation);
-
+        const isUnderMaintenance = response.isUnderMaintenance;
+        if (isUnderMaintenance) {
+            Swal.fire({
+                icon: "warning",
+                title: "Under Maintenance",
+                text: "Whole day event attendance recording is currently under maintenance.",
+                showConfirmButton: true,
+            });
+            inputField.value = "";
+            return;
+        }
         let attendCheckIn = attendanceInformation.attend_checkIn;
         let attendCheckOut = attendanceInformation.attend_checkOut;
         let attendAfternoonCheckIn =
@@ -318,26 +324,23 @@ form_auto.addEventListener("submit", async (event) => {
         // default if input field isn't empty
         const response = await post(new FormData(event.target));
         // Properly fetching data for all responses, and some specific response
-        const attendanceInformation = response.attendanceInformation;
-        console.log(attendanceInformation);
-
-        let attendCheckIn = attendanceInformation.attend_checkIn;
-        let attendCheckOut = attendanceInformation.attend_checkOut;
-        let attendAfternoonCheckIn =
-            attendanceInformation.attend_afternoon_checkIn; //Fetch the afternoon time-in/out
-        let attendAfternoonCheckOut =
-            attendanceInformation.attend_afternoon_checkOut;
+        // console.log("Auto Response:", response.isUnderMaintenance);
+        // const isUnderMaintenance = response.isUnderMaintenance ?? null;
+        // if (isUnderMaintenance) {
+        //     Swal.fire({
+        //         icon: "warning",
+        //         title: "Under Maintenance",
+        //         text: "Whole day event attendance recording is currently under maintenance.",
+        //         showConfirmButton: true,
+        //     });
+        //     inputField.value = "";
+        //     return;
+        // }
 
         inputField.value = "";
 
         if (response.isRecorded) {
-            AttendanceRecorded(
-                response,
-                attendCheckIn,
-                attendCheckOut,
-                attendAfternoonCheckIn,
-                attendAfternoonCheckOut,
-            ); //Added 3 arguments to retrieve the data
+            AttendanceRecorded(response); //Added 3 arguments to retrieve the data
             addLogs(response);
         } else if (response.AlreadyRecorded) {
             //if student is already recorded, call function
@@ -383,49 +386,43 @@ function axiosError(message) {
     });
 }
 
-function AttendanceRecorded(
-    responses,
-    attendCheckIn,
-    attendCheckOut,
-    attend_afternoon_checkIn,
-    attend_afternoon_checkOut,
-) {
+function AttendanceRecorded(responses) {
     const studentInformation = responses.studentInformation;
-    console.log(formatTime(attend_afternoon_checkIn));
+    const attendanceInformation = responses.attendanceInformation;
     // Dynamically build time sections
     let timeInfo = "";
 
-    if (attendCheckIn) {
+    if (attendanceInformation.attendCheckIn) {
         timeInfo += `
             <p class="text-md text-gray-500 mt-1 font-semibold">Morning Attendance</p>
             <p class="text-md text-gray-500 mt-1">Time In: ${formatTime(
-                attendCheckIn,
+                attendanceInformation.attendCheckIn,
             )}</p>
         `;
     }
 
-    if (attendCheckOut) {
+    if (attendanceInformation.attendCheckOut) {
         timeInfo += `
             <p class="text-md text-gray-500 mt-1 font-semibold">Morning Attendance</p>
             <p class="text-md text-gray-500 mt-1">Time Out: ${formatTime(
-                attendCheckOut,
+                attendanceInformation.attendCheckOut,
             )}</p>
         `;
     }
 
-    if (attend_afternoon_checkIn) {
+    if (attendanceInformation.attend_afternoon_checkIn) {
         timeInfo += `
             <p class="text-md text-gray-500 mt-4 font-semibold">Afternoon Attendance</p>
             <p class="text-md text-gray-500 mt-1">Time In: 1:27 PM ${formatTime(
-                attend_afternoon_checkIn,
+                attendanceInformation.attend_afternoon_checkIn,
             )}</p>
         `;
     }
-    if (attend_afternoon_checkOut) {
+    if (attendanceInformation.attend_afternoon_checkOut) {
         timeInfo += `
             <p class="text-md text-gray-500 mt-4 font-semibold">Afternoon Attendance</p>
             <p class="text-md text-gray-500 mt-1">Time Out: ${formatTime(
-                attend_afternoon_checkOut,
+                attendanceInformation.attend_afternoon_checkOut,
             )}</p>
         `;
     }
@@ -473,7 +470,8 @@ function AttendanceNotRecorded(data) {
 function AttendanceAlreadyRecorded(responses) {
     const studentInformation = responses.studentInformation;
     const attendanceInformation = responses.attendanceInformation;
-
+    console.log("Already Recorded Response:", responses);
+    console.log("Attendance Information:", attendanceInformation);
     Swal.fire({
         icon: "warning",
         title: "Student is already recorded!",

@@ -26,7 +26,7 @@ $page = 'logs';
                     icon: 'success',
                     title: 'Success!',
                     text: '{{ session('
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    success ') }}',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        success ') }}',
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -70,7 +70,7 @@ $page = 'logs';
         </div>
 
         <div>
-            <x-event-filter :events="$events" :route="route('fetchFinesViaEvent')" />
+            <x-event-filter :events="$events" :route="route('fetchLogViaEvent')" />
         </div>
     </div>
     {{-- Content --}}
