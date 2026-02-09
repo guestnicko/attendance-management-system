@@ -22,6 +22,7 @@ function addLogs(response) {
     if (attendanceLogs.length >= 5) {
         attendanceLogs.shift();
     }
+    console.log("Adding to logs:", response);
     insertRow(response);
 }
 
@@ -66,8 +67,8 @@ function insertRow(response) {
             <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
               <span class="text-white font-semibold text-sm">
                 ${student.s_fname.charAt(0).toUpperCase()}${student.s_lname
-        .charAt(0)
-        .toUpperCase()}
+                    .charAt(0)
+                    .toUpperCase()}
               </span>
             </div>
           </div>
@@ -137,11 +138,11 @@ function insertRow(response) {
       <td class="px-6 py-4 text-center border-r border-gray-200">
         <div class="space-y-2">
           <div class="flex items-center justify-center gap-2">
-            <span class="text-xs text-gray-500 font-medium">Check In:</span>
+            <span class="text-xs text-gray-500 font-medium">Afternoon Check In:</span>
             ${
                 attendanceInformation.attend_afternoon_checkIn
                     ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                     ${formatTime(student.attend_afternoon_checkIn)}
+                     ${formatTime(attendanceInformation.attend_afternoon_checkIn)}
                    </span>`
                     : `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                      <svg xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -154,12 +155,12 @@ function insertRow(response) {
             }
           </div>
           <div class="flex items-center justify-center gap-2">
-            <span class="text-xs text-gray-500 font-medium">Check Out:</span>
+            <span class="text-xs text-gray-500 font-medium">Afternoon Check Out:</span>
             ${
                 attendanceInformation.attend_afternoon_checkOut
                     ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                      ${formatTime(
-                         attendanceInformation.attend_afternoon_checkOut
+                         attendanceInformation.attend_afternoon_checkOut,
                      )}
                    </span>`
                     : `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
@@ -181,7 +182,7 @@ function insertRow(response) {
       <!-- Date Column -->
       <td class="px-6 py-4 text-center">
         <div class="text-sm text-gray-900">${formatDate(
-            attendanceInformation.created_at
+            attendanceInformation.created_at,
         )}</div>
       </td>
     `;
@@ -234,7 +235,7 @@ async function post(form) {
         const response = await axios.post(form.get("uri"), form, {
             headers: {
                 "X-CSRF-TOKEN": document.querySelector(
-                    'meta[name="csrf-token"]'
+                    'meta[name="csrf-token"]',
                 ).content,
                 "Content-Type": "application/json",
             },
@@ -253,7 +254,7 @@ async function post(form) {
             throw new Error(
                 `Request failed with status ${
                     error.response.status
-                }: ${JSON.stringify(error.response.data)}`
+                }: ${JSON.stringify(error.response.data)}`,
             );
         } else if (error.request) {
             // Request made but no response received
@@ -291,7 +292,7 @@ form.addEventListener("submit", async (event) => {
                 attendCheckIn,
                 attendCheckOut,
                 attendAfternoonCheckIn,
-                attendAfternoonCheckOut
+                attendAfternoonCheckOut,
             ); //Added 3 arguments to retrieve the data
             addLogs(response);
         } else if (response.AlreadyRecorded) {
@@ -312,7 +313,7 @@ form.addEventListener("submit", async (event) => {
 form_auto.addEventListener("submit", async (event) => {
     event.preventDefault();
     try {
-        let inputField = document.querySelector("#inputField"); //Input field HTML element
+        let inputField = document.querySelector("#inputField1"); //Input field HTML element
 
         // default if input field isn't empty
         const response = await post(new FormData(event.target));
@@ -326,13 +327,16 @@ form_auto.addEventListener("submit", async (event) => {
             attendanceInformation.attend_afternoon_checkIn; //Fetch the afternoon time-in/out
         let attendAfternoonCheckOut =
             attendanceInformation.attend_afternoon_checkOut;
+
+        inputField.value = "";
+
         if (response.isRecorded) {
             AttendanceRecorded(
                 response,
                 attendCheckIn,
                 attendCheckOut,
                 attendAfternoonCheckIn,
-                attendAfternoonCheckOut
+                attendAfternoonCheckOut,
             ); //Added 3 arguments to retrieve the data
             addLogs(response);
         } else if (response.AlreadyRecorded) {
@@ -344,7 +348,6 @@ form_auto.addEventListener("submit", async (event) => {
         }
         // let data = await get();
         // loadTable(data);
-        inputField.value = "";
     } catch (error) {
         throw new Error(error);
     }
@@ -385,18 +388,18 @@ function AttendanceRecorded(
     attendCheckIn,
     attendCheckOut,
     attend_afternoon_checkIn,
-    attend_afternoon_checkOut
+    attend_afternoon_checkOut,
 ) {
     const studentInformation = responses.studentInformation;
-
+    console.log(formatTime(attend_afternoon_checkIn));
     // Dynamically build time sections
     let timeInfo = "";
 
-    if (attendCheckIn || attendCheckOut) {
+    if (attendCheckIn) {
         timeInfo += `
             <p class="text-md text-gray-500 mt-1 font-semibold">Morning Attendance</p>
             <p class="text-md text-gray-500 mt-1">Time In: ${formatTime(
-                attendCheckIn
+                attendCheckIn,
             )}</p>
         `;
     }
@@ -405,7 +408,7 @@ function AttendanceRecorded(
         timeInfo += `
             <p class="text-md text-gray-500 mt-1 font-semibold">Morning Attendance</p>
             <p class="text-md text-gray-500 mt-1">Time Out: ${formatTime(
-                attendCheckOut
+                attendCheckOut,
             )}</p>
         `;
     }
@@ -413,8 +416,8 @@ function AttendanceRecorded(
     if (attend_afternoon_checkIn) {
         timeInfo += `
             <p class="text-md text-gray-500 mt-4 font-semibold">Afternoon Attendance</p>
-            <p class="text-md text-gray-500 mt-1">Time In: ${formatTime(
-                attend_afternoon_checkIn
+            <p class="text-md text-gray-500 mt-1">Time In: 1:27 PM ${formatTime(
+                attend_afternoon_checkIn,
             )}</p>
         `;
     }
@@ -422,7 +425,7 @@ function AttendanceRecorded(
         timeInfo += `
             <p class="text-md text-gray-500 mt-4 font-semibold">Afternoon Attendance</p>
             <p class="text-md text-gray-500 mt-1">Time Out: ${formatTime(
-                attend_afternoon_checkOut
+                attend_afternoon_checkOut,
             )}</p>
         `;
     }
@@ -482,8 +485,8 @@ function AttendanceAlreadyRecorded(responses) {
                 </h3>
                 <p class="text-lg font-medium text-gray-700">
                     ${studentInformation.s_program} - Year Level: ${
-            studentInformation.s_lvl
-        }
+                        studentInformation.s_lvl
+                    }
                 </p>
                 <p class="text-md text-gray-500 mt-1">Set: ${
                     studentInformation.s_set
@@ -497,12 +500,12 @@ function AttendanceAlreadyRecorded(responses) {
                 }</p>
                 <p class="text-md text-gray-500 mt-1">Time In (Afternoon): ${
                     formatTime(
-                        attendanceInformation.attend_afternoon_checkIn
+                        attendanceInformation.attend_afternoon_checkIn,
                     ) ?? "---"
                 }</p>
                 <p class="text-md text-gray-500 mt-1">Time Out (Afternoon): ${
                     formatTime(
-                        attendanceInformation.attend_afternoon_checkOut
+                        attendanceInformation.attend_afternoon_checkOut,
                     ) ?? "---"
                 }</p>
             </div>
@@ -552,8 +555,8 @@ function loadTable(data) {
             <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
               <span class="text-white font-semibold text-sm">
                 ${student.s_fname.charAt(0).toUpperCase()}${student.s_lname
-            .charAt(0)
-            .toUpperCase()}
+                    .charAt(0)
+                    .toUpperCase()}
               </span>
             </div>
           </div>
@@ -580,7 +583,7 @@ function loadTable(data) {
       <td class="px-6 py-4 text-center border-r border-gray-200">
         <div class="space-y-2">
           <div class="flex items-center justify-center gap-2">
-            <span class="text-xs text-gray-500 font-medium">Check In:</span>
+            <span class="text-xs text-gray-500 font-medium">Morning Check In:</span>
             ${
                 student.attend_checkIn
                     ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -597,7 +600,7 @@ function loadTable(data) {
             }
           </div>
           <div class="flex items-center justify-center gap-2">
-            <span class="text-xs text-gray-500 font-medium">Check Out:</span>
+            <span class="text-xs text-gray-500 font-medium">Morning Check Out:</span>
             ${
                 student.attend_checkOut
                     ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -627,6 +630,7 @@ function loadTable(data) {
             ${
                 student.attend_afternoon_checkIn
                     ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    1:27 PM
                      ${formatTime(student.attend_afternoon_checkIn)}
                    </span>`
                     : `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
@@ -665,7 +669,7 @@ function loadTable(data) {
       <!-- Date Column -->
       <td class="px-6 py-4 text-center">
         <div class="text-sm text-gray-900">${formatDate(
-            student.created_at
+            student.created_at,
         )}</div>
       </td>
     </tr>
