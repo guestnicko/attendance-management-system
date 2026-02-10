@@ -387,6 +387,7 @@ function axiosError(message) {
 }
 
 function AttendanceRecorded(responses) {
+    console.log("Recorded Response:", responses);
     const studentInformation = responses.studentInformation;
     const attendanceInformation = responses.attendanceInformation;
     // Dynamically build time sections

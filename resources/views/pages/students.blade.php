@@ -31,7 +31,7 @@ $page = 'students';
                     icon: 'success',
                     title: 'Success!',
                     text: '{{ session('
-                                                                                                                                        success ') }}',
+                                                                                                                                                                                                                        success ') }}',
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -213,6 +213,8 @@ $page = 'students';
                                         <option value="F">F</option>
                                         <option value="G">G</option>
                                         <option value="H">H</option>
+                                        <option value="A-SAMAL">A-SAMAL</option>
+
                                     </select>
                                 </div>
                             </div>
@@ -666,7 +668,7 @@ $page = 'students';
                     <select name="s_set" id=""
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option value="">Keep Current</option>
-                        @foreach (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] as $set)
+                        @foreach (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'A-SAMAL'] as $set)
                             <option value="{{ $set }}">{{ $set }}</option>
                         @endforeach
                     </select>
