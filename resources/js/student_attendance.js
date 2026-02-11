@@ -460,7 +460,7 @@ function AttendanceRecorded(responses) {
 function AttendanceNotRecorded(data) {
     Swal.fire({
         icon: "warning",
-        title: "Fetching Error!",
+        title: "出问题了!",
         text: data.message,
         showConfirmButton: true,
         // timer: 500,
