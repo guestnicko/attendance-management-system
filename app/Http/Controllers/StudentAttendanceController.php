@@ -219,6 +219,7 @@ class StudentAttendanceController extends Controller
         if ($time < $event->checkIn_start || ($time > $event->checkIn_end && $time < $event->checkOut_start) || $time > $event->checkOut_end) {
             return response()->json([
                 "message" => "I am sorry, but your attendance can only be recorded during the set time frame",
+                "title" => "Bawi Next Layp!",
                 "isRecorded" => false
             ]);
         }
@@ -339,6 +340,8 @@ class StudentAttendanceController extends Controller
         ) {
             return response()->json([
                 "message" => "I am sorry, but your attendance can only be recorded during the set time frame",
+                "title" => "Bawi Next Layp!",
+
                 "isRecorded" => false
             ]);
         }
